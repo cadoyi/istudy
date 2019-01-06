@@ -7,7 +7,7 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-console',
+    'id' => 'edu-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
@@ -17,9 +17,15 @@ return [
     ],
     'controllerMap' => [
         'fixture' => [
-            'class' => 'yii\console\controllers\FixtureController',
+            'class'     => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => [
+                '@console/migrations',
+            ],
+        ],
     ],
     'components' => [
         'log' => [
