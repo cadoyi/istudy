@@ -39,10 +39,10 @@ phpunit.phar
 *~
 
 #runtime path
-/backend/runtime/
-/frontend/runtime/
-/common/runtime/
-/console/runtime/
-/backend/web/assets/
-/frontend/web/assets/
+/backend/runtime/*
+/frontend/runtime/*
+/common/runtime/*
+/console/runtime/*
+/backend/web/assets/*
+/frontend/web/assets/*
 
