@@ -18,7 +18,7 @@ class m190106_135133_create_contact_table extends Migration
         $this->createTable($this->table, [
             'id' => $this->primaryKey()->unsigned(),
             'name'    => $this->string(5)->notNull(),
-            'phone'   => $this->string(15)->notNull(),
+            'phone'   => $this->string(11)->notNull(),
             'email'   => $this->string(191)->notNull(),
             'subject' => $this->string(32)->notNull(),
             'message' => $this->string(255)->notNull(),

@@ -34,6 +34,7 @@ class m190106_123549_create_customer_profile_table extends Migration
             'city'     => $this->string()->comment('城市'),
             'note'     => $this->string()->comment('个性签名'),
         ]);
+        
         $this->addForeignKey($this->customerFk,
             $this->table,
             '[[customer_id]]',

@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `customer_emails`.
  */
-class m190106_122731_create_customer_emails_table extends Migration
+class m190106_122731_create_customer_email_table extends Migration
 {
     public $table = '{{%customer_email}}';
 

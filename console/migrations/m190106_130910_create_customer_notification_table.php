@@ -21,7 +21,7 @@ class m190106_130910_create_customer_notification_table extends Migration
         $this->createTable($this->table, [
             'id' => $this->primaryKey()->unsigned(),
             'customer_id' => $this->integer(11)->unsigned()->notNull(),
-            'message'    => $this->string(191)->notNull(),
+            'message'    => $this->string(255)->notNull(),
             'level'      => $this->tinyInteger()->notNull()->defaultValue(0),
             'watched'    => $this->boolean()->notNull()->defaultValue(0),
             'rewatch'    => $this->boolean()->notNull()->defaultValue(0),
