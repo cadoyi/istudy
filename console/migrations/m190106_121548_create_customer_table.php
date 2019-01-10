@@ -1,7 +1,7 @@
 <?php
 
-use yii\db\Migration;
-use yii\db\Expression;
+use console\db\Migration;
+
 
 /**
  * Handles the creation of table `customer`.
@@ -10,6 +10,8 @@ class m190106_121548_create_customer_table extends Migration
 {
 
     public $table = '{{%customer}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
    
     /**
      * {@inheritdoc}
@@ -25,7 +27,7 @@ class m190106_121548_create_customer_table extends Migration
             'is_active'     => $this->boolean()->notNull()->defaultValue(1),
             'created_at'    => $this->integer(11)->unsigned()->notNull(),
             'updated_at'    => $this->integer(11)->unsigned()->notNull(),
-        ]);
+        ], $this->tableOption);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `customer_favorite`.
@@ -9,6 +9,8 @@ class m190106_151032_create_customer_favorite_table extends Migration
 {
 
     public $table = '{{%customer_favorite}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $customerTable = '{{%customer}}';
 
@@ -31,7 +33,7 @@ class m190106_151032_create_customer_favorite_table extends Migration
             'is_user_reason' => $this->boolean()->notNull()->defaultValue(0)->comment('是否是用户自己输入的原因'),
             'created_at' => $this->integer(11)->unsigned()->notNull(),
             'updated_at' => $this->integer(11)->unsigned()->notNull(),
-        ]);
+        ], $this->tableOption);
 
         $this->addForeignKey($this->customerFk,
             $this->table,

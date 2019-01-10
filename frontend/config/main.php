@@ -15,6 +15,9 @@ return [
         'request' => [
             'csrfParam' => 'csrf',
         ],
+        'response' => [
+            'format' => 'html',
+        ],
         'user' => [
             'identityClass' => 'common\models\Customer',
             'enableAutoLogin' => true,
@@ -24,9 +27,9 @@ return [
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
-            'name' => 'frontend',
+            'name'         => 'frontend',
             'cookieParams' => ['lifetime' => 86400, 'httpOnly' => true],
-            'timeout' => 86400,
+            'timeout'      => 86400,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -38,7 +41,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'site/error',   // only for html
         ],
         
         'urlManager' => [
@@ -47,6 +50,9 @@ return [
             'suffix' => '.html',
             'rules' => [
             ],
+        ],
+        'assetManager' => [
+            'appendTimestamp' => true,
         ],
         
     ],

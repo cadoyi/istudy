@@ -5,6 +5,7 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'charset'        => 'UTF-8',
     'language'       => 'zh-CN',
     'sourceLanguage' => 'en',
     'timeZone'       => 'Asia/Shanghai',
@@ -20,6 +21,10 @@ return [
             'dateFormat'      => 'php:Y-m-d',
             'timeFormat'      => 'php:H:i:s',
             'datetimeFormat'  => 'php:Y-m-d H:i:s',
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            
         ],
     ],
 ];

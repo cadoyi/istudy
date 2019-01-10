@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `contact`.
@@ -9,6 +9,8 @@ class m190106_135133_create_contact_table extends Migration
 {
 
     public $table = '{{%contact}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     /**
      * {@inheritdoc}
@@ -22,7 +24,7 @@ class m190106_135133_create_contact_table extends Migration
             'email'   => $this->string(191)->notNull(),
             'subject' => $this->string(32)->notNull(),
             'message' => $this->string(255)->notNull(),
-        ]);
+        ], $this->tableOption);
     }
 
     /**

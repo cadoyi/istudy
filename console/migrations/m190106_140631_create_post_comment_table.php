@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `post_comment`.
@@ -8,6 +8,8 @@ use yii\db\Migration;
 class m190106_140631_create_post_comment_table extends Migration
 {
     public $table = '{{%post_comment}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $postTable = '{{%post}}';
 
@@ -32,7 +34,7 @@ class m190106_140631_create_post_comment_table extends Migration
             'comment' => $this->string(255)->notNull(),
             'created_at' => $this->integer(11)->unsigned()->notNull(),
             'status' => $this->tinyInteger()->notNull()->defaultValue(0)->comment('审核状态'),
-        ]);
+        ], $this->tableOption);
 
         $this->addForeignKey($this->postFk, 
             $this->table,

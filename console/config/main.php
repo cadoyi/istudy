@@ -26,6 +26,13 @@ return [
                 '@console/migrations',
                 '@yii/rbac/migrations',
             ],
+            'generatorTemplateFiles' => [
+                'create_table'    => '@console/views/createTableMigration.php',
+                'drop_table'      => '@yii/views/dropTableMigration.php',
+                'add_column'      => '@yii/views/addColumnMigration.php',
+                'drop_column'     => '@yii/views/dropColumnMigration.php',
+                'create_junction' => '@yii/views/createTableMigration.php',
+            ],
         ],
     ],
     'components' => [

@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `customer_profile`.
@@ -9,6 +9,8 @@ class m190106_123549_create_customer_profile_table extends Migration
 {
 
     public $table = '{{%customer_profile}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $customerTable = '{{%customer}}';
 
@@ -33,7 +35,7 @@ class m190106_123549_create_customer_profile_table extends Migration
             'avator'   => $this->string()->comment('头像'),
             'city'     => $this->string()->comment('城市'),
             'note'     => $this->string()->comment('个性签名'),
-        ]);
+        ], $this->tableOption);
         
         $this->addForeignKey($this->customerFk,
             $this->table,

@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `customer_emails`.
@@ -8,6 +8,8 @@ use yii\db\Migration;
 class m190106_122731_create_customer_email_table extends Migration
 {
     public $table = '{{%customer_email}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $customerTable = '{{%customer}}';
 
@@ -26,7 +28,7 @@ class m190106_122731_create_customer_email_table extends Migration
             'is_public'   => $this->boolean()->notNull()->defaultValue(0),
             'can_login'   => $this->boolean()->notNull()->defaultValue(0),
             'created_at'  => $this->integer(11)->unsigned()->notNull(),
-        ]);
+        ], $this->tableOption);
 
         $this->addForeignKey($this->customerFk,
             $this->table,

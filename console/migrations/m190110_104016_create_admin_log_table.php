@@ -3,12 +3,11 @@
 use console\db\Migration;
 
 /**
- * Handles the creation of table `tag`.
+ * Handles the creation of table `$this->table`.
  */
-class m190106_140540_create_tag_table extends Migration
+class m190110_104016_create_admin_log_table extends Migration
 {
-
-    public $table = '{{%tag}}';
+    public $table = '{{%admin_log}}';
 
     public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
@@ -18,9 +17,10 @@ class m190106_140540_create_tag_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
-            'title' => $this->string()->notNull()->unique(),
+            'id' => $this->primaryKey(),
+
         ], $this->tableOption);
+        
     }
 
     /**

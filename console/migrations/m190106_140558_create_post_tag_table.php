@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `post_tag`.
@@ -8,6 +8,8 @@ use yii\db\Migration;
 class m190106_140558_create_post_tag_table extends Migration
 {
     public $table = '{{%post_tag}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $pkName = 'PK_POST_TAB_TAG_ID_POST_ID';
 
@@ -19,7 +21,8 @@ class m190106_140558_create_post_tag_table extends Migration
         $this->createTable($this->table, [
             'tag_id' => $this->integer(11)->unsigned()->notNull(),
             'post_id' => $this->integer(11)->unsigned()->notNull(),
-        ]);
+        ], $this->tableOption);
+
         $this->addPrimaryKey($this->pkName, $this->table, [
             '[[tag_id]]',
             '[[post_id]]',

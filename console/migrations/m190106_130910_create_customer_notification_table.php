@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use console\db\Migration;
 
 /**
  * Handles the creation of table `customer_notification`.
@@ -8,6 +8,8 @@ use yii\db\Migration;
 class m190106_130910_create_customer_notification_table extends Migration
 {
     public $table = '{{%customer_notification}}';
+
+    public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
     public $customerTable = '{{%customer}}';
 
@@ -30,7 +32,7 @@ class m190106_130910_create_customer_notification_table extends Migration
             'updated_at' => $this->integer(11)->unsigned()->notNull(),
             'created_by' => $this->integer(11)->unsigned()->notNull(),
             'updated_by' => $this->integer(11)->unsigned()->notNull(),
-        ]);
+        ], $this->tableOption);
 
         $this->addForeignKey($this->customerFk,
             $this->table,
