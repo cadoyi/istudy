@@ -25,4 +25,15 @@ class Migration extends \yii\db\Migration
         return $this->getDb()->getSchema()->createColumnSchemaBuilder('longtext');
     }
 
+
+    /**
+     * Creates a blob column.
+     * @return ColumnSchemaBuilder the column instance which can be further customized.
+     * @since 2.0.6
+     */
+    public function blob()
+    {
+        return $this->getDb()->getSchema()->createColumnSchemaBuilder('blob');
+    }  
+
 }

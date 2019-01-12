@@ -7,7 +7,7 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'charset'        => 'UTF-8',
     'language'       => 'zh-CN',
-    'sourceLanguage' => 'en',
+    'sourceLanguage' => 'en-US',
     'timeZone'       => 'Asia/Shanghai',
     'components' => [
         'cache' => [
@@ -25,6 +25,18 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             
+        ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'fileMap' => [
+                        'admin' => 'backend.php',
+                        'web'   => 'frontend.php',
+                    ],
+                ],
+            ],
         ],
     ],
 ];

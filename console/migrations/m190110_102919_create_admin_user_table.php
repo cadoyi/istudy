@@ -19,6 +19,7 @@ class m190110_102919_create_admin_user_table extends Migration
         $this->createTable($this->table, [
             'id'       => $this->primaryKey()->unsigned(),
             'username' => $this->string(32)->notNull()->unique(),
+            'nickname' => $this->string(32)->unique(),
             'email'    => $this->string(255)->notNull()->unique(),
             'password_hash' => $this->string(191)->notNull(),
             'is_active' => $this->boolean()->notNull()->defaultValue(1),
@@ -29,6 +30,7 @@ class m190110_102919_create_admin_user_table extends Migration
         
         $this->insert($this->table, [
             'username' => 'admin',
+            'nickname' => '超级管理员',
             'email'    => 'admin@localhost',
             'password_hash' => Yii::$app->security->generatePasswordHash('admin'),
             'created_at' => time(),

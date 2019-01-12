@@ -2,27 +2,29 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\captcha\CaptchaAction;
+use backend\form\LoginForm;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function haviors(&$behaviors)
+    { 
         return [
-            'access' => [
+            'login' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error', 'captcha'],
                         'allow' => true,
                     ],
                     [
@@ -50,6 +52,11 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
+            'captcha' => [
+                'class' => CaptchaAction::className(),
+                'minLength' => 4,
+                'maxLength' => 4,
+            ],
         ];
     }
 
@@ -73,17 +80,19 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+        $this->layout = 'login';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                'model' => $model,
-            ]);
         }
+
+        $model->password = '';
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+        
     }
 
     /**

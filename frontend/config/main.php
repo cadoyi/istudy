@@ -28,7 +28,11 @@ return [
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name'         => 'frontend',
-            'cookieParams' => ['lifetime' => 86400, 'httpOnly' => true],
+            'cookieParams' => [
+                'lifetime' => 86400, 
+                'httpOnly' => true,
+                'secure' => !YII_DEBUG,
+            ],
             'timeout'      => 86400,
         ],
         'log' => [
