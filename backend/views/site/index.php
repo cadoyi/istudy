@@ -1,17 +1,18 @@
 <?php
 
 /* @var $this yii\web\View */
-
-$this->title = 'My Yii Application';
+use yii\helpers\Html;
+use yii\helpers\Url;
+$this->title = Yii::t('admin', Yii::$app->name);
 ?>
-<div class="site-index">
+<div class="site-index col-xs-12">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
+        <h1>dashboard</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">这是 dashboard 面板.</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <p><a class="btn btn-lg btn-success" href="<?= Url::to(['site/index']) ?>">访问此页面</a></p>
     </div>
 
     <div class="body-content">

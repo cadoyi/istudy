@@ -13,35 +13,41 @@ use backend\form\LoginForm;
 class SiteController extends Controller
 {
 
+    public function login()
+    {
+        $login = parent::login();
+        $login['rules'] = [
+            [
+                'actions' => ['login', 'error', 'captcha'],
+                'allow' => true,
+            ],
+            [
+                'actions' => ['logout', 'index'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],            
+        ];
+        return $login;  
+    }
 
+    
     /**
      * {@inheritdoc}
      */
-    public function haviors(&$behaviors)
-    { 
-        return [
-            'login' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error', 'captcha'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
                 ],
-            ],
         ];
+        return $behaviors;
     }
+
+
+
 
     /**
      * {@inheritdoc}
@@ -51,6 +57,7 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+                'layout' => 'error',
             ],
             'captcha' => [
                 'class' => CaptchaAction::className(),

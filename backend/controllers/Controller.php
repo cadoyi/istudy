@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\base\WebController;
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 
 class Controller extends WebController
 {
@@ -18,37 +19,60 @@ class Controller extends WebController
     public function behaviors()
     {
         $parent = parent::behaviors();
-        $self = [
-            'login' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    'must' => [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-        $behaviors = array_merge($parent, $self);
-        $childBehaviors = $this->haviors($behaviors);
-        $child = is_array($childBehaviors) ? $childBehaviors : [];
-        return array_merge($behaviors, $child);
+        $child = [];
+        if($login = $this->login()) {
+            $child['login'] = $login;
+        }
+
+        if($rbac = $this->rbac()) {
+            $child['rbac'] = $rbac;
+        }
+
+        return array_merge($parent, $child);
     }
-
-
 
 
     /**
-     * 这是一个 behaviors 的回调,让子类可以有参数,也可以没有参数. 
-     * 如果这个方法返回一个数组, 那么会直接和 $behaviors 合并.
+     * 设置 login 的 behaviors
      * 
-     * @param  array &$behaviors - behaviors() 方法中定义的数组.
-     * @return mixed 
+     * @return array 
      */
-    public function haviors(&$behaviors)
+    public function login()
     {
-        
+        return [
+            'class' => AccessControl::className(),
+            'denyCallback' => function($rule, $action) {
+                if(Yii::$app->user->isGuest) { 
+                    if(Yii::$app->request->isGet) {
+                        $route = [ $this->route ];
+                        $params = $this->actionParams;
+                        $url = array_merge($route, $params);
+                        Yii::$app->user->setReturnUrl($url);
+                    }
+                    return Yii::$app->user->loginRequired();
+                }
+                throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
+            },
+            'rules' => [
+                'must' => [
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ];
     }
+
+
+    /**
+     * 设置 rbac 的 behaviors
+     * 
+     * @return array
+     */
+    public function rbac()
+    {
+        return [];
+    }
+
 
 
 

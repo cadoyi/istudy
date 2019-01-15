@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'edu-backend',
+    'name' => "My sister's website",
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -25,9 +26,9 @@ return [
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name'    => 'backend',
-            'timeout' => 1440,
+            'timeout' => 86400,
             'cookieParams' => [
-                'lifetime' => 1440, 
+                'lifetime' => 86400, 
                 'httpOnly' => true, 
                 'secure' => !YII_DEBUG,
             ],
@@ -61,9 +62,12 @@ return [
                     'baseUrl'  => '@web',
                     'js' => [
                         'js/scripts.js',
+                        'js/layout.js',
+
                     ],
                     'css' => [
                         'css/styles.css',
+                        'css/layout.css',
                     ],
                     'depends' => [
                         'yii\bootstrap\BootstrapPluginAsset',
