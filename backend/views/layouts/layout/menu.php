@@ -22,15 +22,15 @@ use yii\helpers\Html;
         ],
         [
             'label' => Yii::t('admin', 'Role'),
-            'template' => '<span class="glyphicon glyphicon-user"></span> {label}',	                
+            'template' => '<span class="glyphicon glyphicon-user"></span> {label}<span class="caret"></span>',	                
             'items' => [
                 [
                     'label' => 'create admin',
-                    'url' =>  ['/user/create'],
+                    'url' =>  ['/admin/create'],
                 ],
                 [
                     'label' => 'index',
-                	'url' => ['/site/index'],
+                	'url' => ['/admin/index'],
                 ],
             ],
         ],
@@ -50,11 +50,7 @@ use yii\helpers\Html;
             'url' => ['post/index'],
         ],
 
-
-
-
     ],
-
 
 ]) ?>
 

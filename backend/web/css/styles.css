@@ -19,3 +19,13 @@ ul, li {
 .color-inverse a {
     color: #fff;
 }
+
+.table-gray {
+    background-color: #f1f1f1;
+    border-radius: 4px;
+}
+
+.form-group.required label.control-label:before {
+    content:"* ";
+    color: #a94442;
+}

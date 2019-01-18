@@ -7,6 +7,9 @@ use Yii;
 class ActiveRecord extends \yii\db\ActiveRecord
 {
 
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
+
 
     /**
      * {@inheritdoc}
@@ -35,6 +38,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $keys = $this->primaryKey();
         $pk = $keys[0];
         $this->$pk = $id;
+    }
+
+
+    /**
+     * 允许 form 输出的字段
+     * @return array
+     */
+    public function formFields()
+    {
+        return $this->attributes();
     }
 
 }
