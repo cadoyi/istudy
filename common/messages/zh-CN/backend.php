@@ -10,10 +10,14 @@ return [
     'Admin login' => '管理员登录',
     
     /******** B ********/
+    'Back' => '返回',
+    
     /******** C ********/
     'Customer' => '客户',
+    'Commit' => '提交',
     'Category' => '分类',
     'Created time' => '创建时间',
+    'Create new' => '新建',
     'Captcha code' => '验证码',
     'Confirm password' => '确认密码',
     "Current user's password" => '当前用户密码',
@@ -47,6 +51,7 @@ return [
     /******** Q ********/
     /******** R ********/
     'Role' => '角色',
+    'Reset filter' => '重置筛选器',
 
     /******** S ********/
     /******** T ********/

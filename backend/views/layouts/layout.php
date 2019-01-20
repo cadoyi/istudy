@@ -16,7 +16,7 @@
               </div>
           </div>
           <div class="page-content">
-              <div class="container-fluid">
+              <div class="container-fluid page-content-container">
                   <?= $content; ?>
               </div>
           </div>

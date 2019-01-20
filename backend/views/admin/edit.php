@@ -1,16 +1,38 @@
 <?php
-use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\helpers\Form;
+use backend\widgets\FormContainer;
 ?>
-
-<?php $form = ActiveForm::begin() ?>
+<?php
+/**
+ * 
+ */
+?>
+<?php $container = FormContainer::begin([
+   'tabs' => [
+       [
+          'title' => '基本信息',
+          'target'   => 'form1',
+       ],
+       [
+          'title'    => '密码',
+          'target'   => 'form2',
+       ],       
+   ],
+]) ?>
+<?php $form = $container->form; ?>
+<div id="form1" class="tab-target">
     <?= $form->field($model, 'username') ?>
-    <?= $form->field($model, 'password')->passwordInput() ?>
-    <?= $form->field($model, 'confirm_password')->passwordInput() ?>
     <?= $form->field($model, 'nickname') ?>
     <?= $form->field($model, 'email') ?>
-    <?= $form->field($model, 'is_active')->dropDownList(['1' => 'enabled', '0' => 'disabled']) ?>
+    <?= $form->field($model, 'is_active')->dropDownList(Form::statusList()) ?>
     <?= $form->field($model,'current_password')->passwordInput() ?>
-    <?= Html::submitButton('submit', ['class' => 'btn btn-primary']) ?>
-<?php ActiveForm::end(); ?>
+</div>
+<div id="form2" class="tab-target">
+    <?= $form->field($model, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'confirm_password')->passwordInput() ?>
+</div>
+<?php 
+    FormContainer::end();
+ ?>

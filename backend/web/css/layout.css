@@ -126,4 +126,7 @@ body.b-xs .page-head .navbar-form {
 body.b-xs .page-head .navbar-nav {
     margin-bottom: 0;
 }
-
+.page-content-container {
+    padding-top: 2rem;
+    height: 100%;
+}

@@ -41,7 +41,16 @@ class UserForm extends User
             ],
             [['current_password'], 'validateCurrentPassword'],
             [['password'], 'string', 'length' => [5,32]],
-            [['confirm_password'], 'compare', 'compareAttribute' => 'password'],
+            [['confirm_password'], 'compare', 
+                'compareAttribute' => 'password', 
+                'skipOnEmpty' => false,
+                'when' => function() {
+                    return !empty($this->password);
+                },
+                'whenClient' => "function(attribute, value) {
+                    return $('#userform-password').val().trim() != '';
+                }",
+           ],
         ], $rules);
     }
 
@@ -74,5 +83,12 @@ class UserForm extends User
         if(!$identity->validatePassword($this->$attribute)) {
             $this->addError($attribute, Yii::t('admin', 'Password incorrect'));
         }
+    }
+
+    public function cleanPassword()
+    {
+        $this->password = null;
+        $this->confirm_password = null;
+        $this->current_password = null;
     }
 }

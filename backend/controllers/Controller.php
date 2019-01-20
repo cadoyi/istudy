@@ -6,6 +6,7 @@ use Yii;
 use common\base\WebController;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 
 class Controller extends WebController
 {
@@ -74,6 +75,14 @@ class Controller extends WebController
     }
 
 
+    public function findModel($id, $modelClass)
+    {
+         $model = $modelClass::findOne($id);
+         if(!$model instanceof $modelClass) {
+            throw new NotFoundHttpException(Yii::t('admin', 'Page not found'));
+         }
+         return $model;
+    }
 
 
 }

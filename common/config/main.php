@@ -33,7 +33,8 @@ return [
                     'basePath' => '@common/messages',
                     'fileMap' => [
                         'admin' => 'backend.php',
-                        'web'   => 'frontend.php',
+                        'front'   => 'frontend.php',
+                        'web'    => 'common.php',
                     ],
                 ],
             ],

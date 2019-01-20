@@ -29,25 +29,50 @@ class AdminController extends Controller
         $request = Yii::$app->request;
         if($request->isPost) {
             if($model->load($request->post()) && $model->validate()) {
-                return $this->asJson($model->toArray());
+                $model->generatePasswordHash($model->password);
+                $model->cleanPassword();
+                $model->save(false);
+                return $this->redirect(['index']);
             }
         }
+        $model->cleanPassword();
         return $this->render('edit', compact('model'));
     }
 
     public function actionView($id)
     {
-
+        $model = $this->findModel($id, User::className());
+        return $this->asJson($model);
+        //return $this->render('view', compact('model'));
     }
 
     public function actionUpdate($id)
     {
-
+        $model = $this->findModel($id, UserForm::className());
+        $request = Yii::$app->request;
+        if($request->isPost && $model->load($request->post())) {
+            if($model->validate()) {
+                if($model->password) {
+                    $model->generatePasswordHash($model->password);
+                }
+                $model->cleanPassword();
+                $model->save(false);
+                Yii::$app->session->addFlash('success', '更新成功');
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('edit', ['model' => $model]);
     }
 
     public function actionDelete($id)
     {
-
+        $model = $this->findModel($id, User::className());
+        if($model->canDelete()) {
+            $model->delete();
+        }
+        $this->redirect(['index']);
     }
+
+
 
 }

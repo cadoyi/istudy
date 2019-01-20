@@ -5,9 +5,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 $this->title = '管理员列表';
 ?>
-<?php $this->beginContent('@backend/views/widgets/grid-wrapper.php') ?>
-<a class="btn btn-default" href="<?= Url::to(['create']); ?>">添加管理员</a>
+<?php $this->beginContent('@backend/views/wraps/grid.php') ?>
 <?= GridView::widget([
+    'id' => 'admin_list',
     'filterModel'  => $searchModel,
     'dataProvider' => $dataProvider,
     'tableOptions' => [
