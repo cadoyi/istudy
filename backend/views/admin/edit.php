@@ -3,13 +3,16 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use common\helpers\Form;
 use backend\widgets\FormContainer;
+use yii\bootstrap\ActiveForm;
 ?>
 <?php
 /**
  * 
  */
 ?>
-<?php $container = FormContainer::begin([
+<?php 
+
+$container = FormContainer::begin([
    'tabs' => [
        [
           'title' => '基本信息',
@@ -20,19 +23,22 @@ use backend\widgets\FormContainer;
           'target'   => 'form2',
        ],       
    ],
-]) ?>
-<?php $form = $container->form; ?>
+   'formId' => 'edit_form',
+]); 
+$form = ActiveForm::begin(['id' => 'edit_form']);
+?>
 <div id="form1" class="tab-target">
     <?= $form->field($model, 'username') ?>
     <?= $form->field($model, 'nickname') ?>
     <?= $form->field($model, 'email') ?>
     <?= $form->field($model, 'is_active')->dropDownList(Form::statusList()) ?>
-    <?= $form->field($model,'current_password')->passwordInput() ?>
+    <?= $form->field($model, 'current_password')->passwordInput() ?>
 </div>
 <div id="form2" class="tab-target">
     <?= $form->field($model, 'password')->passwordInput() ?>
     <?= $form->field($model, 'confirm_password')->passwordInput() ?>
 </div>
 <?php 
+    ActiveForm::end();
     FormContainer::end();
  ?>

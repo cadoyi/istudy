@@ -33,84 +33,74 @@ use yii\bootstrap\ActiveForm;
 class FormContainer extends Widget
 {
 
-    /**
-     * row 选项
-     * @var array
-     */
-	public $options = ["id"=> "form_container" ,'class' => 'row form-container' ];
-
-	public $tabContainerOptions = ['class' => 'col-xs-3 tab-container'];
-
-	public $tabOptions = [ 'id' => 'tabs', 'class' => 'list-group form-tab'];
-
-	public $tabItemOptions = ['class' => 'list-group-item'];
-
    /**
     * 渲染标签
-    * title        : 标题
-    * options      : 数组, li 的选项
-    * target       : tab 的锚点
-    * linkOptions  : a 标签的选项
+    * title        : a标签的内容
+    * target       : tab 的锚点,不带 #
     * active       : 是否是 active 的
+    * icon         : 内容 icon
     * 
     * @var array
     */
 	public $tabs = [];
 
+
 	public $tabTitle = '标签页';
 
-	public $tabTitleOptions = ['class' => 'list-group-item tab-title'];
-
-	public $contentContainerOptions = [ 'class' => 'col-xs-9 form-content-container' ];
-
-    public $buttonContainerOptions = [ 'class' => 'col-xs-12 text-right button-bar' ];
 
 	public $buttons = [];
 
-	public $backButton = [
-		'name' => 'Back', 
-		'class'=> 'btn btn-sm btn-primary',
-		'url' => ['index'],
-	];
+    public $buttonTemplate = "{commit} {back}";
 
-	public $commitButton = [
-		'name' => 'Commit', 
-		'class'=> 'btn btn-sm btn-primary',
-		'type' => 'submit',
-	];
-
-	public $buttonLayout = "{other}\n{commit}\n{back}";
-
-    public $formContentOptions = ['class' => 'col-xs-12 form-content' ];
-
-    public $formOptions = [ 'id' => 'edit_form', 'options' => ['class' => 'form'] ];
-
-    public $form;
-
-    public $t = 'admin';
+    public $formId = 'edit_form';
 
 	public function init()
 	{
 		parent::init();
-		if(isset($this->options['id'])) {
-			$this->id = $this->options['id'];
-		}
+        if(!isset($this->options['id'])) {
+            $this->options['id'] = $this->id;
+        }
+        $this->initButtons();
 		ob_start();
 		ob_implicit_flush(false);
-        echo Html::beginTag('div', $this->options);
-        echo Html::beginTag('div', $this->tabContainerOptions);
-        $this->renderTabs();
-        echo Html::endTag('div');
-        echo Html::beginTag('div', $this->contentContainerOptions);
-        
-        $this->form = ActiveForm::begin($this->formOptions);
-
-        echo Html::beginTag('div', $this->buttonContainerOptions);
-        $this->renderButtons();
-        echo Html::endTag('div');
-        echo Html::beginTag('div', $this->formContentOptions);
-
 	}
+
+    public function initButtons()
+    {
+        $this->registerButton('back', [
+            'tag'   => 'a',
+            'href'   => Url::to(['index']),
+            'title' => Yii::t('admin', 'Back'),
+            'class' => 'btn btn-sm btn-primary',
+        ]);
+
+        $this->registerButton('commit', [
+            'tag'         => 'button',
+            'type'        => 'submit',
+            'data'        =>  [
+                'form'   => $this->formId,
+                'method' => 'post',
+            ],
+            'class' => 'btn btn-sm btn-primary',
+        ]);
+    }
+
+    public function registerButton($name, $options = []) 
+    {
+         if(!isset($this->buttons[$name]) && strpos($this->buttonTemplate, '{' . $name . '}') !== false) {
+            $this->buttons[$name] = array_merge([
+                'content' => Yii::t('admin', ucfirst($name)),
+            ], $options);
+         }
+    }
+
+
+    public function run()
+    {
+        $content = ob_get_clean();
+        return $this->render('form_container', ['content' => $content]);
+    }
+
 
 	public function checkActiveTab()
 	{
@@ -134,44 +124,17 @@ class FormContainer extends Widget
 		return $actived;
 	}
 
-	public function renderTabs()
+	public function tabs()
 	{
 		$actived = $this->checkActiveTab();
 		$this->registerTabJs($actived);
-        echo Html::beginTag('ul', $this->tabOptions);
-        echo Html::beginTag('li', $this->tabTitleOptions);
-        echo Html::encode($this->tabTitle);
-        echo Html::endTag('li');
-        foreach($this->tabs as $tab) {
-            $this->renderTab($tab);
-        }
-        echo Html::endTag('ul');
-	}
-
-	public function renderTab($tab)
-	{
-        $itemOptions = ArrayHelper::remove($tab, 'options', []);
-        $itemOptions = array_merge($this->tabItemOptions, $itemOptions);
-        if(isset($tab['active']) && $tab['active']) {
-        	Html::addCssClass($itemOptions, 'active');
-        }
-        echo Html::beginTag('li', $itemOptions);
-        if(isset($tab['target'])) {
-        	$url = '#' . $tab['target'];
-        	$linkOptions = ArrayHelper::remove($tab, 'linkOptions', []);
-        	$linkOptions['href'] = $url;
-        	echo Html::beginTag('a', $linkOptions);
-        }
-        echo Html::encode($tab['title']);
-        if(isset($tab['target'])) {
-        	echo Html::endTag('a');
-        }
-        echo Html::endTag('li');
+        return $this->tabs;
 	}
 
 	public function registerTabJs($activeId)
 	{
-		$this->view->registerJs("\$('#{$this->id} ul.form-tab a').click(function(e){
+
+		$this->view->registerJs("\$('#tabs a').click(function(e){
            e.preventDefault();
            \$(this).tab('show');
 		});");
@@ -186,54 +149,38 @@ class FormContainer extends Widget
 		
 	}
 
+    public function isActiveButton($button)
+    {
+        if(isset($button['active'])) {
+            $active = $button['active'];
+            if(is_callable($active)) {
+               $active = call_user_func($active, $this);
+            }
+            return $active;
+        }
+        return true;
+    }
+
 	public function renderButtons()
     {
-    	$back = $this->renderButton($this->backButton);
-    	$commit = $this->renderButton($this->commitButton);
-    	$other = $this->renderOtherButtons();
-        echo strtr($this->buttonLayout, [
-            '{back}'   => $back,
-            '{commit}' => $commit,
-            '{other}'  => $other,
-        ]);
-    }
-
-    public function renderOtherButtons()
-    {
-    	$other = '';
+        $buttons = [];
         foreach($this->buttons as $name => $button) {
-            $other .= $this->renderButton($button);
+            if($this->isActiveButton($button)) {
+                $buttons['{' . $name . '}'] = $this->renderButton($name, $button);
+            } else {
+                $button['{' . $name . '}'] = '';
+            }
         }
-        return $other;
+        return strtr($this->buttonTemplate, $buttons);
     }
 
-
-    public function renderButton($button)
+    public function renderButton($name, $button)
     {
-    	if(is_string($button)) {
-    		return $button;
-    	}
-    	if($button === false || $button === null) {
-    		return '';
-    	}
-    	$name = ArrayHelper::remove($button, 'name');
-        $type = ArrayHelper::getValue($button, 'type', false);
-        $url = ArrayHelper::getValue($button, 'url', false);
-        $name = Yii::t($this->t, $name);
-        if($type === false) {
-        	return Html::a($name, $url, $button);
-        } else {
-        	return Html::button($name, $button);
-        }
+        $tag = ArrayHelper::remove($button, 'tag', 'button');
+        ArrayHelper::remove($button, 'active');
+        $content = ArrayHelper::remove($button, 'content', '');
+        return Html::tag($tag, $content, $button);
     }
 
-	public function run()
-	{
-	    echo Html::endTag('div');
-	    ActiveForm::end();
-        echo Html::endTag('div');
-        echo Html::endTag('div');
-        return ob_get_clean();
-	}
 
 }
