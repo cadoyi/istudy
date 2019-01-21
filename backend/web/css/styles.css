@@ -76,10 +76,14 @@ ul, li {
 
 .form-tab > li {
     background-color: #f1f1f1;
+    padding: 0;
 }
 .form-tab > .tab-title {
-    background-color: #f1f1f1;
     font-weight: 900;
+    padding: 10px 15px;
+    color: #fcf4f4;
+    background-color: #337ab7;
+    border: 1px solid #2e6da4;
 }
 .form-tab > li.active {
     background-color: #fff;
@@ -98,6 +102,7 @@ ul, li {
 .form-tab > li > a {
     display: block;
     color: #000;
+    padding: 10px 15px;
 }
 .form-tab > li > a:hover,
 .form-tab > li > a:focus {

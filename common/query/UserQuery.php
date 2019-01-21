@@ -21,16 +21,5 @@ class UserQuery extends ActiveQuery
     }
 
 
-    /**
-     * 过滤 is_deleted 参数.
-     * 
-     * @param  boolean $bool 
-     * @return $this
-     */
-    public function filterDeleted($bool = true)
-    {
-        return $this->_filterBoolean('is_deleted', $bool);
-    }
-
     
 }

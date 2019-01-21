@@ -1,6 +1,6 @@
 <?php
-use yii\grid\GridView;
-use yii\grid\ActionColumn;
+use backend\grid\GridView;
+use backend\grid\ActionColumn;
 use yii\helpers\Html;
 use yii\helpers\Url;
 $this->title = '管理员列表';
@@ -9,10 +9,8 @@ $this->title = '管理员列表';
 <?= GridView::widget([
     'id' => 'admin_list',
     'filterModel'  => $searchModel,
-    'dataProvider' => $dataProvider,
-    'tableOptions' => [
-        'class' => ['table', 'table-bordered', 'table-hover', 'table-stripped', 'table-responsive', 'table-gray'],
-    ],                                                                                                           
+    
+    'dataProvider' => $dataProvider,                                                                                                       
     'columns' => [
         [
             'attribute' => 'id',
@@ -56,7 +54,11 @@ $this->title = '管理员列表';
         ],
         [
            'class' => ActionColumn::className(),
-           'header' => Yii::t('admin', 'Action'),
+            'visibleButtons' => [
+                'delete' => function($model, $key, $index) {
+                    return $model->canDelete();
+                },
+            ],
         ],
     ],
 ]) ?>

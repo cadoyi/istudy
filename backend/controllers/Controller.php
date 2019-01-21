@@ -19,17 +19,16 @@ class Controller extends WebController
      */
     public function behaviors()
     {
-        $parent = parent::behaviors();
-        $child = [];
+        $behaviors = parent::behaviors();
         if($login = $this->login()) {
-            $child['login'] = $login;
+            $behaviors['login'] = $login;
         }
 
         if($rbac = $this->rbac()) {
-            $child['rbac'] = $rbac;
+            $behaviors['rbac'] = $rbac;
         }
 
-        return array_merge($parent, $child);
+        return $behaviors;
     }
 
 
@@ -74,7 +73,15 @@ class Controller extends WebController
         return [];
     }
 
-
+    
+    /**
+     * 查找模型
+     * 
+     * @param  integer $id        模型的 id 字段
+     * @param  string  $modelClass 模型的完全类名
+     * @throws yii\web\NotFoundHttpException 
+     * @return $object
+     */
     public function findModel($id, $modelClass)
     {
          $model = $modelClass::findOne($id);
@@ -82,6 +89,18 @@ class Controller extends WebController
             throw new NotFoundHttpException(Yii::t('admin', 'Page not found'));
          }
          return $model;
+    }
+
+
+    public function renderView($model)
+    {
+        $data = $model->toArray();
+        $result = [];
+        foreach($data as $name => $value) {
+            $label = $model->getAttributeLabel($name);
+            $result[$label] = $value;
+        }
+        return $this->asJson($result);
     }
 
 

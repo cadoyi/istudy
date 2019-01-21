@@ -23,6 +23,7 @@ class AdminSearch extends User
         $query = User::find();
         $provider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 1],
         ]);
 
         if($this->load($params) && $this->validate()) {

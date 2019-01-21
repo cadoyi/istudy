@@ -8,6 +8,7 @@ return [
     /******** A ********/
     'Action' => '动作',
     'Admin login' => '管理员登录',
+    'Are you sure you want delete this item?' => '确定要删除这个项目吗?',
     
     /******** B ********/
     'Back' => '返回',
@@ -23,6 +24,7 @@ return [
     "Current user's password" => '当前用户密码',
 
     /******** D ********/
+    'Delete'    => '删除',
     'Dashboard' => '仪表盘',
     /******** E ********/
     'Email address' => '邮件地址',
@@ -60,11 +62,14 @@ return [
     
     /******** U ********/
     'Username' => '用户名',
-    'User' => '用户',
+    'User'     => '用户',
+    'Update'   => '更新',
     'Updated time' => '更新时间',
     'Username or password incorrect' => '用户名或密码不正确',
 
     /******** V ********/
+    'View' => '查看',
+
     /******** W ********/
     'Whether enabled' => '是否已启用',
     'Whether deleted' => '是否已删除',

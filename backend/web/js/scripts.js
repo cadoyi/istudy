@@ -34,6 +34,27 @@ jQuery(function( $ ) {
         addBodyClass();
     });
 
-
+    $(".grid-view").on("click", "a.action-view", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var url = this.href;
+        var k;
+        $.get(url, function(model){
+            var html = '<table class="table table-hover table-stripped table-bordered">'
+            for(k in model) {
+                html += '<tr>';
+                html += '<th>';
+                html += k.toString();
+                html += '</th>';
+                html += '<td>';
+                html += model[k].toString();
+                html += '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $(".modal-body").html(html);
+            $(".modal").modal("show");
+        });
+    });
 
 });

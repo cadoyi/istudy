@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
 use common\models\User;
 use backend\form\AdminSearch;
 use backend\form\UserForm;
@@ -10,6 +12,22 @@ use backend\form\UserForm;
 
 class AdminController extends Controller
 {
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+               'delete' => ['POST'],
+            ],
+        ];
+        $behaviors['ajax'] = [
+            'class' => AjaxFilter::className(),
+            'only' => ['view'],
+        ];
+        return $behaviors;
+    }
 
     public function actionIndex()
     {
@@ -39,16 +57,18 @@ class AdminController extends Controller
         return $this->render('edit', compact('model'));
     }
 
+
+
     public function actionView($id)
     {
         $model = $this->findModel($id, User::className());
-        return $this->asJson($model);
-        //return $this->render('view', compact('model'));
+        return $this->renderView($model);
     }
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id, UserForm::className());
+        $model->scenario = UserForm::SCENARIO_UPDATE;
         $request = Yii::$app->request;
         if($request->isPost && $model->load($request->post())) {
             if($model->validate()) {
@@ -72,7 +92,6 @@ class AdminController extends Controller
         }
         $this->redirect(['index']);
     }
-
 
 
 }

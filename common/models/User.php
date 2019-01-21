@@ -54,8 +54,6 @@ class User extends ActiveRecord implements IdentityInterface
            [['email'], 'email'],
            [['is_active'], 'default', 'value' => 1],
            [['is_active'], 'boolean'],
-           [['is_deleted'], 'default', 'value' => 0],
-           [['is_deleted'], 'boolean'],
            [['nickname'], 'default', 'value' => function($model, $attribute) {
                 return $model->username;
            }, 'on' => [ static::SCENARIO_CREATE ]],
@@ -142,13 +140,13 @@ class User extends ActiveRecord implements IdentityInterface
 
 
     /**
-     * 可以删除 60 秒内新建立的管理员,但是不能删除超级管理员.
+     * 
      * 
      * @return boolean
      */
     public function canDelete()
     {
-        return ($this->updated_at - $this->created_at) < 60 && $this->id != static::SUPER_ADMIN;
+        return $this->id != static::SUPER_ADMIN;
     }
 
 
