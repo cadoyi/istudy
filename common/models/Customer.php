@@ -35,6 +35,23 @@ class Customer extends ActiveRecord implements IdentityInterface
         return '{{%customer}}';
     }
 
+    public function rules()
+    {
+
+    }
+
+    public function attributeLabels()
+    {
+        return [
+           'id'         => 'ID',
+           'nickname'   => Yii::t('admin', 'Nickname'),
+           'phone'      => Yii::t('admin', 'Mobile phone number'),
+           'is_active'  => Yii::t('admin', 'Enabled'),
+           'created_at' => Yii::t('admin', 'Created time'),
+           'updated_at' => Yii::t('admin', 'Updated time'),
+        ];
+    }
+
 
     /**
      * {@inheritdoc}

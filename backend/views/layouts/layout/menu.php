@@ -16,16 +16,16 @@ use yii\helpers\Html;
             'boot-icon' => 'dashboard',
         ],
         [
-            'label' => Yii::t('admin', 'Role'),
+            'label' => Yii::t('admin', 'Permission'),
             'boot-icon' => 'user',	                
             'items' => [
                 [
-                    'label' => 'create admin',
-                    'url' =>  ['/admin/create'],
+                    'label' => Yii::t('admin', 'User'),
+                	'url' => ['admin/index'],
                 ],
                 [
-                    'label' => 'index',
-                	'url' => ['/admin/index'],
+                    'label' => Yii::t('admin', 'Role'),
+                    'url'   => ['role/index'],
                 ],
             ],
         ],

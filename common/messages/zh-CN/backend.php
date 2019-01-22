@@ -29,6 +29,7 @@ return [
     'Dashboard' => '仪表盘',
     /******** E ********/
     'Email address' => '邮件地址',
+    'Enabled' => '已启用',
 
     /******** F ********/
     /******** G ********/
@@ -41,6 +42,7 @@ return [
     'Logout' => '注销', 
 
     /******** M ********/
+    'Mobile phone number' => '手机号码',
     "My sister's website" => '站点标题',
     /******** N ********/
     'Nickname' => '昵称',
@@ -59,7 +61,8 @@ return [
 
     /******** S ********/
     /******** T ********/
-    'Tag' => '标签',
+    'Tag'        => '标签',
+    'Telephone'  => '电话',
     'This user does not exists' => '这个用户不存在',
     
     /******** U ********/

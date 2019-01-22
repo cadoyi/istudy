@@ -5,9 +5,8 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
-use common\models\User;
+use backend\models\User;
 use backend\form\AdminSearch;
-use backend\form\UserForm;
 
 
 class AdminController extends Controller
@@ -42,8 +41,8 @@ class AdminController extends Controller
 
     public function actionCreate()
     {
-        $model = new UserForm();
-        $model->scenario = UserForm::SCENARIO_CREATE;
+        $model = new User();
+        $model->scenario = User::SCENARIO_CREATE;
         $request = Yii::$app->request;
         if($request->isPost) {
             if($model->load($request->post()) && $model->validate()) {
@@ -67,8 +66,8 @@ class AdminController extends Controller
 
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id, UserForm::className());
-        $model->scenario = UserForm::SCENARIO_UPDATE;
+        $model = $this->findModel($id, User::className());
+        $model->scenario = User::SCENARIO_UPDATE;
         $request = Yii::$app->request;
         if($request->isPost && $model->load($request->post())) {
             if($model->validate()) {

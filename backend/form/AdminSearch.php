@@ -3,13 +3,11 @@
 namespace backend\form;
 
 use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use common\models\User;
+use backend\models\User;
 
 class AdminSearch extends User
 {
-
+    use Search;
 
     public function rules()
     {
@@ -18,21 +16,17 @@ class AdminSearch extends User
         ];
     }
 
-    public function search($params)
+    protected function _search($success)
     {
-        $query = User::find();
-        $provider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        if($this->load($params) && $this->validate()) {
+        $query = static::find();
+        if($success) {
             $query 
-               -> andFilterWhere(['id' => $this->id, 'is_active' => $this->is_active])
-               -> andFilterWhere(['like', 'username', $this->username ])
-               -> andFilterWhere(['like', 'nickname', $this->nickname ])
-               -> andFilterWhere(['like', 'email', $this->email]);
+            -> andFilterWhere(['id' => $this->id, 'is_active' => $this->is_active])
+            -> andFilterWhere(['like', 'username', $this->username ])
+            -> andFilterWhere(['like', 'nickname', $this->nickname ])
+            -> andFilterWhere(['like', 'email', $this->email]);            
         }
-        return $provider;
+        return $query;
     }
 
 }
