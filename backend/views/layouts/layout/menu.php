@@ -1,6 +1,6 @@
 <?php
 
-use yii\widgets\Menu;
+use backend\widgets\Menu;
 use yii\helpers\Html;
 ?>
 
@@ -9,20 +9,15 @@ use yii\helpers\Html;
         'id' => 'menus',
         'class' => ['list-unstyled', 'menus'],
     ],
-    'submenuTemplate' => "\n<ul class=\"list-unstyled\">\n{items}\n</ul>\n",
-    'firstItemCssClass' => 'first',
-    'lastItemCssClass'  => 'last',
-    'encodeLabels' => true,
-    'activateParents' => true,
     'items' => [
         [
             'label' => Yii::t('admin','Dashboard'),
-            'url' => ['dashboard/index'],
-            'template' => '<a title="{label}" href="{url}"><span class="glyphicon glyphicon-home"></span> {label}</a>',
+            'url' => ['site/index'],
+            'boot-icon' => 'dashboard',
         ],
         [
             'label' => Yii::t('admin', 'Role'),
-            'template' => '<span class="glyphicon glyphicon-user"></span> {label}<span class="caret"></span>',	                
+            'boot-icon' => 'user',	                
             'items' => [
                 [
                     'label' => 'create admin',
@@ -36,17 +31,17 @@ use yii\helpers\Html;
         ],
         [
             'label' => Yii::t('admin', 'Customer'),
-            'template' => '<a title="{label}" href="{url}"><span class="glyphicon glyphicon-home"></span> {label}</a>',
+            'icon'  => 'user',
             'url' => ['customer/index'],
         ],
         [
             'label' => Yii::t('admin', 'Category'),
-            'template' => '<a title="{label}" href="{url}"><span class="glyphicon glyphicon-home"></span> {label}</a>',
+            'icon' => 'home',
             'url' => ['category/index'],
         ],
         [
             'label' => Yii::t('admin', 'Post'),
-            'template' => '<a title="{label}" href="{url}"><span class="glyphicon glyphicon-home"></span> {label}</a>',
+            'icon' => 'home',
             'url' => ['post/index'],
         ],
 

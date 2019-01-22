@@ -9,6 +9,7 @@ return [
     'Action' => '动作',
     'Admin login' => '管理员登录',
     'Are you sure you want delete this item?' => '确定要删除这个项目吗?',
+    'Are you sure you want to logout?' => '确定要注销吗?',
     
     /******** B ********/
     'Back' => '返回',
@@ -36,10 +37,11 @@ return [
     /******** J ********/
     /******** K ********/
     /******** L ********/
-    'Login' => '登录',
+    'Login'  => '登录',
+    'Logout' => '注销', 
 
     /******** M ********/
-    "My sister's website" => '我姐的站点',
+    "My sister's website" => '站点标题',
     /******** N ********/
     'Nickname' => '昵称',
 

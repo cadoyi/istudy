@@ -1,130 +1,244 @@
+body {
+    min-width: 768px;
+}
 .page {
     height: 100%;
     position: relative;
 }
-.page-head {
-    position: relative;
-    height: 50px;
-    z-index: 200;
-}
 
+/*************************
+ * page menu bar 
+ *************************/
 .page-menus {
-    width: 220px;
-    height: 100%;
     position: absolute;
     left: 0;
     top: 0;
     z-index: 100;
-    padding-top: 50px;
     border-right: 1px solid #777;
-    overflow: hidden;
+    background-color: #2a3f54;
+    height: 100%;
+    width: 4rem;
+    font-size: 1rem;
+    text-align: center;
 }
+
+.page-menus.full {
+    width: 220px;
+    text-align: left;
+}
+
+.page-menus .brand {
+    height: 4rem;
+    padding: .5rem;
+}
+
+.page-menus.full .brand {
+    height: auto;
+    padding: 0;
+}
+
+.page-menus .brand > a.website_name {
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background-color: #fff;
+    color: red;
+}
+.page-menus.full .brand > a.website_name {
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: #fff;
+}
+
+.page-menus .brand .text-label {
+    display: none;
+}
+.page-menus.full .brand .text-label {
+    display: inline-block;
+}
+
+
+.page-menus li span.glyphicon,
+.page-menus li span.text-label {
+    display: block;
+}
+
+.page-menus.full li span.glyphicon,
+.page-menus.full li span.text-label {
+    display: inline;
+}
+
+.page-menus li span.text-label {
+    font-size: .7rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+}
+.page-menus.full li span.text-label {
+    font-size: 1rem;
+}
+
+
 
 
 .page-menus .glyphicon {
-    margin-right: .5rem;
+    font-size: 1.5rem;
+}
+.page-menus.full .glyphicon {
+    font-size: 1rem;
 }
 
+.page-menus a {
+    display: block;
+    padding-left: 0;
+    padding: .5rem 0;
+}
+.page-menus a:hover,
+.page-menus a:focus
+{
+    background-color: #3E5367;
+}
+
+.page-menus.full a {
+    padding: 0 1rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    font-size: 1rem;
+}
+
+
+
+.page-menus .has-childs .glyphicon-menu-down {
+    display: none;
+}
+.page-menus.full .has-childs .glyphicon-menu-down {
+    display: inline-block;
+    float: right;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    font-size: .7rem;
+}
+
+
+
+.page-menus .menus li {
+    min-height: 2.5rem;
+    line-height: 2.5rem;
+    position: relative;
+}
+
+.page-menus .menus li > ul {
+    display: none;
+    box-shadow: inset 0px 1px 6px 1px #969698;
+}
+.page-menus .menus li.opened > a {
+    text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
+    background: linear-gradient(#334556, #2C4257), #2A3F54;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
+}
+.page-menus .menus ul.open {
+    display: block;
+    width: 10rem;
+    position: absolute;
+    left: 4rem;
+    top: 50%;
+    background-color: #2A3F54;
+    margin-left: -1px;
+    padding: .25rem .5rem;
+    border-radius: 0 4px 4px 0;
+
+}
+.page-menus.full .menus ul.open {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: initial;
+    border-top: 1px solid #1d3043;
+    border-bottom: 1px solid #556170;
+}
+.page-menus .menus ul.open a:hover,
+.page-menus .menus ul.open a:focus {
+    background-color: #3E5367;
+}
+
+
+/**************************
+ * page head bar
+ **************************/
+.page-head {
+    position: relative;
+    z-index: 200;
+    background-color: #f1f1f1; 
+    border-bottom: 1px solid #ddd; 
+    border-right: 1px solid #ddd;
+    height: 3rem;
+}
+.page-head .switch-menu {
+    width: 3rem;
+    padding: .5rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    text-align: center;
+}
+.message-box .messages {
+    padding: .5rem;
+}
+.message-box .messages > li {
+   background-color: #f1f1f1;
+   min-height: 2.5rem;
+   border-bottom: 3px solid #fff;
+   padding: 0;
+}
+.message-box .messages span.subject,
+.message-box .messages span.message {
+    display: block;
+}
+.message-box .messages span.subject:before,
+.message-box .messages span.subject:after {
+    display: block;
+    content: " ";
+    clear:both;
+}
+.message-box .messages span.subject > span {
+    display: block;
+    float: left;
+    width: 50%;
+}
+.message-box .messages span.subject .sendtime {
+    text-align: right;
+}
+.message-box .messages > li.last {
+    text-align: center;
+    line-height: 2.5rem;
+    font-size: .9rem;
+}
+.message-box .messages > li.last > a {
+    height: 2.5rem;
+    line-height: 2.5rem;
+}
+.message-box .messages > li.last > a span {
+    display: inline-block;
+}
+.message-box .messages .message {
+    padding: .5rem 0;
+}
+
+
+/****************************
+ * page content
+ ****************************/
 .page-content {
     position: absolute;
     left: 220px;
     top: 0;
     right: 0;
-    padding-top: 50px;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
 }
-
-.page-menus .main-menubar {
-    height: 100%;
+.page-content.full {
+    left: 4rem;
 }
 
-.page-menus .menus {
-    height: 100%;
-    overflow: auto;
-}
-
-.page-menus .menus li {
-    cursor: pointer;
-    font-size: 1rem;
-    padding-left: 1rem;
-    border-bottom: 1px solid #080808;
-    min-height: 2.5rem;
-    line-height: 2.5rem;
-}
-.page-menus .menus li.first {
-    border-top: 1px solid #080808;
-}
-.page-menus .menus li li.last {
-    border-bottom: 0;
-}
-.page-menus .menus li.active {
-    font-weight: 700;
-    background-color: #555;
-}
-.page-menus .menus li:hover {
-    background-color: #555;
-}
-
-.page-menus .menus li > a {
-    display: block;
-    margin-left: -1rem;
-    padding-left: 1rem;
-}
-
-.page-menus .menus li > a:hover {
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.page-menus .menus li > ul {
-    display: none;
-    margin-left: -1rem;
-    padding-left: 1rem;
-    background-color: #000;
-}
-
-
-.page-menus .switcher {
-    display: none;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    padding-left: 1rem;
-    font-size: .8rem;
-}
-
-body.b-xs .page-menus .switcher {
-    display: block;
-}
-
-
-body.b-xs .page-menus.menus-hide {
-    height: auto;
-    width: 3rem;
-}
-
-body.b-xs .page-menus.menus-hide .switcher {
-    display: block;
-    height: 1.5rem;
-    width: 1.5rem;
-    line-height: 1.5rem;   
-}
-
-body.b-xs .page-menus.menus-hide .main-menubar {
-    height:1.5rem;
-}
-
-body.b-xs .page-content {
-    left: 0;
-}
-
-body.b-xs .page-head .navbar-form {
-    margin: 0;
-}
-body.b-xs .page-head .navbar-nav {
-    margin-bottom: 0;
-}
 .page-content-container {
     padding-top: 2rem;
     height: 100%;

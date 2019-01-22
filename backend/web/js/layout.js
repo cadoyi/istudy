@@ -1,40 +1,25 @@
 
 jQuery(function($){
+    $('#menus li > ul').each(function() {
+        $(this).addClass('child-items');
+        $(this).parent().addClass('has-childs');
+    });
 
-
-    $('#menus').on('click', 'li:has(ul)', function(e){
+    $('#menus').on('click', 'li.has-childs', function(e){
         var ul = $(this).children('ul');
         if(ul.length) {
-            if(this == e.target) {
-                ul.toggle();
+            if(this == e.target || this == $(e.target).closest('li').get(0)) {
+                ul.toggleClass('open');
+                $(this).toggleClass('opened');
                 return false;
-            }   
+            }
         }
     });
 
-
-    $('#menu_switcher').click(function(e){
-           var
-            left = 'glyphicon-arrow-left',
-            right = 'glyphicon-arrow-right',
-            showText = '',
-            hideText = '隐藏',
-            $this = $(this),
-            glyphicon = $this.find('.glyphicon'),
-            texter = $this.find('.switcher-text'),
-            pm = $this.closest('.page-menus');
-
-        if(pm.hasClass('menus-hide')) {  // 显示隐藏
-            glyphicon.addClass(left).removeClass(right);
-            texter.text(hideText);
-            pm.removeClass('menus-hide');
-           
-        } else {  //显示呼出界面
-            glyphicon.addClass(right).removeClass(left);
-            texter.text(showText);
-            pm.addClass('menus-hide');
-        }
+    $('#switchmenu').on('click', function(e){
+        $('#page_menus').toggleClass('full');
+        $('#page_content').toggleClass('full');
+        $('body').toggleClass('menu-full');
         return false;
     });
-
 });
