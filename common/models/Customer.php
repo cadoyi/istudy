@@ -3,8 +3,10 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
 use common\query\CustomerQuery;
+use common\helpers\Form;
 
 /**
  * 客户表
@@ -21,11 +23,23 @@ use common\query\CustomerQuery;
 class Customer extends ActiveRecord implements IdentityInterface
 {
 
-    const STATUS_ENABLED  = 1;
-    const STATUS_DISABLED = 0;
-
     protected $_accessToken;
 
+    public $password;
+
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['timestamp'] = [
+            'class' => TimestampBehavior::className(),
+        ];
+        return $behaviors;
+    }
 
     /**
      * {@inheritdoc}
@@ -35,20 +49,35 @@ class Customer extends ActiveRecord implements IdentityInterface
         return '{{%customer}}';
     }
 
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
     public function rules()
     {
-
+        return [
+            [['phone'], 'match', 'pattern' => '/^1\d{10}$/'],
+            [['nickname'], 'string', 'length' => [5,32]],
+            [['is_active'], 'default', 'value' => Form::BOOLEAN_TRUE ],
+            [['is_active'], 'in', 'range' => [Form::BOOLEAN_TRUE, Form::BOOLEAN_FALSE]],
+        ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
-           'id'         => 'ID',
-           'nickname'   => Yii::t('admin', 'Nickname'),
-           'phone'      => Yii::t('admin', 'Mobile phone number'),
-           'is_active'  => Yii::t('admin', 'Enabled'),
-           'created_at' => Yii::t('admin', 'Created time'),
-           'updated_at' => Yii::t('admin', 'Updated time'),
+           'id'               => 'ID',
+           'nickname'         => Yii::t('admin', 'Nickname'),
+           'phone'            => Yii::t('admin', 'Mobile phone number'),
+           'is_active'        => Yii::t('admin', 'Enabled'),
+           'created_at'       => Yii::t('admin', 'Created time'),
+           'updated_at'       => Yii::t('admin', 'Updated time'),
+           'password'         => Yii::t('admin', 'Password'),
+           'confirm_password' => Yii::t('admin', 'Confirm password'),
+           'email'            => Yii::t('admin', 'Email address'),
         ];
     }
 
@@ -341,6 +370,19 @@ class Customer extends ActiveRecord implements IdentityInterface
     {
         return $this -> hasMany(Post::className(), ['id' => 'post_id'])
                      -> via('favorites');
+    }
+
+
+    public function fields()
+    {
+        $fields = array_filter(parent::fields(), function($value, $key) {
+            if($key == 'password_hash' || $value == 'password_hash') {
+                return false;
+            }
+            return true;
+        }, ARRAY_FILTER_USE_BOTH);
+        
+        return $fields;
     }
 
 

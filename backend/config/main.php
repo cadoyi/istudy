@@ -68,7 +68,7 @@ return [
                     'css' => [
                         'css/styles.css',
                         'css/layout.css',
-                        'fontawesome/css/font-awesome.css',
+                        'css/font-awesome.css',
                     ],
                     'depends' => [
                         'yii\bootstrap\BootstrapPluginAsset',

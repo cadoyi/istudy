@@ -13,11 +13,11 @@ use yii\helpers\Html;
         [
             'label' => Yii::t('admin','Dashboard'),
             'url' => ['site/index'],
-            'boot-icon' => 'dashboard',
+            'icon' => 'dashboard',
         ],
         [
             'label' => Yii::t('admin', 'Permission'),
-            'boot-icon' => 'user',	                
+            'icon' => 'users',	                
             'items' => [
                 [
                     'label' => Yii::t('admin', 'User'),
@@ -34,17 +34,6 @@ use yii\helpers\Html;
             'icon'  => 'user',
             'url' => ['customer/index'],
         ],
-        [
-            'label' => Yii::t('admin', 'Category'),
-            'icon' => 'home',
-            'url' => ['category/index'],
-        ],
-        [
-            'label' => Yii::t('admin', 'Post'),
-            'icon' => 'home',
-            'url' => ['post/index'],
-        ],
-
     ],
 
 ]) ?>

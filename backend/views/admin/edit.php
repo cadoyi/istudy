@@ -23,7 +23,7 @@ $container = FormContainer::begin([
           'target'   => 'form2',
        ],       
    ],
-   'formId' => 'edit_form',
+   'form' => 'edit_form',
 ]); 
 $form = ActiveForm::begin(['id' => 'edit_form']);
 ?>

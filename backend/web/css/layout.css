@@ -59,11 +59,13 @@ body {
 
 
 .page-menus li span.glyphicon,
+.page-menus li span.ifont,
 .page-menus li span.text-label {
     display: block;
 }
 
 .page-menus.full li span.glyphicon,
+.page-menus.full li span.ifont,
 .page-menus.full li span.text-label {
     display: inline;
 }
@@ -80,10 +82,12 @@ body {
 
 
 
-.page-menus .glyphicon {
+.page-menus .glyphicon,
+.page-menus .ifont {
     font-size: 1.5rem;
 }
-.page-menus.full .glyphicon {
+.page-menus.full .glyphicon,
+.page-menus.full .ifont {
     font-size: 1rem;
 }
 

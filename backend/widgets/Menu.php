@@ -33,12 +33,19 @@ class Menu extends BaseMenu
     protected function renderItem($item)
     {
         $icon = '';
-        if(isset($item['boot-icon'])) {
-            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-{$item['boot-icon']}"]);
+        if(isset($item['glyphicon'])) {
+            $icon = Html::tag('span', '', ['class' => "ifont glyphicon glyphicon-{$item['glyphicon']}"]);
         } elseif(isset($item['icon'])) {
-            $icon = Html::tag('span', '', ['class' => "glyphicon icon-{$item['icon']}"]);
+            $icon = Html::tag('span', '', ['class' => "ifont fa fa-{$item['icon']}"]);
         } elseif(isset($item['fonts'])) {
-            $icon = Html::tag('span', '', ['class' => $item['font']]);
+            $fonts = $item['fonts'];
+            if(is_string($fonts)) {
+                $fonts = preg_split('/\s+/', $fonts, 0, PREG_SPLIT_NO_EMPTY);
+            }
+            if(!in_array('ifont', $fonts)) {
+                array_shift($fonts, 'ifont');
+            }
+            $icon = Html::tag('span', '', ['class' => $item['fonts']]);
         }
 
         if (isset($item['url'])) {

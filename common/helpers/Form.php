@@ -7,6 +7,8 @@ use yii\helpers\Html;
 
 class Form
 {
+    const BOOLEAN_TRUE  = 1;
+    const BOOLEAN_FALSE = 0;
 
 	public static function t($message)
 	{
@@ -22,8 +24,8 @@ class Form
            list($yes, $no) = $active;
         }
         return [
-               '1' => Yii::t('web', static::t($yes)),
-               '0' => Yii::t('web', static::t($no)),
+            static::BOOLEAN_TRUE   => Yii::t('web', static::t($yes)),
+            static::BOOLEAN_FALSE  => Yii::t('web', static::t($no)),
         ];
     }
 

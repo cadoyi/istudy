@@ -52,7 +52,7 @@ class FormContainer extends Widget
 
     public $buttonTemplate = "{commit} {back}";
 
-    public $formId = 'edit_form';
+    public $form = 'edit_form';
 
 	public function init()
 	{
@@ -78,7 +78,7 @@ class FormContainer extends Widget
             'tag'         => 'button',
             'type'        => 'submit',
             'data'        =>  [
-                'form'   => $this->formId,
+                'form'   => $this->form,
                 'method' => 'post',
             ],
             'class' => 'btn btn-sm btn-primary',
