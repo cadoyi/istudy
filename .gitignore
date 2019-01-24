@@ -45,4 +45,6 @@ phpunit.phar
 /console/runtime/*
 /backend/web/assets/*
 /frontend/web/assets/*
+/media/*
+!/media/.gitkeep
 
