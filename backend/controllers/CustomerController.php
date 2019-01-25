@@ -5,9 +5,11 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
+use yii\base\Model;
 use backend\form\CustomerSearch;
-use backend\models\Customer;
+use common\models\Customer;
 use common\models\CustomerProfile;
+use common\models\CustomerEmail;
 
 class CustomerController extends Controller
 {
@@ -15,17 +17,18 @@ class CustomerController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['verbs'] = [
-            'class' => VerbFilter::className(),
-            'actions' => [
-               'delete' => ['post'],
+        return array_merge($behaviors, [
+           'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ]
             ],
-        ];
-        $behaviors['ajax'] = [
-            'class' => AjaxFilter::className(),
-            'only' => ['view'],
-        ];
-        return $behaviors;
+            'ajax' => [
+                'class' => AjaxFilter::className(),
+                'only' => ['view'],
+            ],
+        ]);
     }
 
     public function actionIndex()
@@ -42,23 +45,57 @@ class CustomerController extends Controller
 
     public function actionCreate()
     {
-        $customer = new Customer([
-            'scenario' => Customer::SCENARIO_CREATE,
-        ]);
+        $customer = new Customer(['scenario' => Customer::SCENARIO_CREATE]);
         $profile = new CustomerProfile();
+        $email = CustomerEmail::instance();
 
-        return $this->render('edit', ['model' => $customer, 'profile' => $profile]);
+        $request = Yii::$app->request;
+
+        if($request->isPost) {
+            $post = $request->post();
+            if($customer->load($post) && $profile->load($post) && $email->load($post)) {
+                if(Model::validateMultiple([$customer, $profile, $email])) {
+                    Customer::getDb()->transaction(function() use ($customer, $profile, $email) {
+                        $customer->save(false);
+                        $profile->setCustomer($customer);
+                        $profile->save(false);
+                        $email->setPrimaryCustomer($customer);
+                        $email->save(false);
+                    });
+                    return $this->redirect(['index']);
+                }
+            }
+        }
+        $customer->cleanPassword();
+        return $this->render('edit', compact('customer', 'profile', 'email'));
     }
-
 
     public function actionView($id)
     {
-
+        $customer = Customer::find()->where(['id' => $id])
+           -> with('emails', 'profile')
+           -> one();
+        if(!$customer) {
+            throw new \yii\web\NotFoundHttpException('page not found');
+        }
+        return $this->asJson($customer->toArray());
     }
+
+
+
 
     public function actionUpdate($id)
     {
+        $customer = Customer::find()->where(['id' => $id])
+           -> with('primaryEmail', 'profile')
+           -> one();
+        if(!$customer) {
+            throw new \yii\web\NotFoundHttpException('page not found');
+        }
+        $email = $customer->primaryEmail;
+        $profile = $customer->profile;
 
+        return $this->render('edit', compact('customer', 'profile', 'email'));       
     }
 
     public function actionDelete($id)

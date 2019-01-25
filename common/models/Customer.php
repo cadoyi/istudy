@@ -27,6 +27,8 @@ class Customer extends ActiveRecord implements IdentityInterface
 
     public $password;
 
+    public $password_confirm;
+
 
     /**
      * {@inheritdoc}
@@ -34,11 +36,11 @@ class Customer extends ActiveRecord implements IdentityInterface
      */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $behaviors['timestamp'] = [
-            'class' => TimestampBehavior::className(),
-        ];
-        return $behaviors;
+        return array_merge(parent::behaviors(), [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+            ],
+        ]);
     }
 
     /**
@@ -55,12 +57,35 @@ class Customer extends ActiveRecord implements IdentityInterface
      */
     public function rules()
     {
+        $passwordError = Yii::t('admin', 'Invaild password format');
         return [
-            [['phone'], 'match', 'pattern' => '/^1\d{10}$/'],
+            [['password', 'password_confirm'], 'required', 'on' => [ static::SCENARIO_CREATE ]],
             [['nickname'], 'string', 'length' => [5,32]],
-            [['is_active'], 'default', 'value' => Form::BOOLEAN_TRUE ],
-            [['is_active'], 'in', 'range' => [Form::BOOLEAN_TRUE, Form::BOOLEAN_FALSE]],
+            [['phone'], 'match', 'pattern' => '/^1\d{10}$/'],
+            [['is_active'], 'default', 'value' => 1],
+            [['is_active'], 'boolean'],
+            [['password'], 'string', 
+                'length' => [5, 32],
+                'tooShort' => $passwordError,
+                'tooLong'  => $passwordError,
+                'message'  => $passwordError,
+            ],
+            [['password_confirm'], 'compare', 
+             'compareAttribute' => 'password',
+             'when' => function() {
+                  return !empty($this->password);
+              },
+              'whenClient' => 'function(attribute, value) {
+                  return $("#customer-password").val().trim() != "";
+              }',
+            ],
+            [['nickname', 'phone'], 'default', 'value' => null],
         ];
+    }
+
+    public function formName()
+    {
+        return 'customer';
     }
 
     /**
@@ -76,9 +101,27 @@ class Customer extends ActiveRecord implements IdentityInterface
            'created_at'       => Yii::t('admin', 'Created time'),
            'updated_at'       => Yii::t('admin', 'Updated time'),
            'password'         => Yii::t('admin', 'Password'),
-           'confirm_password' => Yii::t('admin', 'Confirm password'),
+           'password_confirm' => Yii::t('admin', 'Confirm password'),
            'email'            => Yii::t('admin', 'Email address'),
         ];
+    }
+
+
+    public function beforeSave($insert)
+    {
+        if($this->password) {
+            $this->setPassword($this->password);
+        }
+        if($insert) {
+            $this->generateAuthKey();
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function cleanPassword()
+    {
+        $this->password = null;
+        $this->password_confirm = null;
     }
 
 
@@ -88,6 +131,25 @@ class Customer extends ActiveRecord implements IdentityInterface
     public static function find()
     {
         return Yii::createObject(CustomerQuery::className(), [ get_called_class() ]);
+    }
+
+
+    public function fields()
+    {
+        return [
+            'id',
+            'nickname',
+            'phone',
+            'is_active',
+            'created_at' => function($model, $attribute) {
+                return Yii::$app->formatter->asDatetime($model->$attribute);
+            },
+            'updated_at' => function() {
+                return Yii::$app->formatter->asDatetime($this->updated_at);
+            },
+            'profile',
+            'emails',
+        ];
     }
 
 
@@ -280,6 +342,9 @@ class Customer extends ActiveRecord implements IdentityInterface
         }
         
     }
+
+
+
     
 
     /**
@@ -370,19 +435,6 @@ class Customer extends ActiveRecord implements IdentityInterface
     {
         return $this -> hasMany(Post::className(), ['id' => 'post_id'])
                      -> via('favorites');
-    }
-
-
-    public function fields()
-    {
-        $fields = array_filter(parent::fields(), function($value, $key) {
-            if($key == 'password_hash' || $value == 'password_hash') {
-                return false;
-            }
-            return true;
-        }, ARRAY_FILTER_USE_BOTH);
-        
-        return $fields;
     }
 
 

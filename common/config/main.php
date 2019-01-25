@@ -32,9 +32,10 @@ return [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',
                     'fileMap' => [
-                        'admin' => 'backend.php',
-                        'front'   => 'frontend.php',
-                        'web'    => 'common.php',
+                        'all'     => 'all.php',
+                        'admin'   => 'all.php',    // @deprecated
+                        'front'   => 'all.php',    // @deprecated
+                        'web'     => 'all.php',    // @deprecated
                     ],
                 ],
             ],

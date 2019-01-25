@@ -37,20 +37,41 @@ jQuery(function( $ ) {
     $(".grid-view").on("click", "a.action-view", function(e){
         e.preventDefault();
         e.stopPropagation();
-        var url = this.href;
-        var k;
-        $.get(url, function(model){
-            var html = '<table class="table table-hover table-stripped table-bordered">'
+        var tr = function(k,v) {
+            return '<tr><th>' + k.toString() + '</th><td>' + v + '</td></tr>';
+        }
+        var mtrs = function(last) {
+            var html = '';
+            $.each(last, function(index, model){
+                html += '<tr><td colspan="2" style="background-color:#ddd;">&nbsp;</td></tr>';
+                html += trs(model);
+            });
+            return html;
+        }
+        var trs = function(model) {
+            var k, last = [], arr = [], html = '';
             for(k in model) {
-                html += '<tr>';
-                html += '<th>';
-                html += k.toString();
-                html += '</th>';
-                html += '<td>';
-                html += model[k].toString();
-                html += '</td>';
-                html += '</tr>';
+                var v = model[k];
+                if($.isPlainObject(v)) {
+                    last.push(v);
+                    continue;
+                } else if($.isArray(v)) {
+                    arr.push(v);
+                    continue;
+                }
+                html += tr(k,v);
             }
+            html += mtrs(last);
+            $.each(arr, function(_, a) {
+                html += mtrs(a);
+            });
+            return html;
+        }
+
+        $.get(this.href).then(function(model){
+            var html = '<table class="table table-hover table-stripped table-bordered">';
+            html += trs(model);
+
             html += '</table>';
             $(".modal-body").html(html);
             $(".modal").modal("show");

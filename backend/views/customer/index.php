@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Html;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
 ?>
@@ -8,14 +9,13 @@ use backend\grid\ActionColumn;
   	 'dataProvider' => $dataProvider,
      'columns' => [
         'id',
+        'email',
         'nickname',
         'phone',
         'is_active:boolean',
         'created_at:datetime',
-        'updated_at:datetime',
         [
             'class' => ActionColumn::className(),
-
         ],
      ],
   ])?>

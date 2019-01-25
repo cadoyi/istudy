@@ -3,14 +3,14 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use common\helpers\Form;
-use backend\models\Customer;
+use common\models\Customer;
 use backend\widgets\FormContainer;
 use backend\widgets\ImageField;
 ?>
 <?php
 /**
  * @var  $this yii\web\View
- * @var  $model backend\models\Customer
+ * @var  $profile backend\models\Customer
  * @var  $profile common\models\Profile
  */
 ?>
@@ -37,16 +37,16 @@ use backend\widgets\ImageField;
    ]);
 ?>
    <div id="customer_base_info" class="tab-target">
-       <?php if($model->scenario == Customer::SCENARIO_CREATE): ?>
-           <?= $form->field($model, 'email') ?>
-       <?php endif; ?>
-       <?= $form->field($model, 'nickname') ?>
-       <?= $form->field($model, 'phone') ?>
-       <?= $form->field($model, 'is_active')->dropDownList(Form::statusList()) ?>
+       <?php //if($customer->scenario == Customer::SCENARIO_CREATE): ?>
+           <?= $form->field($email, 'email') ?>
+       <?php //endif; ?>
+       <?= $form->field($customer, 'nickname') ?>
+       <?= $form->field($customer, 'phone') ?>
+       <?= $form->field($customer, 'is_active')->dropDownList(Form::statusList()) ?>
    </div>
    <div id="customer_password_info" class="tab-target">
-       <?= $form->field($model, 'password')->passwordInput() ?>
-       <?= $form->field($model, 'confirm_password')->passwordInput() ?>
+       <?= $form->field($customer, 'password')->passwordInput() ?>
+       <?= $form->field($customer, 'password_confirm')->passwordInput() ?>
    </div>
    <div id="customer_profile_info" class="tab-target">
         <?= $form->field($profile, 'username') ?>
@@ -56,7 +56,11 @@ use backend\widgets\ImageField;
         <?= $form->field($profile, 'qq') ?>
         <?= $form->field($profile, 'sex')->dropDownList(Form::booleanList(['male', 'female']), ['prompt' => '']) ?>
         <?= $form->field($profile, 'dob') ?>
-        <?= $form->field($profile, 'avatorImage')->widget(ImageField::className()) ?>
+        <?= $form->field($profile, 'avatorImage')
+           ->widget(ImageField::className(), [
+               'url' => $profile->getAvatorUrl(true),
+           ]);
+        ?>
         <?= $form->field($profile, 'city') ?>
         <?= $form->field($profile, 'note')->textarea() ?>
    </div>

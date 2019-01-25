@@ -3,7 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Url;
 use common\helpers\Form;
+use common\behaviors\UploadBehavior;
 
 
 class CustomerProfile extends ActiveRecord
@@ -22,6 +24,20 @@ class CustomerProfile extends ActiveRecord
     public function formName()
     {
         return 'profile';
+    }
+
+    public function behaviors()
+    {
+         $behaviors = parent::behaviors();
+         return array_merge($behaviors, [
+             'avator' => [
+                 'class' => UploadBehavior::className(),
+                 'attribute' => 'avatorImage',
+                 'targetAttribute' => 'avator',
+                 'path' => 'customer',
+                 'absolutePath' => '@media/customer',
+             ],
+         ]);
     }
 
 
@@ -46,6 +62,10 @@ class CustomerProfile extends ActiveRecord
                 })';
            }],
            [['avatorImage'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+           [['url', 'wechat', 'qq', 'sex','dob', 'avator', 'city', 'note', 'sex', 'bio', 'username'], 
+               'default',
+               'value' => null,
+           ], 
         ];
     }
 
@@ -67,6 +87,21 @@ class CustomerProfile extends ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['customer_id'], $fields['id']);
+        $fields['avator'] = function($model, $field) {
+            return $this->getAvatorUrl(true);
+        };
+        return $fields;
+    }
+
+    public function getAvatorUrl($full = false)
+    {
+        return Url::to('@web/media/' . $this->avator, $full);
+    }
+
     public function attributeHints()
     {
         return [
@@ -83,5 +118,11 @@ class CustomerProfile extends ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id'])->inverseOf('profile');
+    }
+
+
+    public function setCustomer($customer)
+    {
+         $this->customer_id = ($customer instanceof Customer) ? $customer->id : $customer;
     }
 }

@@ -20,11 +20,12 @@ class ImageField extends InputWidget
 
     public $imageOptions = ['style' => ['width' => '36px', 'height' => '36px']];
     
-    public $url = 'http://cdn.jjglobal.com/media/wysiwyg/app/home2/21-c-59-m.png';
+    public $url;
+    //public $url;
 
-    public $imageContainerOptions = ['class' => 'pull-left', 'style' => ['padding'=> '0 15px']];
+    public $imageContainerOptions = ['class' => 'pull-left', 'style' => ['padding-right'=> '15px']];
 
-    public $inputContainerOptions = ['class' => 'pull-left', 'style' => ['padding'=> '0 15px']];
+    public $inputContainerOptions = ['class' => 'pull-left', 'style' => ['padding'=> '6px 0']];
 
     public $inputGroupOptions = ['class' => 'input-group'];
 
@@ -36,15 +37,19 @@ class ImageField extends InputWidget
         parent::init();
         $form = $this->field->form;
         if(!isset($form->options['encrypt'])) {
-            $form->options['encrypt'] = 'multipart/form-data';
+            $form->options['enctype'] = 'multipart/form-data';
         }
     }
 
     public function run()
     {
-        $image = Html::tag('div', $this->renderImage(), $this->imageContainerOptions);
         $input = Html::tag('div', $this->renderInput(), $this->inputContainerOptions);
-        return Html::tag('div', $image . $input, ['class' => 'input-group'], $this->inputGroupOptions);
+        if($this->url) {
+            $image = Html::tag('div', $this->renderImage(), $this->imageContainerOptions);
+            $input = $image . $input;
+        }
+        
+        return Html::tag('div', $input, ['class' => 'input-group'], $this->inputGroupOptions);
     }
 
     public function renderInput()

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\query\ActiveQuery;
 
 class ActiveRecord extends \yii\db\ActiveRecord
 {
