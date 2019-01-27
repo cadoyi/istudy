@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 use yii\helpers\Url;
 use common\helpers\Form;
-use common\behaviors\UploadBehavior;
+use core\behaviors\UploadBehavior;
 
 
 class CustomerProfile extends ActiveRecord
@@ -28,8 +28,7 @@ class CustomerProfile extends ActiveRecord
 
     public function behaviors()
     {
-         $behaviors = parent::behaviors();
-         return array_merge($behaviors, [
+         return array_merge(parent::behaviors(), [
              'avator' => [
                  'class' => UploadBehavior::className(),
                  'attribute' => 'avatorImage',
@@ -44,31 +43,35 @@ class CustomerProfile extends ActiveRecord
     public function rules()
     {
         return [
-           [['url'], 'url'],
-           [['wechat'], 'string', 'length' => [5,32]],
-           [['qq'], 'integer'],
-           [['sex'], 'boolean'],
-           [['dob'], 'date',
+            [['url'], 'string', 'on' => [
+                static::SCENARIO_DEFAULT,
+                static::SCENARIO_CREATE,
+                static::SCENARIO_UPDATE,
+            ]],
+            [['url'], 'url'],
+            [['wechat'], 'string', 'length' => [5,32]],
+            [['qq'], 'integer'],
+            [['sex'], 'boolean'],
+            [['dob'], 'date',
                'format' => 'php:Y-m-d',
                'timestampAttributeFormat' => 'php:Y-m-d',
                'timestampAttributeTimeZone' => Yii::$app->timeZone,
-           ],
-           [['dob'], function() {}, 'clientValidate' => function($attribute, $params, $validator) {
+            ],
+            [['dob'], function() {}, 'clientValidate' => function($attribute, $params, $validator) {
                 return 'yii.validation.regularExpression(value, messages, {
                     skipOnEmpty: true,
                     not : false,
                     pattern : /^(19[4-9][0-9]|20[0-9]{2})[-/](0[1-9]|1[0-2])[-/](0[1-9]|1[0-2])$/,
                     message : \'不是有效的日期格式\'
                 })';
-           }],
-           [['avatorImage'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
-           [['url', 'wechat', 'qq', 'sex','dob', 'avator', 'city', 'note', 'sex', 'bio', 'username'], 
+            }],
+            [['avatorImage'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+            [['url', 'wechat', 'qq', 'sex','dob', 'avator', 'city', 'note', 'sex', 'bio', 'username'], 
                'default',
                'value' => null,
            ], 
         ];
     }
-
 
     public function attributeLabels()
     {
@@ -99,7 +102,10 @@ class CustomerProfile extends ActiveRecord
 
     public function getAvatorUrl($full = false)
     {
-        return Url::to('@web/media/' . $this->avator, $full);
+        if($this->avator) {
+            return Url::to('@web/media/' . $this->avator, $full);
+        }
+        return null;
     }
 
     public function attributeHints()

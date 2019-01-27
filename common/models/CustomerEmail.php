@@ -29,10 +29,14 @@ class CustomerEmail extends ActiveRecord
         return '{{%customer_email}}';
     }
 
+    public function formName()
+    {
+        return 'emails';
+    }
+
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, [
+        return array_merge(parent::behaviors(), [
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => false,
@@ -46,9 +50,16 @@ class CustomerEmail extends ActiveRecord
     public function rules()
     {
         return [
+            [['email'], 'string', 'on' => [
+                static::SCENARIO_DEFAULT,
+                static::SCENARIO_CREATE,
+                static::SCENARIO_UPDATE,
+            ]],
             [['email'], 'required'],
             [['email'], 'email'],
-            [['email'], 'unique'],
+            [['email'], 'unique', 'when' => function($model, $attribute) {
+                return $model->isAttributeChanged($attribute);
+            }],
             [['is_primary'], 'default', 'value' => 1],
             [['is_primary'], 'boolean'],
             [['can_login'], 'default', 'value' => function($model, $attribute) {

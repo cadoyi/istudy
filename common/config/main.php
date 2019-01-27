@@ -21,6 +21,7 @@ return [
             'dateFormat'      => 'php:Y-m-d',
             'timeFormat'      => 'php:H:i:s',
             'datetimeFormat'  => 'php:Y-m-d H:i:s',
+            'nullDisplay'     => '',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

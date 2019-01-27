@@ -108,4 +108,8 @@ return [
     /******** Y ********/
     'Yes' => '是',
     /******** Z ********/
+
+    /******** { *********/
+    "{attribute} must be combination of {mixed} or more uppercase and lowercase and digit and other character" => "{attribute}必须包含大小写字母,数字和特殊字符中的{mixed}种以上",
+    
 ];

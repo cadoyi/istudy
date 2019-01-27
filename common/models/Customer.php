@@ -3,10 +3,13 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Html;
 use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
 use common\query\CustomerQuery;
-use common\helpers\Form;
+use core\helpers\Form;
+use core\validators\PhoneValidator;
+use core\validators\PasswordValidator;
 
 /**
  * 客户表
@@ -59,27 +62,30 @@ class Customer extends ActiveRecord implements IdentityInterface
     {
         $passwordError = Yii::t('admin', 'Invaild password format');
         return [
-            [['password', 'password_confirm'], 'required', 'on' => [ static::SCENARIO_CREATE ]],
-            [['nickname'], 'string', 'length' => [5,32]],
-            [['phone'], 'match', 'pattern' => '/^1\d{10}$/'],
+            [['nickname'], 'string', 'on' => [
+                static::SCENARIO_CREATE,
+                static::SCENARIO_UPDATE,
+            ]],
+            [['phone'], PhoneValidator::className()],
+            [['password'], 'string', 'length' => [5, 32]],
+            [['password'], PasswordValidator::className()], 
+            [['password_confirm'], 
+               'compare', 
+               'compareAttribute' => 'password',
+               'when' => function($model, $attribute) {
+                    return !empty($model->password);
+               },
+               'whenClient' => 'function(attribute, value) {
+                   return $("#'.Html::getInputId($this, 'password').'").val().trim() != "";
+               }',
+            ],
             [['is_active'], 'default', 'value' => 1],
             [['is_active'], 'boolean'],
-            [['password'], 'string', 
-                'length' => [5, 32],
-                'tooShort' => $passwordError,
-                'tooLong'  => $passwordError,
-                'message'  => $passwordError,
-            ],
-            [['password_confirm'], 'compare', 
-             'compareAttribute' => 'password',
-             'when' => function() {
-                  return !empty($this->password);
-              },
-              'whenClient' => 'function(attribute, value) {
-                  return $("#customer-password").val().trim() != "";
-              }',
-            ],
             [['nickname', 'phone'], 'default', 'value' => null],
+            [['password', 'password_confirm'], 'required', 'on' => [
+                static::SCENARIO_CREATE,
+            ]],
+
         ];
     }
 

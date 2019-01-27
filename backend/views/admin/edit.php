@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-use common\helpers\Form;
+use core\helpers\Form;
 use backend\widgets\FormContainer;
 use yii\bootstrap\ActiveForm;
 ?>
@@ -36,7 +36,7 @@ $form = ActiveForm::begin(['id' => 'edit_form']);
 </div>
 <div id="form2" class="tab-target">
     <?= $form->field($model, 'password')->passwordInput() ?>
-    <?= $form->field($model, 'confirm_password')->passwordInput() ?>
+    <?= $form->field($model, 'password_confirm')->passwordInput() ?>
 </div>
 <?php 
     ActiveForm::end();

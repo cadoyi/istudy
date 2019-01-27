@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-use common\helpers\Form;
+use core\helpers\Form;
 use common\models\Customer;
 use backend\widgets\FormContainer;
 use backend\widgets\ImageField;
@@ -10,19 +10,22 @@ use backend\widgets\ImageField;
 <?php
 /**
  * @var  $this yii\web\View
- * @var  $profile backend\models\Customer
+ * @var  $customer common\models\Customer
  * @var  $profile common\models\Profile
+ * @var  $email common\models\CustomerEmail
+ * @var array $emails  多个邮件地址 
+ * 
  */
 ?>
 <?php
    FormContainer::begin([
       'tabs' => [
         [
-            'title'  => '基本信息',
+            'title'  => '邮件信息',
             'target' => 'customer_base_info',
         ],
         [
-            'title'  => '密码信息',
+            'title'  => '基本信息',
             'target' => 'customer_password_info',
         ],
         [
@@ -37,14 +40,18 @@ use backend\widgets\ImageField;
    ]);
 ?>
    <div id="customer_base_info" class="tab-target">
-       <?php //if($customer->scenario == Customer::SCENARIO_CREATE): ?>
+       <?php if(isset($email)): ?>
            <?= $form->field($email, 'email') ?>
-       <?php //endif; ?>
+       <?php else: ?>
+           <?php foreach($emails as $index => $email): ?>
+               <?= $form->field($email, "[{$index}]email") ?>
+           <?php endforeach; ?>
+       <?php endif; ?>
+   </div>
+   <div id="customer_password_info" class="tab-target">
        <?= $form->field($customer, 'nickname') ?>
        <?= $form->field($customer, 'phone') ?>
        <?= $form->field($customer, 'is_active')->dropDownList(Form::statusList()) ?>
-   </div>
-   <div id="customer_password_info" class="tab-target">
        <?= $form->field($customer, 'password')->passwordInput() ?>
        <?= $form->field($customer, 'password_confirm')->passwordInput() ?>
    </div>

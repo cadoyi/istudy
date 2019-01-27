@@ -34,6 +34,11 @@ use yii\helpers\Html;
             'icon'  => 'user',
             'url' => ['customer/index'],
         ],
+        [
+            'label' => Yii::t('admin', 'Category'),
+            'icon' => 'subway',
+            'url' => ['category/index'],
+        ],
     ],
 
 ]) ?>

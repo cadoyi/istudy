@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use common\base\WebController;
+use core\web\Controller as WebController;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;

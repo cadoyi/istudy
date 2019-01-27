@@ -3,7 +3,7 @@
 namespace backend\form;
 
 use Yii;
-use backend\models\User;
+use common\models\User;
 
 class AdminSearch extends User
 {

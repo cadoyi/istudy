@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
+use core\validators\PasswordValidator;
 use common\query\UserQuery;
 
 /**
@@ -16,7 +17,6 @@ use common\query\UserQuery;
  * @property string $email 
  * @property string $password_hash 
  * @property boolean $is_active 
- * @property boolean $is_deleted 
  * @property integer $created_at 
  * @property integer $updated_at 
  * 
@@ -29,6 +29,21 @@ class User extends ActiveRecord implements IdentityInterface
     const SUPER_ADMIN = 1;
 
     /**
+     * @var string 密码
+     */
+    public $password;
+
+    /**
+     * @var string 确认密码
+     */
+    public $password_confirm;
+
+    /**
+     * @var string 当前管理员密码
+     */
+    public $current_password;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -36,34 +51,79 @@ class User extends ActiveRecord implements IdentityInterface
         return '{{%admin_user}}';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $behaviors['timestamp'] = TimestampBehavior::className();
-        return $behaviors;
+        return array_merge(parent::behaviors(),[
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+            ],
+        ]);
     }
 
-
+    /**
+     * {@inheritdoc}
+     * @return [type] [description]
+     */
     public function rules()
     {
         return [
-           [['username', 'email'], 'required'],
-           [['nickname'], 'required', 'on' => [ static::SCENARIO_UPDATE ]],
-           [['username', 'email', 'nickname'], 'trim'],
-           [['username'], 'string', 'length' => [5,32]],
-           [['email'], 'email'],
-           [['is_active'], 'default', 'value' => 1],
-           [['is_active'], 'boolean'],
-           [['nickname'], 'default', 'value' => function($model, $attribute) {
-                return $model->username;
-           }, 'on' => [ static::SCENARIO_CREATE ]],
-           [['nickname'], 'string', 'length' => [5, 32]],
-           [['username'], 'unique', 'when' => function($model, $attribute) {
+            [['username', 'email', 'nickname'], 'trim'],
+            [['username'], 'string', 'length' => [5,32]],
+            [['email'], 'email'],
+            [['nickname'], 'string'],
+            [['password'], 'string', 'length' => [5,32]],
+            [['password'], PasswordValidator::className() ],
+            [['password_confirm'], 
+              'compare', 
+              'compareAttribute' => 'password',
+              'when' => function($model, $attribute) {
+                   return !empty($this->password);
+              },
+              'whenClient' => "function(attribute, value) {
+                    return \$('#user-password').val().trim() != '';
+                }",
+            ],
+            [['current_password'], function($attribute, $params, $validator) {
+                $identity = Yii::$app->user->identity;
+                if(!$identity->validatePassword($this->current_password)) {
+                    $this->addError($attribute, 'Invalid password');
+                }
+            }],
+            [['is_active'], 'default', 'value' => 1],
+            [['is_active'], 'boolean'],
+            
+            [['username'], 'unique', 'when' => function($model, $attribute) {
                 return $model->isAttributeChanged($attribute);
-           }],
-           [['email'], 'unique', 'when' => function($model, $attribute) {
+            }],
+            [['email'], 'unique', 'when' => function($model, $attribute) {
                 return $model->isAttributeChanged($attribute);
-           }],
+            }],
+            [['username', 'email'], 'required'],
+            [
+                ['password', 'password_confirm'], 
+                'required', 
+                'on' => [
+                    static::SCENARIO_CREATE,
+                ],
+            ],
+            [['current_password'], 'required', 'on' => [
+               static::SCENARIO_CREATE,
+               static::SCENARIO_UPDATE,
+            ]],
+            [
+                ['nickname'], 
+                'default', 
+                'value' => function($model, $attribute) {
+                    return $this->username;
+                },
+                'on' => [
+                    static::SCENARIO_CREATE,
+                ],
+            ],
+            [['nickname'], 'required', 'on' => [static::SCENARIO_UPDATE]],
         ];
     }
 
@@ -73,15 +133,26 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id'         => 'ID',
-            'username'   => Yii::t('admin', 'Username'),
-            'password'   => Yii::t('admin', 'Password'),
-            'email'      => Yii::t('admin', 'Email address'),
-            'nickname'   => Yii::t('admin', 'Nickname'),
-            'is_active'  => Yii::t('admin', 'Whether enabled'),
-            'is_deleted' => Yii::t('admin', 'Whether deleted'),
-            'created_at' => Yii::t('admin', 'Created time'),
-            'updated_at' => Yii::t('admin', 'Updated time'),
+            'username'   => Yii::t('all', 'Username'),
+            'password'   => Yii::t('all', 'Password'),
+            'password_confirm' => Yii::t('all', 'Confirm password'),
+            'current_password' => Yii::t('all', 'Current user\'s password'),
+            'email'      => Yii::t('all', 'Email address'),
+            'nickname'   => Yii::t('all', 'Nickname'),
+            'is_active'  => Yii::t('all', 'Whether enabled'),
+            'is_deleted' => Yii::t('all', 'Whether deleted'),
+            'created_at' => Yii::t('all', 'Created time'),
+            'updated_at' => Yii::t('all', 'Updated time'),
         ];
+    }
+
+
+    public function beforeSave($insert)
+    {
+        if($this->password) {
+            $this->generatePasswordHash($this->password);
+        }
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -165,6 +236,13 @@ class User extends ActiveRecord implements IdentityInterface
                 return Yii::$app->formatter->asDatetime($this->updated_at);
            }
         ];
+    }
+
+    public function cleanPassword()
+    {
+        $this->password = null;
+        $this->password_confirm = null;
+        $this->current_password = null;
     }
 
 

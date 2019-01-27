@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
-use backend\models\User;
+use common\models\User;
 use backend\form\AdminSearch;
 
 
@@ -14,18 +14,18 @@ class AdminController extends Controller
 
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $behaviors['verbs'] = [
-            'class' => VerbFilter::className(),
-            'actions' => [
-               'delete' => ['POST'],
+        return array_merge(parent::behaviors(), [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                   'delete' => ['POST'],
+                ],
             ],
-        ];
-        $behaviors['ajax'] = [
-            'class' => AjaxFilter::className(),
-            'only' => ['view'],
-        ];
-        return $behaviors;
+            'ajax' => [
+                'class' => AjaxFilter::className(),
+                'only' => ['view'],
+            ],
+        ]);
     }
 
     public function actionIndex()
@@ -41,13 +41,10 @@ class AdminController extends Controller
 
     public function actionCreate()
     {
-        $model = new User();
-        $model->scenario = User::SCENARIO_CREATE;
+        $model = new User(['scenario' => User::SCENARIO_CREATE]);
         $request = Yii::$app->request;
         if($request->isPost) {
             if($model->load($request->post()) && $model->validate()) {
-                $model->generatePasswordHash($model->password);
-                $model->cleanPassword();
                 $model->save(false);
                 return $this->redirect(['index']);
             }
@@ -71,15 +68,11 @@ class AdminController extends Controller
         $request = Yii::$app->request;
         if($request->isPost && $model->load($request->post())) {
             if($model->validate()) {
-                if($model->password) {
-                    $model->generatePasswordHash($model->password);
-                }
-                $model->cleanPassword();
                 $model->save(false);
-                Yii::$app->session->addFlash('success', '更新成功');
                 return $this->redirect(['index']);
             }
         }
+        $model->cleanPassword();
         return $this->render('edit', ['model' => $model]);
     }
 
