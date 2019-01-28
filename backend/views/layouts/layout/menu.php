@@ -36,9 +36,24 @@ use yii\helpers\Html;
         ],
         [
             'label' => Yii::t('admin', 'Category'),
-            'icon' => 'subway',
+            'icon' => 'book',
             'url' => ['category/index'],
         ],
+        [
+            'label' => Yii::t('admin', 'Post'),
+            'icon' => 'newspaper-o',
+            'url'  => ['post/index'],
+        ],
+        [
+            'label' => Yii::t('admin', 'Tag'),
+            'icon'  => 'tag',
+            'url'   => ['tag/index'],
+        ],
+        [
+            'label' => Yii::t('admin', 'Comment'),
+            'icon'  => 'comment',
+            'url'   => ['comment/index'],
+        ]
     ],
 
 ]) ?>

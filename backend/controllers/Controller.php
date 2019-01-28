@@ -86,7 +86,7 @@ class Controller extends WebController
     {
          $model = $modelClass::findOne($id);
          if(!$model instanceof $modelClass) {
-            throw new NotFoundHttpException(Yii::t('admin', 'Page not found'));
+            throw new NotFoundHttpException(Yii::t('all', 'Page not found'));
          }
          return $model;
     }

@@ -48,6 +48,18 @@ class CategoryController extends Controller
 	public function actionCreate()
 	{
         $category = new Category(['scenario' => Category::SCENARIO_CREATE]);
+        $request = Yii::$app->request;
+        if($request->isPost) {
+            $post = $request->post();
+            if($category->load($post) && $category->validate()) {
+                Category::getDb()->transaction(function() use ($category) {
+                    $category->save(false);
+                    $category->changePathAndLevel();
+                    $category->save(false);
+                });
+                $this->redirect(['index']);
+            }
+        }
         return $this->render('edit', [
            'category' => $category,
         ]);
@@ -55,36 +67,44 @@ class CategoryController extends Controller
 
 	public function actionUpdate($id)
 	{
+        $category = $this->findCategory($id);
+        $category->scenario = Category::SCENARIO_UPDATE;
+        $request = Yii::$app->request;
 
+        if($request->isPost) {
+            $post = $request->post();
+            if($category->load($post) && $category->validate()) {
+                Category::getDb()->transaction(function() use ($category) {
+                    $category->save(false);
+                    $category->changePathAndLevel();
+                    $category->save(false);
+                });
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('edit', [
+           'category' => $category,
+        ]);
 	}
 
-    public function actionView()
+    public function actionView($id)
     {
-
+        $category = $this->findModel($id, Category::className());
+        return $this->asJson($category);
     }
 
 	public function actionDelete($id)
 	{
-
+        $category = $this->findCategory($id);
+        if($category->canDelete()) {
+            $category->delete();
+        }
+        return $this->redirect(['index']);
 	}
 
-	public function actionForm($id = 0)
-	{
-		throw new NotFoundHttpException('page not found');
-		$data = [];
-		if($id === 0) {
-			$category = new Category(['scenario' => Category::SCENARIO_CREATE]);
-            $data['success'] = true;
-		} else {
-			$category = $this->findModel($id, Category::className());
-			$data['success'] = $category instanceof Category;
-			if(!$data['success']) {
-				$data['message'] = Yii::t('all', 'Category not exists');
-                return $this->asJson($data);
-			}
-			$category->scenario = Category::SCENARIO_UPDATE;
-		}
-        $data['message'] = $this->renderPartial('_form', ['category' => $category]);
-        return $this->asJson($data);
-	}
+    public function findCategory($id)
+    {
+        return $this->findModel($id, Category::className());
+    }
+
 }

@@ -44,30 +44,24 @@ class CustomerController extends Controller
 
     public function actionCreate()
     {
-        $customer = new Customer([
-            'scenario' => Customer::SCENARIO_CREATE,
-        ]);
-        $profile = new CustomerProfile([
-            'scenario' => CustomerProfile::SCENARIO_CREATE,
-        ]);
-
-        $email = new CustomerEmail([
-            'scenario' => CustomerEmail::SCENARIO_CREATE,
-        ]);
-
+        $customer = new Customer([ 'scenario' => Customer::SCENARIO_CREATE ]);
+        $profile = new CustomerProfile(['scenario' => CustomerProfile::SCENARIO_CREATE ]);
+        $email = new CustomerEmail(['scenario' => CustomerEmail::SCENARIO_CREATE ]);
 
         $request = Yii::$app->request;
-
         if($request->isPost) {
             $post = $request->post();
             if($customer->load($post) && $profile->load($post) && $email->load($post)) {
+
                 if(Model::validateMultiple([$customer, $profile, $email])) {
                     Customer::getDb()->transaction(function() use ($customer, $profile, $email) {
+
                         $customer->save(false);
                         $profile->setCustomer($customer);
                         $profile->save(false);
                         $email->setPrimaryCustomer($customer);
                         $email->save(false);
+                        
                     });
                     return $this->redirect(['index']);
                 }
@@ -77,14 +71,11 @@ class CustomerController extends Controller
         return $this->render('edit', compact('customer', 'profile', 'email'));
     }
 
+
+
     public function actionView($id)
     {
-        $customer = Customer::find()->where(['id' => $id])
-           -> with('emails', 'profile')
-           -> one();
-        if(!$customer) {
-            throw new \yii\web\NotFoundHttpException('page not found');
-        }
+        $customer = $this->findCustomer($id);
         return $this->asJson($customer->toArray());
     }
 
@@ -93,37 +84,32 @@ class CustomerController extends Controller
 
     public function actionUpdate($id)
     {
-        $customer = Customer::find()->where(['id' => $id])
-           -> with('emails', 'profile')
-           -> one();
-        if(!$customer) {
-            throw new \yii\web\NotFoundHttpException('page not found');
-        }
+        $customer = $this->findCustomer($id);
         $emails = $customer->emails;
         $profile = $customer->profile;
-        $customer->scenario = Customer::SCENARIO_UPDATE;
-        foreach($emails as $email) {
-            $email->scenario = CustomerEmail::SCENARIO_UPDATE;
-        }
-        $profile->scenario = CustomerProfile::SCENARIO_UPDATE;
+        $this->setScenario(Customer::SCENARIO_UPDATE, $customer, $profile, $emails);
+
         $request = Yii::$app->request;
         if($request->isPost) {
             $post = $request->post();
-            $customer->load($post);
-            $profile->load($post);
-            foreach($post['emails'] as $index => $data) {
-                $email = $emails[$index];
-                $email->load($data, '');
-            }
-            if($customer->validate() && $profile->validate() && Model::validateMultiple($emails)) {
-                Customer::getDb()->transaction(function() use ($customer, $profile, $emails) {
-                    $customer->save(false);
-                    $profile->save(false);
-                    foreach($emails as $email) {
-                        $email->save(false);
-                    }
-                });
-                $this->redirect(['index']);
+            if( $customer->load($post) && 
+                $profile->load($post) && 
+                Model::loadMultiple($emails, $post['emails'], '')) {
+
+                if($customer->validate() && 
+                    $profile->validate() && 
+                    Model::validateMultiple($emails)) {
+
+                    Customer::getDb()->transaction(function() use ($customer, $profile, $emails) {
+                        $customer->save(false);
+                        $profile->save(false);
+                        foreach($emails as $email) {
+                            $email->save(false);
+                        }
+                    });
+
+                    $this->redirect(['index']);
+                }
             }
         }
         $customer->cleanPassword();
@@ -132,12 +118,7 @@ class CustomerController extends Controller
 
     public function actionDelete($id)
     {
-        $customer = Customer::find()->where(['id' => $id])
-          -> with('emails', 'profile')
-          -> one();
-        if(!$customer) {
-            throw new \yii\web\NotFoundHttpException('page not found');
-        }
+        $customer = $this->findCustomer($id);
         Customer::getDb()->transaction(function() use ($customer) {
             foreach($customer->emails as $email) {
                 $email->delete();
@@ -146,6 +127,31 @@ class CustomerController extends Controller
             $customer->delete();
         });
         return $this->redirect(['index']);
+    }
+
+
+    public function findCustomer($id)
+    {
+        $customer = Customer::find()->where(['id' => $id])
+           -> with('emails', 'profile')
+           -> one();
+        if(!$customer instanceof Customer) {
+            throw new NotFoundHttpException(Yii::t('all', 'Page not found'));
+        }
+        return $customer;
+    }
+
+    public function setScenario($scenario, $models)
+    {
+        $args = func_get_args();
+        $scenario = array_shift($args);
+        foreach($args as $model) {
+            if(is_array($model)) {
+                $this->setScenario($scenario, $model);
+            } else {
+                $model->scenario = $scenario;
+            }
+        }
     }
 
 }

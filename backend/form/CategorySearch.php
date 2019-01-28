@@ -12,7 +12,7 @@ class CategorySearch extends Category
     public function rules()
     {
     	return [
-           [['title', 'url_path'], 'safe'],
+           [['title', 'url_path', 'parent_id', 'path', 'level', 'created_at', 'updated_at'], 'safe'],
     	];
     }
 
@@ -21,7 +21,8 @@ class CategorySearch extends Category
     	$query = static::find();
         if($success) {
         	$query->andFilterWhere(['like', 'title', $this->title])
-        	  ->andFilterWhere(['like', 'url_path', $this->url_path]);
+        	  ->andFilterWhere(['like', 'url_path', $this->url_path])
+              ->andFilterWhere(['parent_id' => $this->parent_id]);
         }
     	return $query;
     }

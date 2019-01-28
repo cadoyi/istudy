@@ -57,14 +57,14 @@ class AdminController extends Controller
 
     public function actionView($id)
     {
-        $model = $this->findModel($id, User::className());
+        $model = $this->findUser($id);
         return $this->renderView($model);
     }
 
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id, User::className());
-        $model->scenario = User::SCENARIO_UPDATE;
+        $model = $this->findUser($id);
+        $model->scenario =  User::SCENARIO_UPDATE;
         $request = Yii::$app->request;
         if($request->isPost && $model->load($request->post())) {
             if($model->validate()) {
@@ -78,11 +78,17 @@ class AdminController extends Controller
 
     public function actionDelete($id)
     {
-        $model = $this->findModel($id, User::className());
+        $model = $this->findUser($id);
         if($model->canDelete()) {
             $model->delete();
         }
         $this->redirect(['index']);
+    }
+
+
+    public function findUser($id)
+    {
+        return $this->findModel($id, User::className());
     }
 
 

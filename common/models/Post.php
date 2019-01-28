@@ -3,8 +3,27 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
 use common\query\PostQuery;
 
+/**
+ * Post table
+ *
+ * @property integer $id 
+ * @property string  $title 文章标题
+ * @property integer $category_id 
+ * @property string  $description 
+ * @property integer $status
+ * @property string  $url_path
+ * @property boolean $only_category 
+ * @property integer $last_content 
+ * @property integer $created_at 
+ * @property integer $updated_at 
+ * @property integer $created_by 
+ * @property integer $updated_by 
+ * 
+ */
 class Post extends ActiveRecord
 {
     const STATUS_PRIVATE = 0;
@@ -17,6 +36,81 @@ class Post extends ActiveRecord
     {
         return '{{%post}}';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formName()
+    {
+        return 'post';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            'timestamp' => TimestampBehavior::className(),
+            'blameable' => BlameableBehavior::className(),
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['title'], 'string', 'on' => [
+               static::SCENARIO_DEFAULT,
+               static::SCENARIO_CREATE,
+               static::SCENARIO_UPDATE,
+            ], 'length' => [1, 255]],
+            [['title'], 'required'],
+            [['description'], 'required'],
+            [['description'], 'string', 'length' => [1,255]],
+            [['category_id'], 'required'],
+            [['category_id'], 'integer'],
+            [['category_id'], 
+                'exists', 
+                'targetClass' => Category::className(), 
+                'targetAttribute' => 'id',
+                'when' => function($model, $attribute) {
+                    return $model->isAttributeChanged($attribute);
+                },
+            ],
+            [['status'], 'default', 'value' => 1],
+            [['status'], 'integer', 'max' => 255],
+            [['url_path'], 'string', 'length' => [2,255]],
+            [['url_path'], 'unique', 'when' => function($model, $attribute) {
+                return $model->isAttributeChanged($attribute);
+            }],
+            [['only_category'], 'default', 'value' => 0],
+            [['only_category'], 'boolean'],
+            [['last_content'], 'required'],
+            [['last_content'], 'integer'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id'            => 'ID',
+            'title'         => Yii::t('all', 'Post title'),
+            'description'   => Yii::t('all', 'Post description'),
+            'category_id'   => Yii::t('all', 'Category'),
+            'status'        => Yii::t('all', 'Status'),
+            'url_path'      => Yii::t('all', 'Url path'),
+            'only_category' => Yii::t('all', 'Only use for category'),
+            'last_content'  => Yii::t('all', 'Last content'),
+            'created_at'    => Yii::t('all', 'Created time'),
+            'updated_at'    => Yii::t('all', 'Updated time'),
+            'created_by'    => Yii::t('all', 'Author'),
+            'updated_by'    => Yii::t('all', 'Revisor'),
+        ];
+    }
+
 
 
     /**

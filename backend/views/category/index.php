@@ -20,7 +20,15 @@ use common\models\Category;
         'url_path',
         'parent_id' => [
        	    'attribute' => 'parent_id',
-
+            'filter' => Category::hashOptions(),
+            'value' => function($model, $key, $index, $column) {
+                $filter = $column->filter;
+                $parent_id = $model->parent_id;
+                if(array_key_exists($parent_id, $filter)) {
+                    return $filter[$parent_id];
+                }
+                return null;
+            }
         ],
         [
             'class' => ActionColumn::className(),
