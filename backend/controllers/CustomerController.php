@@ -9,26 +9,9 @@ use yii\base\Model;
 use backend\form\CustomerSearch;
 use common\models\Customer;
 use common\models\CustomerProfile;
-use common\models\CustomerEmail;
 
 class CustomerController extends Controller
 {
-
-    public function behaviors()
-    {
-        return array_merge(parent::behaviors(), [
-           'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ]
-            ],
-            'ajax' => [
-                'class' => AjaxFilter::className(),
-                'only' => ['view'],
-            ],
-        ]);
-    }
 
     public function actionIndex()
     {
@@ -44,31 +27,31 @@ class CustomerController extends Controller
 
     public function actionCreate()
     {
-        $customer = new Customer([ 'scenario' => Customer::SCENARIO_CREATE ]);
-        $profile = new CustomerProfile(['scenario' => CustomerProfile::SCENARIO_CREATE ]);
-        $email = new CustomerEmail(['scenario' => CustomerEmail::SCENARIO_CREATE ]);
-
-        $request = Yii::$app->request;
-        if($request->isPost) {
-            $post = $request->post();
-            if($customer->load($post) && $profile->load($post) && $email->load($post)) {
-
-                if(Model::validateMultiple([$customer, $profile, $email])) {
-                    Customer::getDb()->transaction(function() use ($customer, $profile, $email) {
-
-                        $customer->save(false);
-                        $profile->setCustomer($customer);
-                        $profile->save(false);
-                        $email->setPrimaryCustomer($customer);
-                        $email->save(false);
-                        
-                    });
-                    return $this->redirect(['index']);
-                }
+        $customer = new Customer([ 
+            'scenario' => Customer::SCENARIO_CREATE,
+        ]);
+        $profile = new CustomerProfile([
+            'scenario' => CustomerProfile::SCENARIO_CREATE, 
+        ]);
+        if($post = $this->post) {
+            $success = $customer->load($post) &&
+                 $profile->load($post) &&
+                 $customer->validate() &&
+                 $profile->validate();
+            if($success) {
+                 Customer::getDb()->transaction(function() use ($customer, $profile) {
+                     $customer->save(false);
+                     $profile->setCustomer($customer);
+                     $profile->save(false);
+                 });
+                 return $this->redirect(['index']);
             }
         }
         $customer->cleanPassword();
-        return $this->render('edit', compact('customer', 'profile', 'email'));
+        return $this->render('edit', [
+            'customer' => $customer,
+            'profile'  => $profile,
+        ]);
     }
 
 
@@ -85,44 +68,35 @@ class CustomerController extends Controller
     public function actionUpdate($id)
     {
         $customer = $this->findCustomer($id);
-        $emails = $customer->emails;
         $profile = $customer->profile;
-        $this->setScenario(Customer::SCENARIO_UPDATE, $customer, $profile, $emails);
+        $customer->scenario = Customer::SCENARIO_UPDATE;
+        $profile->scenario = CustomerProfile::SCENARIO_UPDATE;
 
-        $request = Yii::$app->request;
-        if($request->isPost) {
-            $post = $request->post();
-            if( $customer->load($post) && 
-                $profile->load($post) && 
-                Model::loadMultiple($emails, $post['emails'], '')) {
-
-                if($customer->validate() && 
-                    $profile->validate() && 
-                    Model::validateMultiple($emails)) {
-
-                    Customer::getDb()->transaction(function() use ($customer, $profile, $emails) {
-                        $customer->save(false);
-                        $profile->save(false);
-                        foreach($emails as $email) {
-                            $email->save(false);
-                        }
-                    });
-
-                    $this->redirect(['index']);
-                }
+        if($post = $this->post) {
+            $success = $customer->load($post) &&
+                $profile->load($post) &&
+                $customer->validate() &&
+                $profile->validate();
+            if($success) {
+                Customer::getDb()->transaction(function() use ($customer, $profile) {
+                    $customer->save(false);
+                    $profile->setCustomer($customer);
+                    $profile->save(false);
+                });
+                return $this->redirect(['index']);
             }
         }
         $customer->cleanPassword();
-        return $this->render('edit', compact('customer', 'profile', 'emails'));       
+        return $this->render('edit', [
+            'customer' => $customer,
+            'profile'  => $profile,
+        ]);       
     }
 
     public function actionDelete($id)
     {
         $customer = $this->findCustomer($id);
         Customer::getDb()->transaction(function() use ($customer) {
-            foreach($customer->emails as $email) {
-                $email->delete();
-            }
             $customer->profile->delete();
             $customer->delete();
         });
@@ -132,26 +106,9 @@ class CustomerController extends Controller
 
     public function findCustomer($id)
     {
-        $customer = Customer::find()->where(['id' => $id])
-           -> with('emails', 'profile')
-           -> one();
-        if(!$customer instanceof Customer) {
-            throw new NotFoundHttpException(Yii::t('all', 'Page not found'));
-        }
-        return $customer;
-    }
-
-    public function setScenario($scenario, $models)
-    {
-        $args = func_get_args();
-        $scenario = array_shift($args);
-        foreach($args as $model) {
-            if(is_array($model)) {
-                $this->setScenario($scenario, $model);
-            } else {
-                $model->scenario = $scenario;
-            }
-        }
+        return $this->findModel($id, Customer::className(), function($query) {
+             $query->with('profile');
+        }); 
     }
 
 }

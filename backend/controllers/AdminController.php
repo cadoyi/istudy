@@ -6,27 +6,12 @@ use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
 use common\models\User;
+use common\models\UserProfile;
 use backend\form\AdminSearch;
 
 
 class AdminController extends Controller
 {
-
-    public function behaviors()
-    {
-        return array_merge(parent::behaviors(), [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                   'delete' => ['POST'],
-                ],
-            ],
-            'ajax' => [
-                'class' => AjaxFilter::className(),
-                'only' => ['view'],
-            ],
-        ]);
-    }
 
     public function actionIndex()
     {
@@ -41,16 +26,29 @@ class AdminController extends Controller
 
     public function actionCreate()
     {
-        $model = new User(['scenario' => User::SCENARIO_CREATE]);
+        $user = new User(['scenario' => User::SCENARIO_CREATE]);
+        $profile = new UserProfile(['scenario' => UserProfile::SCENARIO_CREATE]);
+
         $request = Yii::$app->request;
-        if($request->isPost) {
-            if($model->load($request->post()) && $model->validate()) {
-                $model->save(false);
+        if($post = $this->post) {
+            $success = $user->load($post) &&
+                $profile->load($post) && 
+                $user->validate() &&
+                $profile->validate();
+            if($success) {
+                User::getDb()->transaction(function() use ($user, $profile){
+                    $user->save(false);
+                    $profile->user_id = $user->id;
+                    $profile->save(false);
+                });
                 return $this->redirect(['index']);
             }
         }
-        $model->cleanPassword();
-        return $this->render('edit', compact('model'));
+        $user->cleanPassword();
+        return $this->render('edit', [
+            'user'    => $user,
+            'profile' => $profile,
+        ]);
     }
 
 
@@ -63,24 +61,40 @@ class AdminController extends Controller
 
     public function actionUpdate($id)
     {
-        $model = $this->findUser($id);
-        $model->scenario =  User::SCENARIO_UPDATE;
-        $request = Yii::$app->request;
-        if($request->isPost && $model->load($request->post())) {
-            if($model->validate()) {
-                $model->save(false);
+        $user = $this->findUser($id);
+        $user->scenario =  User::SCENARIO_UPDATE;
+        $profile = $user->profile;
+        $profile->scenario = UserProfile::SCENARIO_UPDATE;
+
+        if($post = $this->post) {
+            $success = $user->load($post) &&
+                $profile->load($post) &&
+                $user->validate() &&
+                $profile->validate();
+            if($success) {
+                User::getDb()->transaction(function() use ($user, $profile){
+                    $user->save(false);
+                    $profile->user_id = $user->id;
+                    $profile->save(false);
+                });
                 return $this->redirect(['index']);
             }
         }
-        $model->cleanPassword();
-        return $this->render('edit', ['model' => $model]);
+        $user->cleanPassword();
+        return $this->render('edit', [
+            'user' => $user,
+            'profile' => $profile,
+        ]);
     }
 
     public function actionDelete($id)
     {
-        $model = $this->findUser($id);
-        if($model->canDelete()) {
-            $model->delete();
+        $user = $this->findUser($id);
+        if($user->canDelete()) {
+            User::getDb()->transaction(function() use ($user) {
+                $user->profile->delete();
+                $user->delete();
+            });
         }
         $this->redirect(['index']);
     }
@@ -88,7 +102,9 @@ class AdminController extends Controller
 
     public function findUser($id)
     {
-        return $this->findModel($id, User::className());
+        return $this->findModel($id, User::className(), function($query) {
+            $query->with('profile');
+        });
     }
 
 

@@ -41,8 +41,7 @@ class CategoryQuery extends ActiveQuery
      */
     public function filterClosestChilds(Category $category)
     {
-        $level = $category->level + 1;
-        return $this->filterChilds($category)->andWhere(['level' => $level]);
+        return $this->andWhere(['parent_id' => $category->id]);
     }
 
 

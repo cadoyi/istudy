@@ -6,6 +6,17 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use common\query\PostContentQuery;
 
+/**
+ * post content
+ *
+ * @property integer $id 
+ * @property integer $post_id
+ * @property string $keywords
+ * @property string $description
+ * @property string $content
+ * @property integer $created_at
+ * 
+ */
 class PostContent extends ActiveRecord
 {
 
@@ -22,7 +33,7 @@ class PostContent extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function tableName()
+    public function formName()
     {
         return 'content';
     }
@@ -37,7 +48,6 @@ class PostContent extends ActiveRecord
         return array_merge(parent::behaviors(), [
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => false,
             ],
         ]);
     }
@@ -73,6 +83,7 @@ class PostContent extends ActiveRecord
             'content'     => Yii::t('all', 'Post content'),
             'post_id'     => Yii::t('all', 'Post'),
             'created_at'  => Yii::t('all', 'Created time'),
+            'updated_at'  => Yii::t('all', 'Updated time'),
         ];
     }
 
@@ -85,6 +96,16 @@ class PostContent extends ActiveRecord
         return Yii::createObject(PostContentQuery::className(), [ get_called_class() ]);
     }
 
+    public function fields()
+    {
+        return [
+           'id',
+           'meta_keywords' => 'keywords',
+           'meta_description' => 'description',
+           'content'
+        ];
+    }
+
 
     /**
      * 获取文章实例
@@ -94,18 +115,7 @@ class PostContent extends ActiveRecord
      */
     public function getPost()
     {
-        return $this->hasOne(Post::className(), ['id' => 'post_id']);
-    }
-
-
-    /**
-     * 此内容是否是文章的主要内容
-     * 
-     * @return boolean
-     */
-    public function isPrimary()
-    {
-        return $this->post->last_content == $this->id;
+        return $this->hasOne(Post::className(), ['id' => 'post_id'])->inverseOf('content');
     }
 
 }

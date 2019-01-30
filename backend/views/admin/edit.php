@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use core\helpers\Form;
 use backend\widgets\FormContainer;
+use backend\widgets\ImageField;
 use yii\bootstrap\ActiveForm;
 ?>
 <?php
@@ -11,32 +12,41 @@ use yii\bootstrap\ActiveForm;
  */
 ?>
 <?php 
-
-$container = FormContainer::begin([
-   'tabs' => [
-       [
-          'title' => '基本信息',
-          'target'   => 'form1',
+    $formid = 'edit_form';
+    $container = FormContainer::begin([
+       'tabs' => [
+           [
+              'title' => '用户信息',
+              'target'   => 'user_base_info',
+           ],
+           [
+              'title'    => '资料信息',
+              'target'   => 'user_profile_info',
+           ],       
        ],
-       [
-          'title'    => '密码',
-          'target'   => 'form2',
-       ],       
-   ],
-   'form' => 'edit_form',
-]); 
-$form = ActiveForm::begin(['id' => 'edit_form']);
+       'form' => $formid,
+    ]); 
+    $form = ActiveForm::begin(['id' => $formid]);
 ?>
-<div id="form1" class="tab-target">
-    <?= $form->field($model, 'username') ?>
-    <?= $form->field($model, 'nickname') ?>
-    <?= $form->field($model, 'email') ?>
-    <?= $form->field($model, 'is_active')->dropDownList(Form::statusList()) ?>
-    <?= $form->field($model, 'current_password')->passwordInput() ?>
+<div id="user_base_info" class="tab-target">
+    <?= $form->field($user, 'username') ?>
+    <?= $form->field($user, 'nickname') ?>
+    <?= $form->field($user, 'email') ?>
+    <?= $form->field($user, 'is_active')->dropDownList(Form::statusList()) ?>
+    <?= $form->field($user, 'password')->passwordInput() ?>
+    <?= $form->field($user, 'password_confirm')->passwordInput() ?>
+    <?= $form->field($user, 'current_password')->passwordInput() ?>
 </div>
-<div id="form2" class="tab-target">
-    <?= $form->field($model, 'password')->passwordInput() ?>
-    <?= $form->field($model, 'password_confirm')->passwordInput() ?>
+<div id="user_profile_info" class="tab-target">
+    <?= $form->field($profile, 'phone') ?>
+    <?= $form->field($profile, 'email') ?>
+    <?= $form->field($profile, 'wechat')?>
+    <?= $form->field($profile, 'qq')?>
+    <?= $form->field($profile, 'sex')->dropDownList(Form::sexList(), ['prompt' => ''])?>
+    <?= $form->field($profile, 'avatorImage')->widget(ImageField::className(), [
+        'url' => $profile->getAvatorUrl(true),
+    ]) ?>
+    <?= $form->field($profile, 'note')->textarea() ?>
 </div>
 <?php 
     ActiveForm::end();

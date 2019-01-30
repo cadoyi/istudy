@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use core\web\Controller as WebController;
 use yii\filters\AccessControl;
+use yii\filters\AjaxFilter;
+use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -28,7 +30,18 @@ class Controller extends WebController
             $behaviors['rbac'] = $rbac;
         }
 
-        return $behaviors;
+        return array_merge($behaviors, [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                   'delete' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::className(),
+                'only' => ['view'],
+            ],
+        ]);
     }
 
 
@@ -79,12 +92,20 @@ class Controller extends WebController
      * 
      * @param  integer $id        模型的 id 字段
      * @param  string  $modelClass 模型的完全类名
+     * @param  callable $callback  查询回调
+     *     签名: function($query)
      * @throws yii\web\NotFoundHttpException 
      * @return $object
      */
-    public function findModel($id, $modelClass)
+    public function findModel($id, $modelClass, $callback = null)
     {
-         $model = $modelClass::findOne($id);
+        if($callback === null) {
+            $model = $modelClass::findOne($id);
+        } else {
+            $query = $modelClass::find()->andWhere(['id' => $id]);
+            call_user_func($callback, $query);
+            $model = $query->one();
+        }
          if(!$model instanceof $modelClass) {
             throw new NotFoundHttpException(Yii::t('all', 'Page not found'));
          }
@@ -101,6 +122,16 @@ class Controller extends WebController
             $result[$label] = $value;
         }
         return $this->asJson($result);
+    }
+
+
+    public function getPost()
+    {
+        $request = Yii::$app->request;
+        if($request->isPost) {
+            return $request->post();
+        }
+        return false;
     }
 
 

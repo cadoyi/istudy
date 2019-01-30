@@ -4,56 +4,51 @@ use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use core\helpers\Form;
 use common\models\Customer;
+use common\models\CustomerGroup;
 use backend\widgets\FormContainer;
 use backend\widgets\ImageField;
+
+$groups = CustomerGroup::hashOptions();
 ?>
 <?php
 /**
  * @var  $this yii\web\View
  * @var  $customer common\models\Customer
  * @var  $profile common\models\Profile
- * @var  $email common\models\CustomerEmail
  * @var array $emails  多个邮件地址 
  * 
  */
 ?>
 <?php
+   $formid = 'edit_form';
    FormContainer::begin([
       'tabs' => [
         [
-            'title'  => '邮件信息',
+            'title'  => '基本信息',
             'target' => 'customer_base_info',
         ],
         [
-            'title'  => '基本信息',
-            'target' => 'customer_password_info',
-        ],
-        [
-            'title'  => '其他资料',
+            'title'  => '资料信息',
             'target' => 'customer_profile_info',
         ],
       ],
-      'form' => 'edit_form',
+      'form' => $formid,
    ]);
    $form = ActiveForm::begin([
-       'id' => 'edit_form',
+       'id' => $formid,
    ]);
 ?>
    <div id="customer_base_info" class="tab-target">
-       <?php if(isset($email)): ?>
-           <?= $form->field($email, 'email') ?>
-       <?php else: ?>
-           <?php foreach($emails as $index => $email): ?>
-               <?= $form->field($email, "[{$index}]email") ?>
-           <?php endforeach; ?>
-       <?php endif; ?>
-   </div>
-   <div id="customer_password_info" class="tab-target">
+       <?= $form->field($customer, 'email') ?>
+       <?= $form->field($customer, 'password')->passwordInput() ?>
+       <?= $form->field($customer, 'password_confirm')->passwordInput() ?>
+       <?= $form->field($customer, 'group_id')
+           ->dropDownList($groups, ['prompt' => '']);
+       ?>      
        <?= $form->field($customer, 'nickname') ?>
        <?= $form->field($customer, 'phone') ?>
        <?= $form->field($customer, 'is_active')->dropDownList(Form::statusList()) ?>
-       <?= $form->field($customer, 'password')->passwordInput() ?>
-       <?= $form->field($customer, 'password_confirm')->passwordInput() ?>
+
    </div>
    <div id="customer_profile_info" class="tab-target">
         <?= $form->field($profile, 'username') ?>

@@ -35,9 +35,9 @@ class PostQuery extends ActiveQuery
      * 
      * @return $this
      */
-    public function filterOnlyCategory()
+    public function filterOnlyCategory($bool = true)
     {
-        return $this->_filterBoolean('only_category', true);
+        return $this->_filterBoolean('only_category', $bool);
     }
 
 

@@ -43,11 +43,7 @@ class CustomerProfile extends ActiveRecord
     public function rules()
     {
         return [
-            [['url'], 'string', 'on' => [
-                static::SCENARIO_DEFAULT,
-                static::SCENARIO_CREATE,
-                static::SCENARIO_UPDATE,
-            ]],
+            [['url'], 'string', 'length'=>[0,255]],
             [['url'], 'url'],
             [['wechat'], 'string', 'length' => [5,32]],
             [['qq'], 'integer'],
@@ -70,6 +66,27 @@ class CustomerProfile extends ActiveRecord
                'default',
                'value' => null,
            ], 
+        ];
+    }
+
+    public function scenarios()
+    {
+        $default = [
+           'username',
+           'bio',
+           'url',
+           'wechat',
+           'qq',
+           'sex',
+           'dob',
+           'avatorImage',
+           'city',
+           'note',
+        ];
+        return [
+            static::SCENARIO_DEFAULT => $default,
+            static::SCENARIO_CREATE => $default,
+            static::SCENARIO_UPDATE => $default,
         ];
     }
 

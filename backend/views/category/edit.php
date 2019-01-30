@@ -2,7 +2,38 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\widgets\FormContainer;
+use backend\widgets\ImageField;
 use common\models\Category;
+use core\helpers\Form;
+?>
+<?php
+/**
+ * @var $this yii\web\View
+ * @var $category common\models\Category
+ * @var $post common\models\Post
+ * @var $postContent common\models\PostContent
+ */
+?>
+<?php
+    $input = Html::getInputId($category, 'content');
+    $formid = 'edit_form';
+
+    $this->registerJsFile('@web/ckeditor/ckeditor.js', [
+      'depends' => ['common'],
+    ]);
+
+    $this->registerJsVar('contentid', $input);
+    $this->registerJsVar('formid', $formid);
+    $this->registerJs('
+       var editor = CKEDITOR.replace(contentid);
+       window.ce = editor;
+        $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
+            var html = editor.document.getBody().getHtml();
+            console.log(html);
+            $("#" + contentid).text(html);
+            console.log(document.getElementById(contentid));
+        });
+    ');
 ?>
 <?php $container = FormContainer::begin([
     'tabs' => [
@@ -11,21 +42,38 @@ use common\models\Category;
            'target' => 'category_base_info', 
        ],
        [
-           'title'  => '父分类',
-           'target' => 'category_parent_info',
+           'title'  => '源信息',
+           'target' => 'category_meta_info',
+       ],
+       [
+           'title'  => '分类页面',
+           'target' => 'category_content_info',
        ],
     ],
-    'form' => 'edit_form',
+    'form' => $formid,
 ]) ?>
 <?php $form = ActiveForm::begin([
-    'id' => 'edit_form',
+    'id' => $formid,
 ]) ?>
    <div id="category_base_info" class="tab-target">
        <?= $form->field($category, 'title') ?>
+       <?= $form->field($category, 'description')->textarea() ?>
        <?= $form->field($category, 'url_path')?>
-   </div>
-   <div id="category_parent_info" class="tab-target">
        <?= $form->field($category, 'parent_id')->dropDownList($category->parentOptions(), ['prompt' => '']) ?>
+      <?= $form->field($category, 'categoryImage')->widget(ImageField::className(), [
+           'url' => $category->getImageUrl(true),
+        ])?>
+       <?= $form->field($category, 'is_active')->radioList(Form::statusList()) ?>
+       <?= $form->field($category, 'position')?>
+
    </div>
+   <div id="category_meta_info" class="tab-target">
+       <?= $form->field($category, 'meta_title') ?>
+       <?= $form->field($category, 'meta_keywords')->textarea() ?>
+       <?= $form->field($category, 'meta_description')->textarea() ?>
+   </div>
+  <div id="category_content_info" class="tab-target">
+        <?= $form->field($category, 'content')->textarea() ?>
+  </div>
 <?php ActiveForm::end() ?>
 <?php FormContainer::end() ?>

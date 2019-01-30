@@ -7,29 +7,14 @@ use yii\filters\AjaxFilter;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use common\models\Category;
+use common\models\Post;
+use common\models\PostContent;
 use backend\form\CategorySearch;
+use core\exception\ValidateException;
 
 class CategoryController extends Controller
 {
 
-    /**
-     * {@inheritdoc}
-     */
-	public function behaviors()
-	{
-        return array_merge(parent::behaviors(), [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-            'ajax' => [
-            	'class' => AjaxFilter::className(),
-                'only'  => ['view'],
-            ],
-        ]);
-	}
 
     /**
      * 分类列表
@@ -48,20 +33,19 @@ class CategoryController extends Controller
 	public function actionCreate()
 	{
         $category = new Category(['scenario' => Category::SCENARIO_CREATE]);
-        $request = Yii::$app->request;
-        if($request->isPost) {
-            $post = $request->post();
+        if($post = $this->post) {
             if($category->load($post) && $category->validate()) {
                 Category::getDb()->transaction(function() use ($category) {
                     $category->save(false);
                     $category->changePathAndLevel();
                     $category->save(false);
                 });
-                $this->redirect(['index']);
+                return $this->redirect(['index']);
             }
         }
+
         return $this->render('edit', [
-           'category' => $category,
+           'category'    => $category,
         ]);
 	}
 
@@ -69,12 +53,10 @@ class CategoryController extends Controller
 	{
         $category = $this->findCategory($id);
         $category->scenario = Category::SCENARIO_UPDATE;
-        $request = Yii::$app->request;
 
-        if($request->isPost) {
-            $post = $request->post();
+        if($post = $this->post) {
             if($category->load($post) && $category->validate()) {
-                Category::getDb()->transaction(function() use ($category) {
+                Category::getDb()->transaction(function() use ($category){
                     $category->save(false);
                     $category->changePathAndLevel();
                     $category->save(false);
@@ -89,7 +71,7 @@ class CategoryController extends Controller
 
     public function actionView($id)
     {
-        $category = $this->findModel($id, Category::className());
+        $category = $this->findCategory($id);
         return $this->asJson($category);
     }
 
@@ -106,5 +88,6 @@ class CategoryController extends Controller
     {
         return $this->findModel($id, Category::className());
     }
+
 
 }

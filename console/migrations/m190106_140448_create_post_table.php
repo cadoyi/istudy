@@ -25,10 +25,12 @@ class m190106_140448_create_post_table extends Migration
             'title' => $this->string()->notNull()->comment('文章标题'),
             'category_id' => $this->integer(11)->unsigned()->notNull()->comment('分类ID'),
             'description'  => $this->string(255)->notNull()->comment('短描述'),
-            'status'       => $this->tinyInteger()->notNull()->defaultValue(1),
-            'url_path'      => $this->string(255)->notNull()->unique(),
-            'only_category' => $this->boolean()->notNull()->defaultValue(0)->comment('是否只作为分类文章'),
-            'last_content'  => $this->integer(11)->unsigned()->notNull()->defaultValue(0)->comment('最后更新的内容id'),
+            'is_active'    => $this->boolean()->notNull()->defaultValue(1),
+            'url_path'     => $this->string(255)->notNull()->unique(),
+            'meta_title'       =>  $this->string(),
+            'meta_keywords'    =>  $this->string(),
+            'meta_description' => $this->string(),
+            'content'          => $this->longText()->notNull(),
             'created_at' => $this->integer(11)->unsigned()->notNull(),
             'updated_at' => $this->integer(11)->unsigned()->notNull(),
             'created_by' => $this->integer(11)->unsigned()->notNull(),
@@ -43,6 +45,10 @@ class m190106_140448_create_post_table extends Migration
             'CASCADE',
             'CASCADE'
         );
+
+        $this->createIndex('IDX_POST_IS_ACTIVE', $this->table, 'is_active');
+        $this->createIndex('IDX_POST_TITLE_IS_ACTIVE', $this->table, ['title', 'is_active']);
+        $this->createIndex('IDX_POST_DESCRIPTION', $this->table, 'description');
     }
 
     /**
@@ -50,6 +56,9 @@ class m190106_140448_create_post_table extends Migration
      */
     public function down()
     {
+        $this->dropIndex('IDX_POST_IS_ACTIVE', $this->table);
+        $this->dropIndex('IDX_POST_TITLE_IS_ACTIVE', $this->table);
+        $this->dropIndex('IDX_POST_DESCRIPTION', $this->table);
         $this->dropForeignKey($this->categoryFk, $this->table);
         $this->dropTable($this->table);
     }

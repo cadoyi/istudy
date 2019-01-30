@@ -11,46 +11,56 @@ use yii\helpers\Html;
     ],
     'items' => [
         [
-            'label' => Yii::t('admin','Dashboard'),
+            'label' => Yii::t('all','Dashboard'),
             'url' => ['site/index'],
             'icon' => 'dashboard',
         ],
         [
-            'label' => Yii::t('admin', 'Permission'),
+            'label' => Yii::t('all', 'Permission'),
             'icon' => 'users',	                
             'items' => [
                 [
-                    'label' => Yii::t('admin', 'User'),
+                    'label' => Yii::t('all', 'User'),
                 	'url' => ['admin/index'],
                 ],
                 [
-                    'label' => Yii::t('admin', 'Role'),
+                    'label' => Yii::t('all', 'Role'),
                     'url'   => ['role/index'],
                 ],
             ],
         ],
         [
-            'label' => Yii::t('admin', 'Customer'),
+            'label' => Yii::t('all', 'Customer'),
             'icon'  => 'user',
-            'url' => ['customer/index'],
+            'items' => [
+                [
+                    'label' => Yii::t('all', 'Customer group'),
+                    'url' => ['customer-group/index'],
+                ],
+                [
+                    'label' => Yii::t('all', 'Customer'),
+                    'url' => ['customer/index'],
+                ],
+            ],
+            
         ],
         [
-            'label' => Yii::t('admin', 'Category'),
+            'label' => Yii::t('all', 'Category'),
             'icon' => 'book',
             'url' => ['category/index'],
         ],
         [
-            'label' => Yii::t('admin', 'Post'),
+            'label' => Yii::t('all', 'Post'),
             'icon' => 'newspaper-o',
             'url'  => ['post/index'],
         ],
         [
-            'label' => Yii::t('admin', 'Tag'),
+            'label' => Yii::t('all', 'Tag'),
             'icon'  => 'tag',
             'url'   => ['tag/index'],
         ],
         [
-            'label' => Yii::t('admin', 'Comment'),
+            'label' => Yii::t('all', 'Comment'),
             'icon'  => 'comment',
             'url'   => ['comment/index'],
         ]

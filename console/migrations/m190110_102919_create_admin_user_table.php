@@ -25,7 +25,6 @@ class m190110_102919_create_admin_user_table extends Migration
             'is_active' => $this->boolean()->notNull()->defaultValue(1),
             'created_at' => $this->integer(11)->unsigned()->notNull(),
             'updated_at' => $this->integer(11)->unsigned()->notNull(),
-            'is_deleted' => $this->boolean()->notNull()->defaultValue(0),
         ], $this->tableOption);
         
         $this->insert($this->table, [

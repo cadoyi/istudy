@@ -31,4 +31,9 @@ class Form
     	return static::booleanList(['enabled', 'disabled']);
     }
 
+    public static function sexList()
+    {
+        return static::booleanList(['male', 'female']);
+    }
+
 }

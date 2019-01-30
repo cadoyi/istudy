@@ -20,6 +20,9 @@ class m190106_140540_create_tag_table extends Migration
         $this->createTable($this->table, [
             'id' => $this->primaryKey()->unsigned(),
             'title' => $this->string()->notNull()->unique(),
+            'description' => $this->string(),
+            'created_at' => $this->integer(11)->unsigned()->notNull(),
+            'updated_at' => $this->integer(11)->unsigned()->notNull(),
         ], $this->tableOption);
     }
 

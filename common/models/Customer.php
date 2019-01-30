@@ -60,13 +60,31 @@ class Customer extends ActiveRecord implements IdentityInterface
      */
     public function rules()
     {
-        $passwordError = Yii::t('admin', 'Invaild password format');
+        $passwordError = Yii::t('all', 'Invaild password format');
         return [
-            [['nickname'], 'string', 'on' => [
+            [['email'], 'required'],
+            [['email'], 'email'],
+            [['email'], 'unique', 'when' => function($model, $attribute) {
+                 $model->isAttributeChanged($attribute);
+            }], 
+            [['nickname'], 'required', 'except' => [
+                 static::SCENARIO_CREATE,
+            ]],
+            [['nickname'], 'string', 'length' => [0,32]],
+            [['nickname'], 'default', 'value' => function() {
+                return substr($this->email,0, strpos($this->email, '@'));
+            }, 'on' => [
                 static::SCENARIO_CREATE,
-                static::SCENARIO_UPDATE,
             ]],
             [['phone'], PhoneValidator::className()],
+            [['phone'], 'default', 'value' => null],
+            [['group_id'], 'required', 'except' => [
+                 static::SCENARIO_CREATE,
+            ]],
+            [['group_id'], 'exist', 'targetClass' => CustomerGroup::className(), 'targetAttribute' => 'id'],
+            [['group_id'], 'default', 'value' => function() {
+                return CustomerGroup::findDefault()->id;
+            }],
             [['password'], 'string', 'length' => [5, 32]],
             [['password'], PasswordValidator::className()], 
             [['password_confirm'], 
@@ -81,11 +99,27 @@ class Customer extends ActiveRecord implements IdentityInterface
             ],
             [['is_active'], 'default', 'value' => 1],
             [['is_active'], 'boolean'],
-            [['nickname', 'phone'], 'default', 'value' => null],
             [['password', 'password_confirm'], 'required', 'on' => [
                 static::SCENARIO_CREATE,
             ]],
+        ];
+    }
 
+    public function scenarios()
+    {
+        $default = [
+           'email', 
+           'nickname',
+           'phone',
+           'password',
+           'password_confirm',
+           'is_active',
+           'group_id',
+        ];
+        return [
+            static::SCENARIO_DEFAULT => $default,
+            static::SCENARIO_CREATE => $default,
+            static::SCENARIO_UPDATE => $default,
         ];
     }
 
@@ -101,14 +135,15 @@ class Customer extends ActiveRecord implements IdentityInterface
     {
         return [
            'id'               => 'ID',
-           'nickname'         => Yii::t('admin', 'Nickname'),
-           'phone'            => Yii::t('admin', 'Mobile phone number'),
-           'is_active'        => Yii::t('admin', 'Enabled'),
-           'created_at'       => Yii::t('admin', 'Created time'),
-           'updated_at'       => Yii::t('admin', 'Updated time'),
-           'password'         => Yii::t('admin', 'Password'),
-           'password_confirm' => Yii::t('admin', 'Confirm password'),
-           'email'            => Yii::t('admin', 'Email address'),
+           'nickname'         => Yii::t('all', 'Nickname'),
+           'phone'            => Yii::t('all', 'Mobile phone number'),
+           'is_active'        => Yii::t('all', 'Enabled'),
+           'created_at'       => Yii::t('all', 'Created time'),
+           'updated_at'       => Yii::t('all', 'Updated time'),
+           'password'         => Yii::t('all', 'Password'),
+           'password_confirm' => Yii::t('all', 'Confirm password'),
+           'email'            => Yii::t('all', 'Email address'),
+           'group_id'         => Yii::t('all', 'Customer group'),
         ];
     }
 
@@ -144,6 +179,7 @@ class Customer extends ActiveRecord implements IdentityInterface
     {
         return [
             'id',
+            'email',
             'nickname',
             'phone',
             'is_active',
@@ -154,7 +190,7 @@ class Customer extends ActiveRecord implements IdentityInterface
                 return Yii::$app->formatter->asDatetime($this->updated_at);
             },
             'profile',
-            'emails',
+            'group_id',
         ];
     }
 
@@ -350,55 +386,6 @@ class Customer extends ActiveRecord implements IdentityInterface
     }
 
 
-
-    
-
-    /**
-     * 获取所有的邮件地址, 为了 with() 方法.
-     * 
-     * @see yii\db\ActiveRecord::hasMany()
-     */
-    public function getEmails()
-    {
-        return $this->hasMany(CustomerEmail::className(), ['customer_id' => 'id'])->inverseOf('customer');
-    }
-
-
-    /**
-     * 获取主要邮件地址实例, 为了 with() 方法.
-     * 
-     * @see yii\db\ActiveRecord::hasOne()
-     */
-    public function getPrimaryEmail()
-    {
-        return $this->hasOne(CustomerEmail::className(), ['customer_id' => 'id'])->inverseOf('customer')
-            -> filterPrimary();
-    }
-
-
-    /**
-     * 获取可以公开的邮件地址实例
-     * 
-     * @see yii\db\ActiveRecord::hasMany()
-     */
-    public function getPublicEmails()
-    {
-        return $this->hasMany(CustomerEmail::className(), ['customer_id' => 'id'])->inverseOf('customer')
-          -> filterPublic();
-    }
-
-
-
-    /**
-     * 获取可以登录的邮件地址实例
-     * 
-     * @see yii\db\ActiveRecord::hasMany()
-     */
-    public function getCanLoginedEmails()
-    {
-        return $this->hasMany(CustomerEmail::className(), ['customer_id' => 'id'])->inverseOf('customer')
-          -> filterCanLogin();
-    }
 
 
     /**

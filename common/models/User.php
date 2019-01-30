@@ -127,8 +127,6 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-
-
     public function attributeLabels()
     {
         return [
@@ -243,6 +241,22 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password = null;
         $this->password_confirm = null;
         $this->current_password = null;
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id'])->inverseOf('user');
+    }
+
+
+    public function getMessageList()
+    {
+        return UserMessage::find()
+           -> where(['user_id' => $this->id])
+           -> andWhere(['watched' => 0])
+           -> orderBy(['level' => SORT_DESC, 'created_at' => SORT_DESC])
+           -> limit(5)
+           -> all();
     }
 
 
