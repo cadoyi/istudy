@@ -5,6 +5,7 @@ use backend\grid\GridView;
 use backend\grid\ActionColumn;
 use common\models\Category;
 use common\models\Post;
+use core\helpers\Form;
 
 $categories = Category::hashOptions();
 ?>
@@ -31,14 +32,15 @@ $categories = Category::hashOptions();
             	return $categories[$model->category_id];
             }
 	    ],
-	    'status' => [
-            'attribute' => 'status',
-            'filter' => Post::statusOptions(),
+	    'is_active' => [
+            'attribute' => 'is_active',
+            'filter' => Form::statusList(),
             'value' => function($model, $key, $index, $column) {
                  $options = $column->filter;
-                 return $options[$model->status];
+                 return $options[$model->is_active];
             }
 	    ],
+        'created_at:datetime',
 	    [
 	        'class' => ActionColumn::className(),
 	        'header' => Yii::t('all', 'Action'),

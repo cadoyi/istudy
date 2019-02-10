@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
+use core\helpers\Form;
 use common\models\Category;
 ?>
 <?php
@@ -17,6 +18,7 @@ use common\models\Category;
     'filterModel'  => $filterModel,
     'columns' => [
         'title',
+        'description',
         'url_path',
         'parent_id' => [
        	    'attribute' => 'parent_id',
@@ -30,6 +32,15 @@ use common\models\Category;
                 return null;
             }
         ],
+        'is_active' => [
+             'attribute' => 'is_active',
+             'filter' => Form::statusList(),
+             'value' => function($model, $key, $index, $column) {
+                 return $column->filter[$model->is_active];
+             }
+        ],
+        'position',
+        'created_at:datetime',
         [
             'class' => ActionColumn::className(),
             'header' => Yii::t('all', 'Action'),

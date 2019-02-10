@@ -9,6 +9,7 @@ return [
     'Action' => '动作',
     'Avator' => '头像',
     'Author' => '作者',
+    'Audited' => '已审核',
     'Administrator' => '管理员',
     'Admin login' => '管理员登录',
     'Are you sure you want delete this item?' => '确定要删除这个项目吗?',
@@ -17,6 +18,7 @@ return [
     /******** B ********/
     'Bio'  => '简介',
     'Back' => '返回',
+    'Block' => '块',
 
     
     /******** C ********/
@@ -36,6 +38,10 @@ return [
     'Confirm password' => '确认密码',
     'Customer group name' => '客户组名',
     'Customer group' => '客户组',
+    'Customer email address' => '客户邮件地址',
+    'Customer nickname' => '客户昵称',
+    'Customer login' => '客户登录',
+    'Customer register' => '客户注册',
     "Current user's password" => '当前用户密码',
     'Can use for login' => '可以用于登录',
 
@@ -71,6 +77,7 @@ return [
     'Last content' => '最后的内容',
 
     /******** M ********/
+    'Menu'  => '菜单',
     'Message' => '消息',
     'May Public'  => '可以公开',
     'Mobile phone number' => '手机号码',
@@ -100,9 +107,11 @@ return [
     'Private'          => '私有的',
     'Profile'          => '资料',
     'Position'         => '位置',
+    'Personal'         => '个人中心',
     'Post title'       => '文章标题',
     'Post description' => '文章描述',
     'Post content'     => '文章内容',
+    'Post url path'    => '文章URL路径',
     'Process time'     => '处理时间',
     'Page not found'   => '页面不存在',
     'Password incorrect' => '密码不正确',
@@ -118,6 +127,7 @@ return [
     'Revisor'  => '更新者',
     'Reset filter' => '重置筛选器',
     'Require receipt' => '需要回执',
+    'Remember me' => '记住我',
 
     /******** S ********/
     'Sex'    => '性别',
@@ -131,15 +141,20 @@ return [
 
     /******** T ********/
     'Tag'        => '标签',
+    'Tag name'   => '标签名',
+    'Tag description' => '标签描述',
     'Telephone'  => '电话',
     'The city I live' => '所在城市',
     'This user does not exists' => '这个用户不存在',
     'This parent category is a child of current category' => '这个父分类是当前分类的子分类',
+    'This is a block' => '这是一个块',
+    'This is a menu'  => '这是一个菜单',
     
     /******** U ********/
     'Username' => '用户名',
     'User'     => '用户',
     'Update'   => '更新',
+    'Unaudited' => '未审核',
     'Updated time' => '更新时间',
     'User home page' => '用户主页',
     'Url path' => 'url 路径',

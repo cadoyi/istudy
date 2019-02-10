@@ -30,56 +30,7 @@ class PostQuery extends ActiveQuery
         return $this->andWhere(['category_id' => $category]);
     }
 
-    /**
-     * 获取只为分类而设计的文章.
-     * 
-     * @return $this
-     */
-    public function filterOnlyCategory($bool = true)
-    {
-        return $this->_filterBoolean('only_category', $bool);
-    }
 
-
-    /**
-     * 过滤文章的状态
-     * 
-     * @param string $status  - 文章的状态
-     * @return $this
-     */
-    public function filterStatus($status)
-    {
-        switch($status) {
-            case Post::STATUS_PRIVATE:
-            case Post::STATUS_PUBLIC:
-                break;
-            default:
-                throw new InvalidParamException('Given unknown param :' . $status);
-        }
-        return $this->andWhere(['status' => $status]);
-    }
-
-
-    /**
-     * 过滤私有的文章
-     * 
-     * @return $this
-     */
-    public function filterPrivate()
-    {
-        return $this->filterStatus(Post::STATUS_PRIVATE);
-    }
-
-
-    /**
-     * 过滤发布的文章
-     * 
-     * @return $this
-     */
-    public function filterPublic()
-    {
-        return $this->filterStatus(Post::STATUS_PUBLIC);
-    }
 
 
 }

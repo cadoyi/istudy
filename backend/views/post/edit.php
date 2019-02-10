@@ -4,24 +4,29 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use backend\widgets\FormContainer;
 use common\models\Category;
-$this->registerJsFile('@web/ckeditor/ckeditor.js', ['depends' => ['common']]);
-$input = Html::getInputId($postContent, 'content');
-$formid = 'edit_form';
-$this->registerJsVar('contentid', $input);
-$this->registerJsVar('formid', $formid);
-$this->registerJs('
-	var editor = CKEDITOR.replace(contentid);
-    $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
-        var html = editor.document.getBody().getHtml();
-        $("#" + contentid).text(html);
-    });
-');
+use common\models\Tag;
+use core\helpers\Form;
+?>
+<?php
+    $input = Html::getInputId($post, 'content');
+    $formid = 'edit_form';
+    $this->registerJsVar('tags', Tag::hashOptions());
+    $this->registerJsVar('contentid', $input);
+    $this->registerJsVar('formid', $formid);
+
+    $this->registerJsFile('@web/ckeditor/ckeditor.js', [
+        'depends' => ['common'],
+    ]);
+    $this->registerJsFile('@web/js/post.js', [
+        'depends' => ['common'],
+    ]);
+
 ?>
 <?php
 /**
  * @var $this yii\web\View
  * @var $post common\models\Post
- * @var $postContent common\models\PostContent
+ * @var $post common\models\PostContent
  */
 ?>
 <?php $container = FormContainer::begin([
@@ -29,6 +34,10 @@ $this->registerJs('
         [
             'title' => '基本信息',
             'target' => 'post_base_info',
+        ],
+        [
+            'title' => '源信息',
+            'target' => 'post_meta_info',
         ],
         [
             'title' => '内容信息',
@@ -52,21 +61,44 @@ $this->registerJs('
 	<?= $form->field($post, 'title') ?>
 	<?= $form->field($post, 'url_path') ?>
 	<?= $form->field($post, 'description')->textarea() ?>
+    <?= $form->field($post, 'is_active')->dropDownList(Form::statusList()); ?>
 
 </div>
+<div id="post_meta_info" class="tab-target">
+    <?= $form->field($post, 'meta_title') ?>
+	<?= $form->field($post, 'meta_keywords')->textarea()?>
+	<?= $form->field($post, 'meta_description')->textarea() ?>
+</div>
 <div id="post_content_info" class="tab-target">
-	<?= $form->field($postContent, 'keywords')->textarea()?>
-	<?= $form->field($postContent, 'description')->textarea() ?>
-    <?= $form->field($postContent, 'content')->textarea() ?>
+    <?= $form->field($post, 'content')->textarea() ?>
 </div>
 <div id="post_category_info" class="tab-target">
 	<?= $form->field($post, 'category_id')
 	     ->dropDownList(Category::hashOptions(), ['prompt' => '']) ?>
 </div>
 <div id="post_tag_info" class="tab-target">
-    <h1>这里可以建立标签并选择标签</h1>
+    <style>
+        .tag-wrap { position:relative; }
+        .tag-textarea { height:160px;}
+        .unselected-tags { min-height:50px; }
+        .selected-tags {
+             height:160px; 
+             position:absolute;
+             left:0;
+             top:0;
+             z-index:2;
+             cursor: text;
+         }
+    </style>
+    <div class="form-group">
+        <label>选择标签</label>
+        <input id="tags_input" type="hidden" name="tags" value="{}" />
+        <div id="unselected_tags" class="form-group unselected-tags"></div>
+        <div class="input-gorup tag-wrap">
+            <div class="form-control tag-textarea"></div>
+            <div id="selected_tags" class="form-control selected-tags"></div>
+        </div>
+    </div>
 </div>
-
-
 <?php ActiveForm::end() ?>
 <?php FormContainer::end() ?>

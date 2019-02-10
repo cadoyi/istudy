@@ -16,6 +16,11 @@ use yii\helpers\Html;
             'icon' => 'dashboard',
         ],
         [
+            'label' => Yii::t('all', 'Menu'),
+            'url' => ['menu/index'],
+            'icon' => 'tasks',
+        ],
+        [
             'label' => Yii::t('all', 'Permission'),
             'icon' => 'users',	                
             'items' => [

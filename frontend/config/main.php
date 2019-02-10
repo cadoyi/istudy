@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'layout' => 'layout',
     'components' => [
         'request' => [
             'csrfParam' => 'csrf',
@@ -57,6 +58,26 @@ return [
         ],
         'assetManager' => [
             'appendTimestamp' => true,
+            'bundles' => [
+                'common' => [
+                    'class' => 'yii\web\AssetBundle',
+                    'basePath' => '@webroot',
+                    'baseUrl' => '@web',
+                    'js' => [
+                        'js/scripts.js',
+                    ],
+                    'css' => [
+                        'css/styles.css',
+                    ],
+                    'depends' => [
+                        'yii\web\YiiAsset',
+                        'yii\bootstrap\BootstrapPluginAsset',
+                    ],
+                ],
+            ],
+        ],
+        'view' => [
+            'as view' => 'core\behaviors\ViewBehavior',
         ],
         
     ],

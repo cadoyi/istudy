@@ -3,6 +3,7 @@
 namespace backend\form;
 
 use Yii;
+use yii\db\ActiveRecord;
 use common\models\CustomerGroup;
 
 class CustomerGroupSearch extends CustomerGroup
@@ -14,6 +15,11 @@ class CustomerGroupSearch extends CustomerGroup
 		return [
             [['id', 'name', 'description', 'is_default', 'created_at', 'updated_at'], 'safe'],
 		];
+	}
+
+	public function scenarios()
+	{
+        return ActiveRecord::scenarios();
 	}
 
 	protected function _search($success)

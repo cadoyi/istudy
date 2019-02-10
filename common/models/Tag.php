@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * tag 表
@@ -16,6 +18,8 @@ use Yii;
  */
 class Tag extends ActiveRecord
 {
+
+    const CACHE_TAG = 'tags';
 
     /**
      * {@inheritdoc}
@@ -67,6 +71,16 @@ class Tag extends ActiveRecord
         ];
     }
 
+    public function scenarios()
+    {
+        $default = ['title', 'description'];
+        return [
+            static::SCENARIO_DEFAULT => $default,
+            static::SCENARIO_CREATE  => $default,
+            static::SCENARIO_UPDATE  => $default,
+        ];
+    }
+
 
     /**
      * {@inheritdoc}
@@ -80,6 +94,27 @@ class Tag extends ActiveRecord
             'created_at'  => Yii::t('all', 'Created time'),
             'updated_at'  => Yii::t('all', 'Updated time'),
         ];
+    }
+
+
+    public static function all()
+    {
+        return static::find()
+           -> cache(3600, static::cacheTags(static::CACHE_TAG))
+           -> all();
+    }
+
+    public static function hashOptions()
+    {
+        $all = static::all();
+        return ArrayHelper::map($all, 'id', 'title');
+    }
+
+    public function invalidateCache()
+    {
+        static::invalidate([
+            static::CACHE_TAG,
+        ]);
     }
 
 
@@ -101,5 +136,5 @@ class Tag extends ActiveRecord
                     ->via('postTags');
     }
 
-
+    
 }

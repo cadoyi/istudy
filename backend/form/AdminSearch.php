@@ -3,6 +3,7 @@
 namespace backend\form;
 
 use Yii;
+use yii\db\ActiveRecord;
 use common\models\User;
 
 class AdminSearch extends User
@@ -14,6 +15,11 @@ class AdminSearch extends User
         return [
             [['id', 'username', 'nickname', 'email', 'is_active', 'created_at', 'updated_at'], 'safe'],
         ];
+    }
+
+    public function scenarios()
+    {
+        return ActiveRecord::scenarios();
     }
 
     protected function _search($success)

@@ -27,8 +27,6 @@ use common\query\PostQuery;
  */
 class Post extends ActiveRecord
 {
-    const STATUS_PRIVATE = 0;
-    const STATUS_PUBLIC  = 1;
 
     /**
      * {@inheritdoc}
@@ -74,12 +72,8 @@ class Post extends ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'string', 'on' => [
-               static::SCENARIO_DEFAULT,
-               static::SCENARIO_CREATE,
-               static::SCENARIO_UPDATE,
-            ], 'length' => [1, 255]],
             [['title'], 'required'],
+            [['title'], 'string', 'length' => [1,255]],
             [['description'], 'required'],
             [['description'], 'string', 'length' => [1,255]],
             [['category_id'], 'required'],
@@ -88,19 +82,40 @@ class Post extends ActiveRecord
                 'exist', 
                 'targetClass' => Category::className(), 
                 'targetAttribute' => 'id',
+                'filter' => function($query) {
+                    $query->select('id');
+                },
                 'when' => function($model, $attribute) {
                     return $model->isAttributeChanged($attribute);
                 },
             ],
-            [['status'], 'default', 'value' => 1],
-            [['status'], 'integer', 'max' => 255],
+            [['is_active'], 'default', 'value' => 1],
+            [['is_active'], 'boolean'],
             [['url_path'], 'default', 'value' => null],
             [['url_path'], 'string', 'length' => [2,255]],
             [['url_path'], 'unique', 'when' => function($model, $attribute) {
                 return $model->isAttributeChanged($attribute);
             }],
-            [['only_category'], 'default', 'value' => 0],
-            [['only_category'], 'boolean'],
+            [['meta_title'], 'default', 'value' => function() {
+                return $this->title;
+            } ],
+            [
+                ['meta_title', 'meta_keywords', 'meta_description'], 
+                'string', 
+                'length' => [0,255]
+            ],
+            [['content'], 'required'],
+            [['content'], 'string'],
+        ];
+    }
+
+    public function scenarios()
+    {
+        $default = parent::scenarios()[static::SCENARIO_DEFAULT];
+        return [
+            static::SCENARIO_DEFAULT => $default,
+            static::SCENARIO_CREATE => $default,
+            static::SCENARIO_UPDATE => $default,
         ];
     }
 
@@ -111,34 +126,18 @@ class Post extends ActiveRecord
             'title'         => Yii::t('all', 'Post title'),
             'description'   => Yii::t('all', 'Post description'),
             'category_id'   => Yii::t('all', 'Category'),
-            'status'        => Yii::t('all', 'Status'),
+            'is_active'     => Yii::t('all', 'Status'),
             'url_path'      => Yii::t('all', 'Url path'),
-            'only_category' => Yii::t('all', 'Only use for category'),
+            'meta_title'    => Yii::t('all', 'Meta title'),
+            'meta_keywords' => Yii::t('all', 'Meta keywords'),
+            'meta_description' => Yii::t('all', 'Meta description'),
+            'content'          => Yii::t('all', 'Post content'),
             'created_at'    => Yii::t('all', 'Created time'),
             'updated_at'    => Yii::t('all', 'Updated time'),
             'created_by'    => Yii::t('all', 'Author'),
             'updated_by'    => Yii::t('all', 'Revisor'),
         ];
     }
-    public function loadByCategory($category)
-    {
-        $this->category_id   = $category->id;
-        $this->only_category = 1;
-        $this->title         = $category->title;
-        $this->url_path      = $category->url_path;
-        $this->status        = static::STATUS_PUBLIC;
-    }
-
-
-    public static function statusOptions()
-    {
-        return [
-            static::STATUS_PUBLIC => Yii::t('all', 'Public'),
-            static::STATUS_PRIVATE => Yii::t('all', 'Private'),
-        ];
-    }
-
-
 
 
 
@@ -148,11 +147,6 @@ class Post extends ActiveRecord
     public static function find()
     {
         return Yii::createObject(PostQuery::className(), [ get_called_class() ]);
-    }
-
-    public function canDelete()
-    {
-        return !$this->only_category;
     }
 
 
@@ -192,17 +186,6 @@ class Post extends ActiveRecord
           ->via('favorites');
     }
 
-
-    /**
-     * 获取当前最新的文章
-     * 
-     * @return common\models\PostContent
-     */
-    public function getContent()
-    {
-        return $this->hasOne(PostContent::className(), ['post_id' => 'id'])
-           -> inverseOf('post');
-    }
 
 
     public function getPostTags()

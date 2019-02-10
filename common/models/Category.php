@@ -168,6 +168,8 @@ class Category extends ActiveRecord
            'title',
            'description',
            'is_active',
+           'is_menu',
+           'is_block',
            'position',
            'categoryImage',
            'meta_title',
@@ -208,6 +210,8 @@ class Category extends ActiveRecord
            'updated_at' => Yii::t('all', 'Updated time'),
            'created_by' => Yii::t('all', 'Creator'),
            'updated_at' => Yii::t('all', 'Revisor'),
+           'is_menu' => Yii::t('all', 'This is a menu'),
+           'is_block' => Yii::t('all', 'This is a block'),
         ];
     }
 
@@ -278,7 +282,7 @@ class Category extends ActiveRecord
      * 
      * @return array category 对象组成的数组.
      */
-    public static function menus()
+    public static function all()
     {
         $fields = static::menuColumns();
         $all = static::find()
@@ -288,10 +292,25 @@ class Category extends ActiveRecord
         return $all;
     }
 
+    public static function menus()
+    {
+        $fields = static::menuColumns();
+        $all = static::find()
+            ->select($fields)
+            ->where([
+               'is_active' => 1,
+               'is_menu' => 1,
+            ])
+            ->cache(3600, static::cacheTags(static::CACHE_TAG))
+            ->orderBy('id')
+            ->indexBy('id')
+            ->all();
+    }
+
 
     public static function hashOptions($exclude = null)
     {
-        $all = static::menus();
+        $all = static::all();
         if($exclude === null) { 
             return ArrayHelper::map($all, 'id', 'title');
         }

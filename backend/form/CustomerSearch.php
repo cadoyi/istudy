@@ -3,6 +3,7 @@
 namespace backend\form;
 
 use Yii;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\data\ActiveDataProvider;
 use common\models\Customer;
@@ -17,6 +18,11 @@ class CustomerSearch extends Customer
         return [
            [['id', 'email', 'phone', 'nickname', 'is_active', 'created_at'],'safe'],
         ];
+    }
+
+    public function scenarios()
+    {
+        return ActiveRecord::scenarios();
     }
 
 

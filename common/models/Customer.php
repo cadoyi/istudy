@@ -166,13 +166,7 @@ class Customer extends ActiveRecord implements IdentityInterface
     }
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function find()
-    {
-        return Yii::createObject(CustomerQuery::className(), [ get_called_class() ]);
-    }
+
 
 
     public function fields()
@@ -194,13 +188,33 @@ class Customer extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function find()
+    {
+        return Yii::createObject(CustomerQuery::className(), [ get_called_class() ]);
+    }
+
+
+    public static function findByEmail($email)
+    {
+        return static::findOne([
+            'email'     => $email,
+            'is_active' => 1,
+        ]);
+    }
+
 
     /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
-        return static::findOne($id)->filterActive();
+        return static::findOne([
+            'id'     => $id,
+            'is_active' => 1,
+        ]);
     }
 
 

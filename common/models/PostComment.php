@@ -102,6 +102,10 @@ class PostComment extends ActiveRecord
            'comment'     => Yii::t('all', 'Comment'),
            'status'      => Yii::t('all', 'Status'),
            'created_at'  => Yii::t('all', 'Created time'),
+           'post_title'        => Yii::t('all', 'Post title'),
+           'post_url'          => Yii::t('all', 'Post url path'),
+           'customer_email'    => Yii::t('all', 'Customer email address'),
+           'customer_nickname' => Yii::t('all', 'Customer nickname'),
         ];
     }
 

@@ -1,0 +1,69 @@
+body.pdtop {
+	padding-top: 60px;
+}
+.page {
+	min-height: 100%;
+}
+.page-alert .alert {
+	position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+.preheader .col-xs-6 {
+    height:40px;
+    line-height:2.5rem;
+    font-size:1.2rem;
+}
+.page-alert {
+    padding-left: 0;
+    padding-right: 0;
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+.header-menus {
+	background-color:#222;
+	color: #fff;
+	min-height: 60px;
+	position: relative;
+}
+.header-menus .logo {
+	min-width: 90px;
+}
+.header-menus.fixed-top {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+}
+.header-menus a {
+	color: #fff;
+}
+
+.footer {
+	background-color: #222;
+	color: #f1f1f1;
+	padding: 1rem 0;
+}
+.footer a {
+	color: #f1f1f1;
+}
+.footer a:hover,
+.footer a:focus {
+	text-decoration: none;
+    color: #fff;
+}
+.friendlinks {
+	font-size: 1rem;
+	border-bottom: 1px solid #fff;
+	padding: .5rem 0;
+	text-align: center;
+}
+.site-links {
+	padding: 1rem;
+	font-size: .9rem;
+}
