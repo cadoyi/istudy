@@ -11,7 +11,7 @@ class m190130_044042_create_admin_profile_table extends Migration
 
     public $tableOption = 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
-    public $adminTable = '{{%admin}}';
+    public $adminTable = '{{%admin_user}}';
     public $adminFk = 'FK_ADMIN_PROFILE_USER_ID_ADMIN_USER_ID';
 
     /**
