@@ -6,6 +6,10 @@ use Yii;
 
 class MenuItem extends ActiveRecord
 {
+    const CACHE_TAG = 'menu_items';
+
+    public $parent;
+    public $childs = [];
 
 	public static function tableName()
 	{
@@ -20,7 +24,8 @@ class MenuItem extends ActiveRecord
             [['title'], 'string', 'length' => [0, 255]],
             [['url'], 'string', 'length' => [0, 255]],
             [['url'], 'default', 'value' => '#'],
-            [['url'], 'url'],
+            [['level'], 'default', 'value' => 1],
+            [['level'], 'integer'],
             [['position'], 'integer'],
             [['position'], 'default', 'value' => 0],
             [['menu_id'], 'required'],
@@ -46,13 +51,14 @@ class MenuItem extends ActiveRecord
             'url'  => Yii::t('all', 'Menu url'),
             'menu_id' => Yii::t('all', 'Menu'),
             'parent_id' => Yii::t('all', 'Parent'),
+            'level' => Yii::t('all', 'Level'),
             'position' => Yii::t('all', 'Position'),
 		];
 	}
 
 	public function scenarios()
 	{
-        $default = ['title', 'url', 'parent_id', 'menu_id', 'position'];
+        $default = ['title', 'url', 'parent_id', 'menu_id', 'position', 'level'];
 		return [
 			static::SCENARIO_DEFAULT => $default,
             static::SCENARIO_CREATE => $default,
@@ -64,4 +70,52 @@ class MenuItem extends ActiveRecord
     {
         return $this->hasOne(Menu::className(), ['id' => 'menu_id']);
     }
+
+
+    public static function findOrderedItems($menu)
+    {
+        $items = static::find()
+           -> where(['menu_id' => $menu->id])
+           -> orderBy(['level' => SORT_ASC, 'position' => SORT_ASC])
+           -> cache(3600, static::cacheTags(static::CACHE_TAG))
+           -> indexBy('id')
+           -> all();
+
+        $_result = [];
+        foreach($items as $id => $item) {
+            $position = $item->position;
+            if($item->parent_id === null) {
+                $_result[$position] = $item;
+            } else {
+                $parent = $items[$item->parent_id];
+                $item->parent = $parent;
+                $parent->childs[$position] = $item;
+            }
+        }
+        return static::buildItems($_result);
+    }
+
+    protected static function buildItems($items)
+    {
+        $_items = [];
+        foreach($items as $item) {
+            $_item = [
+               'label' => $item->title,
+               'url'   => $item->url,
+            ];
+            if($item->childs) {
+                $_item['items'] = static::buildItems($item->childs);
+            }
+            $_items[] = $_item;
+        }
+        return $_items;
+    }
+
+    public static function flushMenuItemCache()
+    {
+        static::invalidate([
+            static::CACHE_TAG,
+        ]);
+    }
+    
 }

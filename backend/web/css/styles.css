@@ -24,7 +24,9 @@ a:focus {
 .color-inverse a {
     color: #fff;
 }
-
+.disblk { display: block; }
+.disinl { display: inline; }
+.disinb { display: inline-block; }
 .disflex { 
     display:-webkit-box;
     display:-moz-box;
@@ -141,3 +143,11 @@ a:focus {
     height:100%;
 }
 
+.upload-link {
+    display: block; 
+    float:left; 
+    width: 36px;
+    height: 36px;
+    margin-right: 1rem;
+}
+.upload-link img { max-width: 100%; height: 100%;}

@@ -9,7 +9,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\BlameableBehavior;
 use common\query\CategoryQuery;
-use core\behaviors\UploadBehavior;
+use core\behaviors\UploadedBehavior;
+use core\helpers\App;
 
 /**
  * Category table
@@ -41,7 +42,9 @@ class Category extends ActiveRecord
 
     const CACHE_TAG = 'Categories';
 
-    public $categoryImage;
+    public $imageFile;
+
+    public $imageDelete;
 
     /**
      * @var static 验证用的父分类实例.
@@ -65,12 +68,18 @@ class Category extends ActiveRecord
                     'targetClass'     => static::className(),
                 ],
             ],
+            /*
             'image' => [
                 'class' => UploadBehavior::className(),
                 'attribute' => 'categoryImage',
                 'targetAttribute' => 'image',
                 'path' => 'category',
                 'absolutePath' => '@media/category',
+            ], */
+            'image' => [
+                'class' => UploadedBehavior::className(),
+                'attribute' => 'image',
+                'path'      => '@media/category',
             ],
         ]);
     }
@@ -150,10 +159,12 @@ class Category extends ActiveRecord
                 return $this->title;
             }],
             [['content'], 'string'],
-            [['categoryImage'], 
+            [['imageFile'], 
                 'image', 
                 'extensions' => ['gif', 'jpg', 'png', 'jpeg'],
             ],
+            [['imageDelete'], 'default', 'value' => 0],
+            [['imageDelete'], 'boolean'],
         ];
     }
 
@@ -171,7 +182,8 @@ class Category extends ActiveRecord
            'is_menu',
            'is_block',
            'position',
-           'categoryImage',
+           'imageFile',
+           'imageDelete',
            'meta_title',
            'meta_keywords',
            'meta_description',
@@ -201,7 +213,8 @@ class Category extends ActiveRecord
            'is_active'   => Yii::t('all', 'Status'),
            'position'    => Yii::t('all', 'Position'),
            'image'       => Yii::t('all', 'Category image'),
-           'categoryImage' => Yii::t('all', 'Category image'),
+           'imageFile' => Yii::t('all', 'Category image'),
+           'imageDelete' => Yii::t('all', 'Delete image'),
            'meta_title'   => Yii::t('all', 'Meta title'),
            'meta_keywords'    => Yii::t('all', 'Meta keywords'),
            'meta_description' => Yii::t('all', 'Meta description'),
@@ -239,10 +252,10 @@ class Category extends ActiveRecord
     }
 
 
-    public function getImageUrl($full = false)
+    public function getImageUrl($absolute = true)
     {
         if($this->image) {
-            return Url::to('@web/media/' . $this->image, $full);
+            return App::getMediaUrl('category/' . $this->image, $absolute);
         }
         return null;
     }

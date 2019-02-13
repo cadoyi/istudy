@@ -36,12 +36,14 @@ class App
 
     /**
      * 获取 media url
-     * @param  string $suffix  URL 后缀
+     * @param  string $suffix     URL 后缀
+     * @param  boolean $absolute 是否使用绝对路径
+     * 
      * @return string url
      */
-    public static function getMediaUrl($suffix = '')
+    public static function getMediaUrl($suffix = '', $absolute = true)
     {
-    	return Url::to('@web/media/') . ltrim($suffix, '/');
+    	return Url::to('@web/media/', $absolute) . ltrim($suffix, '/');
     }
 
 
@@ -59,12 +61,15 @@ class App
 
     /**
      * 获取 web 图片路径
+     *
+     * @param string  $suffix   URL 后缀
+     * @param boolean $absolute 是否使用绝对路径
      * 
-     * @return [type] [description]
+     * @return string
      */
-    public static function getImageUrl($suffix = '')
+    public static function getImageUrl($suffix = '', $absolute = true)
     {
-        return Url::to('@web/images/') . ltrim($suffix, '/');
+        return Url::to('@web/images/', $absolute) . ltrim($suffix, '/');
     }
 
     

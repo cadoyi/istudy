@@ -23,12 +23,13 @@ class m190202_065333_create_menu_item_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
-            'parent_id' => $this->integer(11)->unsigned(),
+            'id' => $this->bigPrimaryKey()->unsigned(),
+            'parent_id' => $this->bigInteger()->unsigned(),
             'menu_id' => $this->integer(11)->unsigned()->notNull(),
             'title' => $this->string()->notNull(),
             'url'   => $this->string()->notNull()->defaultValue('#'),
             'position' => $this->integer()->unsigned()->notNull(),
+            'level' => $this->integer()->unsigned()->notNull(),
         ], $this->tableOption);
 
 
@@ -49,6 +50,8 @@ class m190202_065333_create_menu_item_table extends Migration
             'CASCADE',
             'CASCADE'
         );
+
+        $this->createIndex('IDX_POSITION_LEVEL_MENU', $this->table, ['position', 'level', 'menu_id']);
     }
     
 
@@ -59,6 +62,7 @@ class m190202_065333_create_menu_item_table extends Migration
     {
         $this->dropForeignKey($this->menuFk, $this->table);
         $this->dropForeignKey($this->parentFk, $this->table);
+        $this->dropIndex('IDX_POSITION_LEVEL_MENU', $this->table);
         $this->dropTable($this->table);
     }
 }

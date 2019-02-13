@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use core\helpers\Form;
 use backend\widgets\FormContainer;
-use backend\widgets\ImageField;
+use core\widgets\ImageInput;
 use yii\bootstrap\ActiveForm;
 ?>
 <?php
@@ -43,8 +43,9 @@ use yii\bootstrap\ActiveForm;
     <?= $form->field($profile, 'wechat')?>
     <?= $form->field($profile, 'qq')?>
     <?= $form->field($profile, 'sex')->dropDownList(Form::sexList(), ['prompt' => ''])?>
-    <?= $form->field($profile, 'avatorImage')->widget(ImageField::className(), [
+    <?= $form->field($profile, 'avatorFile')->widget(ImageInput::className(), [
         'url' => $profile->getAvatorUrl(true),
+        'deleteAttribute' => 'avatorDelete',
     ]) ?>
     <?= $form->field($profile, 'note')->textarea() ?>
 </div>

@@ -5,12 +5,15 @@ namespace common\models;
 use Yii;
 use yii\helpers\Url;
 use core\validators\PhoneValidator;
-use core\behaviors\UploadBehavior;
+use core\behaviors\UploadedBehavior;
+use core\helpers\App;
 
 class UserProfile extends ActiveRecord
 {
 
-	  public $avatorImage;
+	  public $avatorFile;
+
+    public $avatorDelete;
 
 
 	  public static function tableName()
@@ -22,11 +25,9 @@ class UserProfile extends ActiveRecord
     {
     	return array_merge(parent::behaviors(), [
            'avator' => [
-               'class' => UploadBehavior::className(),
-               'attribute' => 'avatorImage',
-               'targetAttribute' => 'avator',
-               'path'         =>  'admin',
-               'absolutePath' => '@media/admin',
+               'class' => UploadedBehavior::className(),
+               'attribute' => 'avator',
+               'path'      => '@media/admin',
            ],
     	]);
     }
@@ -40,14 +41,16 @@ class UserProfile extends ActiveRecord
             [['qq'], 'integer'],
             [['sex'], 'boolean'],
             [['note'], 'string', 'length' => [0, 255]],
-            [['avatorImage'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+            [['avatorFile'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+            [['avatorDelete'], 'default', 'value' => 0],
+            [['avatorDelete'], 'boolean'],
             [['phone', 'email', 'wechat', 'qq', 'avator', 'sex', 'note'], 'default', 'value' => null],
         ];
 	  }
 
     public function scenarios()
     {
-      	$default = ['phone', 'email', 'wechat', 'qq', 'avator', 'sex', 'note', 'avatorImage'];
+      	$default = ['phone', 'email', 'wechat', 'qq', 'avator', 'sex', 'note', 'avatorFile', 'avatorDelete'];
       	return [
                static::SCENARIO_DEFAULT => $default,
                static::SCENARIO_CREATE => $default,
@@ -68,6 +71,7 @@ class UserProfile extends ActiveRecord
              'note'        => Yii::t('all', 'Note'),
              'avator'      => Yii::t('all', 'Avator'),
              'avatorImage' => Yii::t('all', 'Avator'),
+             'avatorDelete' => Yii::t('all', 'Delete image'),
           ];
     }
 
@@ -77,10 +81,10 @@ class UserProfile extends ActiveRecord
     }
 
 
-    public function getAvatorUrl($full = false)
+    public function getAvatorUrl($absolute = true)
     {
         if($this->avator) {
-           return Url::to('@web/media/' . $this->avator, $full);
+           return App::getMediaUrl('admin/' . $this->avator, $absolute);
         }
         return null;
     }

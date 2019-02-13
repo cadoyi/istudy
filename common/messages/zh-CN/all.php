@@ -52,6 +52,7 @@ return [
     'Description' => '描述',
     'Date of birth' => '出生日期',
     'Default group' => '默认组',
+    'Delete image'  => '删除图片',
 
     /******** E ********/
     'Email address' => '邮件地址',

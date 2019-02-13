@@ -18,11 +18,13 @@ class ImageInput extends InputWidget
 
 	public $deleteAttribute;
 
-	public $imageOptions = [];
+    public $containerOptions = ['class' => 'input-group'];
 
-	public $linkOptions = [];
+	public $imageOptions = ['class' => 'img-responsive'];
 
-	public $inputType = 'image';
+	public $linkOptions = ['class' => 'upload-link'];
+
+	public $inputType = 'file';
 
 
     public function init()
@@ -31,18 +33,31 @@ class ImageInput extends InputWidget
     	if(!isset($this->deleteAttribute)) {
     		throw new InvalidConfigException('{deleteAttribute} must be set.');
     	}
+        $form = $this->field->form;
+        if(!isset($form->options['enctype'])) {
+            $form->options['enctype'] = 'multipart/form-data';
+        }
     }
 
 
-
+    /**
+     * {@inheritdoc}
+     */
 	public function run()
 	{
 		$image = $this->renderImage();
 		$input = $this->renderInput();
 		$delete = $this->renderDelete();
-		return $image . $input . $delete;
+		return Html::tag('div', $image . $input . $delete, $this->containerOptions);
 	}
 
+
+
+
+    /**
+     * 渲染图片
+     * @return string 
+     */
 	public function renderImage()
 	{
 		if($this->url) {
@@ -53,18 +68,26 @@ class ImageInput extends InputWidget
 		return '';
 	}
 
+
+    /**
+     * 渲染 input 框
+     * @return string
+     */
 	public function renderInput()
 	{
         return $this->renderInputHtml($this->inputType);
 	}
 
+
+    /**
+     * 只有图片已经存在,并且不是必须的,就可以渲染 delete 框
+     * 
+     * @return string delete input
+     */
 	public function renderDelete()
 	{
-        if($this->url) {
-        	if($this->hasModel()) {
-        		return Html::activeCheckbox($this->model, $this->deleteAttribute);
-        	}
-        	return Html::checkbox($this->deleteAttribute);
+        if($this->url && !$this->model->isAttributeRequired($this->attribute)) {
+        	return Html::activeCheckbox($this->model, $this->deleteAttribute);
         }
         return '';
 	}

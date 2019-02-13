@@ -63,4 +63,9 @@ class Menu extends ActiveRecord
         return $this->hasMany(MenuItem::className(), ['menu_id' => 'id'])
          ->inverseOf('menu');
     }
+
+    public function getOrderedItems()
+    {
+        return MenuItem::findOrderedItems($this);
+    }
 }

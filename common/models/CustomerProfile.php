@@ -5,13 +5,16 @@ namespace common\models;
 use Yii;
 use yii\helpers\Url;
 use common\helpers\Form;
-use core\behaviors\UploadBehavior;
+use core\behaviors\UploadedBehavior;
+use core\helpers\App;
 
 
 class CustomerProfile extends ActiveRecord
 {
    
-   public $avatorImage;
+   public $avatorFile;
+
+   public $avatorDelete;
 
    /**
     * {@inheritdoc}
@@ -30,11 +33,9 @@ class CustomerProfile extends ActiveRecord
     {
          return array_merge(parent::behaviors(), [
              'avator' => [
-                 'class' => UploadBehavior::className(),
-                 'attribute' => 'avatorImage',
-                 'targetAttribute' => 'avator',
-                 'path' => 'customer',
-                 'absolutePath' => '@media/customer',
+                 'class' => UploadedBehavior::className(),
+                 'attribute' => 'avator',
+                 'path' => '@media/customer',
              ],
          ]);
     }
@@ -61,7 +62,9 @@ class CustomerProfile extends ActiveRecord
                     message : \'不是有效的日期格式\'
                 })';
             }],
-            [['avatorImage'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+            [['avatorFile'], 'image', 'extensions' => ['jpg', 'png', 'gif', 'jpeg']],
+            [['avatorDelete'], 'default', 'value' => 0],
+            [['avatorDelete'], 'boolean'],
             [['url', 'wechat', 'qq', 'sex','dob', 'avator', 'city', 'note', 'sex', 'bio', 'username'], 
                'default',
                'value' => null,
@@ -79,7 +82,8 @@ class CustomerProfile extends ActiveRecord
            'qq',
            'sex',
            'dob',
-           'avatorImage',
+           'avatorFile',
+           'avatorDelete',
            'city',
            'note',
         ];
@@ -103,7 +107,8 @@ class CustomerProfile extends ActiveRecord
             'city'     => Yii::t('admin', 'The city I live'),
             'note'     => Yii::t('admin', 'Note information'),
             'avator'   => Yii::t('admin', 'Avator'),
-            'avatorImage' => Yii::t('admin', 'Avator'),
+            'avatorFile' => Yii::t('admin', 'Avator'),
+            'avatorDelete' => Yii::t('all', 'Delete image'),
         ];
     }
 
@@ -117,10 +122,10 @@ class CustomerProfile extends ActiveRecord
         return $fields;
     }
 
-    public function getAvatorUrl($full = false)
+    public function getAvatorUrl($absolute = true)
     {
         if($this->avator) {
-            return Url::to('@web/media/' . $this->avator, $full);
+            return App::getMediaUrl('customer/'. $this->avator, $absolute);
         }
         return null;
     }

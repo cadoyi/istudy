@@ -5,6 +5,7 @@ use backend\widgets\FormContainer;
 use backend\widgets\ImageField;
 use common\models\Category;
 use core\helpers\Form;
+use core\widgets\ImageInput;
 ?>
 <?php
 /**
@@ -19,13 +20,16 @@ use core\helpers\Form;
     $formid = 'edit_form';
 
     $this->registerJsFile('@web/ckeditor/ckeditor.js', [
-      'depends' => ['common'],
+        'depends' => ['common'],
     ]);
 
     $this->registerJsVar('contentid', $input);
     $this->registerJsVar('formid', $formid);
+    
     $this->registerJs('
-       var editor = CKEDITOR.replace(contentid);
+       var editor = CKEDITOR.replace(contentid, {
+           customConfig : "/config/ckeditor.js",
+        });
        window.ce = editor;
         $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
             var html = editor.document.getBody().getHtml();
@@ -33,7 +37,7 @@ use core\helpers\Form;
             $("#" + contentid).text(html);
             console.log(document.getElementById(contentid));
         });
-    ');
+    '); 
 ?>
 <?php $container = FormContainer::begin([
     'tabs' => [
@@ -60,8 +64,9 @@ use core\helpers\Form;
        <?= $form->field($category, 'description')->textarea() ?>
        <?= $form->field($category, 'url_path')?>
        <?= $form->field($category, 'parent_id')->dropDownList($category->parentOptions(), ['prompt' => '']) ?>
-      <?= $form->field($category, 'categoryImage')->widget(ImageField::className(), [
-           'url' => $category->getImageUrl(true),
+       <?= $form->field($category, 'imageFile')->widget(ImageInput::className(), [
+           'url' => $category->getImageUrl(),
+           'deleteAttribute' => 'imageDelete',
         ])?>
        <?= $form->field($category, 'is_active')->radioList(Form::statusList()) ?>
        <?= $form->field($category, 'position')?>

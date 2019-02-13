@@ -6,7 +6,7 @@ use core\helpers\Form;
 use common\models\Customer;
 use common\models\CustomerGroup;
 use backend\widgets\FormContainer;
-use backend\widgets\ImageField;
+use core\widgets\ImageInput;
 
 $groups = CustomerGroup::hashOptions();
 ?>
@@ -58,9 +58,10 @@ $groups = CustomerGroup::hashOptions();
         <?= $form->field($profile, 'qq') ?>
         <?= $form->field($profile, 'sex')->dropDownList(Form::booleanList(['male', 'female']), ['prompt' => '']) ?>
         <?= $form->field($profile, 'dob') ?>
-        <?= $form->field($profile, 'avatorImage')
-           ->widget(ImageField::className(), [
+        <?= $form->field($profile, 'avatorFile')
+           ->widget(ImageInput::className(), [
                'url' => $profile->getAvatorUrl(true),
+               'deleteAttribute' => 'avatorDelete',
            ]);
         ?>
         <?= $form->field($profile, 'city') ?>

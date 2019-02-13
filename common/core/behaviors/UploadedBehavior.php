@@ -22,12 +22,14 @@ class UploadedBehavior extends Behavior
 
     /**
      * @var string 渲染的删除属性,只在更新的时候使用
+     *      默认为 $attribute . 'Delete'
      */
     public $deleteAttribute;
 
 
     /**
      * @var string 渲染的验证属性, 这个是表单输出时使用
+     *     默认为 $attribute . 'File'
      */
     public $inputAttribute;
 
@@ -73,8 +75,8 @@ class UploadedBehavior extends Behavior
     {
     	return [
             ActiveRecord::EVENT_BEFORE_VALIDATE => 'instance',
-            ActiveRecord::EVENT_AFTER_INSERT => 'insert',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'update',
+            ActiveRecord::EVENT_AFTER_INSERT    => 'insert',
+            ActiveRecord::EVENT_AFTER_UPDATE    => 'update',
     	];
     }
 
@@ -85,13 +87,15 @@ class UploadedBehavior extends Behavior
     	}
 
         $this->value = $this->owner->{$this->attribute};
-
     	$this->_file = UploadedFile::getInstance($this->owner, $this->inputAttribute);
 
         if($this->_file) {
         	$filename = Yii::$app->security->generateRandomString();
         	$ext = $this->_file->extension;
         	$this->owner->{$this->attribute} = $filename . '.' . $ext;
+
+        } elseif($this->isDelete()) {
+            $this->owner->{$this->attribute} = null;
         }
     }
 
@@ -104,6 +108,8 @@ class UploadedBehavior extends Behavior
         if($this->_file) {
         	$this->saveFile();
         }
+
+        $this->clean();
     }
 
     public function update()
@@ -114,39 +120,60 @@ class UploadedBehavior extends Behavior
         if($this->_file) {
             $this->saveFile();
         }
-        if($this->isDelete() && !empty($this->value)) {
+        if($this->isDelete()) {
             $oldFile = $this->getFilePath($this->value);
             if(is_file($oldFile)) {
-            	FileHelper::unlink($oldFile);
-            }
+                FileHelper::unlink($oldFile);
+            } 
         }
+        $this->clean();
 
     }
 
     public function saveFile()
     {
     	if($this->_file) {
-    		$filename = $this->owner->{$this->attribute};
+            $filename = $this->owner->{$this->attribute};
             $file = $this->getFilePath($filename);
             if(!$this->_file->saveAs($file)) {
-            	throw new Exception('file cannot be saved');
+                throw new Exception('file cannot be saved');
             }
     	}
     }
 
     public function isActive()
     {
-    	return $this->owner->isAttributeActive($this->attribute);
+    	return $this->owner->isAttributeActive($this->inputAttribute);
     }
 
+    /**
+     * 是否删除旧的图片
+     *   1. 用户可以删除并且点击了点击了删除操作
+     *   2. 用户替换图片
+     *
+     * @return boolean [description]
+     */
     public function isDelete()
     {
-    	return $this->owner->{$this->deleteAttribute};
+        if($this->value && $this->_file) {
+            return true;
+        }
+        if(!$this->owner->isAttributeRequired($this->inputAttribute)) {
+            return $this->owner->{$this->deleteAttribute};
+        }
+        return false;
     }
 
     public function getFilePath($filename)
     {
     	return $this->path . DIRECTORY_SEPARATOR . $filename;
+    }
+
+
+    public function clean()
+    {
+        $this->_file = null;
+        $this->value = null;
     }
 
 }
