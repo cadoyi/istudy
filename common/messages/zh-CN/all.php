@@ -34,6 +34,13 @@ return [
     'Category page'  => '分类页',
     'Created time' => '创建时间',
     'Create new' => '新建',
+    'Create admin user' => '创建管理用户',
+    'Create category' => '创建分类',
+    'Create menu' => '创建菜单',
+    'Create tag'  => '创建标签',
+    'Create comment' => '创建评论',
+    'Create customer group' => '创建客户组',
+    'Create customer' => '创建客户',
     'Captcha code' => '验证码',
     'Confirm password' => '确认密码',
     'Customer group name' => '客户组名',
@@ -59,8 +66,10 @@ return [
     'Enabled' => '已启用',
     'Edit post' => '编辑文章',
     'Emergency email address' => '应急电子邮件地址',
+    'Enroll now' => '立即报名',
 
     /******** F ********/
+    'Forgot password?' => '忘记密码?',
     /******** G ********/
     'Group' => '组',
     'Group name' => '组名',
@@ -84,10 +93,20 @@ return [
     'Mobile phone number' => '手机号码',
     'Mobile number' => '手机号',
     'Message level' => '消息级别',
+    'Manage post' => '管理文章',
+    'Manage category' => '管理分类',
+    'Manage menu' => '管理菜单',
+    'Manage customer group' => '管理客户组',
+    'Manage customer' => '管理客户',
+    'Manage tag' => '管理标签',
+    'Manage comment' => '管理评论',
+    'Manage admin user' => '管理管理员用户',
     "My sister's website" => '站点标题',
     'Meta title'  => '元标题',
     'Meta keywords' => '元关键字',
     'Meta description' => '元描述',
+    'Menu name' => '菜单名称',
+    'Menu description' => '菜单描述',
 
     /******** N ********/
     'No'       => '否',
@@ -139,6 +158,8 @@ return [
     'Sender'  => '发送者',
     'System'  => '系统',
     'Send time' => '发送时间',
+    'Student login' => '学员登录',
+    'Student register' => '学员注册',
 
     /******** T ********/
     'Tag'        => '标签',
@@ -159,6 +180,13 @@ return [
     'Updated time' => '更新时间',
     'User home page' => '用户主页',
     'Url path' => 'url 路径',
+    'Update admin user' => '更新管理用户',
+    'Update category' => '更新分类',
+    'Update menu' => '更新菜单',
+    'Update post' => '更新文章',
+    'Update tag' => '更新标签',
+    'Update comment' => '更新评论',
+    'Update customer group' => '更新客户组',
     'Username or password incorrect' => '用户名或密码不正确',
 
     /******** V ********/

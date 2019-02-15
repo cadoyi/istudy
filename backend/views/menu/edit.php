@@ -66,12 +66,16 @@ $menuitems = $menu->orderedItems;
                    </a>
               </div>
               <div class="panel-body">
-                  <?= MenuWidget::widget([
-                      'options' => ['id' => 'menutree'],
-                      'items' => $menuitems,
-                      'linkTemplate' => '<a class="menu btn" title="{url}" data-title="{label}"
-                                            href="{url}">{label}</a>',
-                  ])?>
+                  <?php if(empty($menuitems)): ?>
+                     <ul id="menutree"></ul>
+                  <?php else: ?>
+                    <?= MenuWidget::widget([
+                        'options' => ['id' => 'menutree'],
+                        'items' => $menuitems,
+                        'linkTemplate' => '<a class="menu btn" title="{url}" data-title="{label}"
+                                              href="{url}">{label}</a>',
+                    ])?>
+                <?php endif; ?>
               </div>
            </div>
        </div>

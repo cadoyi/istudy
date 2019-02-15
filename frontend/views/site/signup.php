@@ -3,33 +3,34 @@
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \frontend\models\SignupForm */
-
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
+use yii\captcha\Captcha;
 
-$this->title = 'Signup';
+$this->title = Yii::t('app', 'Student register');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<?php $this->beginContent('@frontend/views/site/_siginup.php') ?>
 <div class="site-signup">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to signup:</p>
+    <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
+        <?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <?= $form->field($model, 'email') ?>
+        <?= $form->field($model, 'password_confirm')->passwordInput() ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'code')->widget(Captcha::className(), [
+             
+        ])?>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+        <div class="form-group">
+            <?= Html::submitButton('&nbsp;' . Yii::t('app','Register') . '&nbsp;', ['class' => 'btn btn-primary']) ?>
         </div>
-    </div>
+
+    <?php ActiveForm::end(); ?>
+
 </div>
+<?php $this->endContent() ?>

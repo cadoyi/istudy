@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\models\LoginForm;
@@ -11,6 +12,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\Customer;
 
 /**
  * Site controller
@@ -153,15 +155,59 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
+                return $this->redirect(['verify', ['email' => $user->email]]);
             }
         }
 
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    public function actionVerify($email)
+    {
+        $cache = Yii::$app->cache;
+        $customer = Customer::find()
+            -> where([
+                'email' => $email, 
+                'is_active' => 0
+            ])
+            -> one();
+        if($customer && !$customer->is_active) {
+            return $this->render('verify', ['email' => $customer->email]);
+        }
+        throw new BadRequestHttpException('Bad request');
+    }
+
+    public function actionConfirmEmail($token, $sequeue, $secret)
+    {
+        $customer = Customer::find()
+           ->where([
+              'id'       => $sequeue,
+              'auth_key' => $token,
+          ])->one();
+        $cache = Yii::$app->cache;
+        if($customer && !$customer->is_active && $cache->get([$customer->email, $customer->id])) {
+            $customer->is_active = 1;
+            $customer->save(false);
+            return $this->render('confirm-success');
+        }
+        throw new BadRequestHttpException('Token expired');
+    }
+
+    public function resendRegisterEmail()
+    {
+        $request = Yii::$app->request;
+        $data['success'] = 0;
+        if($request->isPost && $request->isAjax) {
+            $email = $request->post('email');
+            $customer = Customer::find()->where(['email' => $email])->one();
+            if(!$customer->is_active) {
+                SignupForm::sendRegisterVerifyEmail($customer);
+                $data['success'] = 1;
+            }
+        }
+        return $this->asJson($data);
     }
 
     /**

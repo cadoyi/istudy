@@ -1,38 +1,30 @@
 <?php
 namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
-use common\models\User;
+use common\models\Customer;
+use common\models\CustomerProfile;
+use core\validators\PasswordValidator;
 
 /**
  * Signup form
  */
 class SignupForm extends Model
 {
-    public $username;
+
     public $email;
     public $password;
+    public $password_confirm;
+    public $code;
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
+    public function attributeLabels()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            'email' => Yii::t('app', 'Email address'),
+            'password' => Yii::t('app', 'Password'),
+            'password_confirm' => Yii::t('app', 'Confirm password'),
+            'code' => Yii::t('app', 'Captcha code'),
         ];
     }
 
@@ -43,16 +35,47 @@ class SignupForm extends Model
      */
     public function signup()
     {
-        if (!$this->validate()) {
-            return null;
+        $customer = new Customer([
+            'scenario' => Customer::SCENARIO_CREATE,
+            'email' => $this->email,
+            'password' => $this->password,
+            'password_confirm' => $this->password_confirm,
+            'is_active' => 0,
+        ]);
+
+        if ($customer->validate()) {
+            Customer::getDb()->transaction(function() use ($customer){
+                $customer->save(false);
+                $profile = new CustomerProfile([
+                        'scenario' => CustomerProfile::SCENARIO_CREATE,
+                        'customer_id' => $customer->id,
+                ]);
+                $profile->save();
+                static::sendRegisterVerifyEmail($customer);
+            });
+            return $this;
+            
         }
-        
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        
-        return $user->save() ? $user : null;
+        $this->addErrors($customer->getErrors());
+        return null;
+    }
+
+    public static function sendRegisterVerifyEmail($customer)
+    {
+        $cache = Yii::$app->cache;
+        $mailer = Yii::$app->mailer;
+
+        $secret = $cache->getOrSet([$customer->email, $customer->id], function($cache) {
+            return md5(time());
+        }, 3600);
+        $mailer->compose([
+            'text' => 'register-text.php',
+            'html' => 'register-html.php',
+        ], [
+            'user' => $customer,
+            'secret' => $secret,
+        ])->setTo($customer->email)
+          ->setSubject(Yii::t('app', 'Confirm email'))
+          ->send();
     }
 }

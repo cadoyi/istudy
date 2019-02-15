@@ -32,3 +32,19 @@ a.initial:focus {
 .flex5 { -webkit-box-flex:5;-moz-box-flex:5;-webkit-flex:5;-ms-flex:5;flex:5;min-width:0;}
 .flex6 { -webkit-box-flex:6;-moz-box-flex:6;-webkit-flex:6;-ms-flex:6;flex:6;min-width:0;}
 .flex7 { -webkit-box-flex:7;-moz-box-flex:7;-webkit-flex:7;-ms-flex:7;flex:7;min-width:0;}
+
+.site-sign-container {
+    text-align: center;
+}
+.site-sign-row {
+    border: 1px solid #ddd;
+    background-color: rgba(247, 247, 247, 0.5);
+    border-radius: 6px;
+    padding: 2rem;
+    max-width: 330px;
+    margin: auto;
+    text-align: left;
+}
+.site-sign-row ul {
+    margin-bottom: 20px;
+}

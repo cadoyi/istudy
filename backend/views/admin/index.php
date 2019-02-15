@@ -3,14 +3,13 @@ use backend\grid\GridView;
 use backend\grid\ActionColumn;
 use yii\helpers\Html;
 use yii\helpers\Url;
-$this->title = '管理员列表';
+$this->title = Yii::t('app', 'Manage admin user');
 ?>
 <?php $this->beginContent('@backend/views/wraps/grid.php') ?>
 <?= GridView::widget([
     'id' => 'admin_list',
     'filterModel'  => $searchModel,
-    
-    'dataProvider' => $dataProvider,                                                                                                       
+    'dataProvider' => $dataProvider,                                                                                                      
     'columns' => [
         [
             'attribute' => 'id',

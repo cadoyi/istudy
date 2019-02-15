@@ -48,4 +48,26 @@ class ViewBehavior extends Behavior
     	return App::setParam($key, $value);
     }
 
+    public function registerMetaKeywords($keywords = null)
+    {
+        $keywords = is_null($keywords) ? App::getParam('website.meta_keywords') : $keywords;
+        if($keywords) {
+            $this->owner->registerMetaTag([
+               'name' => 'keywords',
+               'content' => $keywords,
+            ], 'keywords');
+        }
+    }
+
+    public function registerMetaDescription($description = null)
+    {
+        $description = is_null($description) ? App::getParam('website.meta_description') : $description;
+        if($description) {
+            $this->owner->registerMetaTag([
+               'name' => 'description',
+               'content' => $description,
+            ], 'description');
+        }
+    }
+
 }

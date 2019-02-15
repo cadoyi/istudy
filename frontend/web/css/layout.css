@@ -1,5 +1,5 @@
-body.pdtop {
-	padding-top: 60px;
+body {
+	padding-top: 70px;
 }
 .page {
 	min-height: 100%;
@@ -9,11 +9,6 @@ body.pdtop {
     top: 0;
     left: 0;
     right: 0;
-}
-.preheader .col-xs-6 {
-    height:40px;
-    line-height:2.5rem;
-    font-size:1.2rem;
 }
 .page-alert {
     padding-left: 0;
@@ -25,9 +20,6 @@ body.pdtop {
     text-align: center;
 }
 .header-menus {
-	background-color:#222;
-	color: #fff;
-	min-height: 60px;
 	position: relative;
 }
 .header-menus .logo {
@@ -36,13 +28,55 @@ body.pdtop {
 .header-menus.fixed-top {
 	position: fixed;
 	top: 0;
-	left: 0;
-	right: 0;
+	left: 15px;
+	right: 15px;
 	z-index: 100;
 }
 .header-menus a {
 	color: #fff;
 }
+.header-menus .navbar {
+    border-radius: 0;
+    margin-bottom: 0;
+    
+}
+@media (min-width: 768px) {
+    .header-menus .navbar { 
+        min-height: 60px;
+    }
+    .header-menus .navbar-brand {
+        height:60px;
+    }
+    .header-menus .navbar-nav > li > a {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        font-size: .8rem;
+    }
+    .header-menus .loginbar {
+        float: right;
+    }
+}
+
+.header-menus .navbar-brand img {
+    height: 100%;
+    width: auto;
+}
+
+
+.enroll-menu {
+    margin-top: -1px;
+    margin-bottom:-1px; 
+}
+.enroll-menu > li:last-child {
+    background-color: #b50b25;
+    border: 1px solid #b50b25;
+}
+ .navbar-inverse .enroll-menu > li > a {
+    color: #f4f4f4;
+    font-size: .9rem;
+}
+
+
 
 .footer {
 	background-color: #222;
@@ -66,4 +100,13 @@ body.pdtop {
 .site-links {
 	padding: 1rem;
 	font-size: .9rem;
+}
+.site-links ul {
+    list-style: none;
+    padding-left: 0;
+}
+.site-links > ul > li > a {
+    display: inline-block;
+    margin-bottom: .5rem;
+    font-size: 1rem;
 }

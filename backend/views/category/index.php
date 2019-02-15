@@ -5,6 +5,7 @@ use backend\grid\GridView;
 use backend\grid\ActionColumn;
 use core\helpers\Form;
 use common\models\Category;
+$this->title = Yii::t('app', 'Manage category');
 ?>
 <?php
 /**

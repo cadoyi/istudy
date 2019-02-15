@@ -42,7 +42,7 @@ class PostController extends Controller
 
     public function actionUpdate($id)
     {
-        $this->_title('Edit post');
+        $this->_title('Update post');
         $post = $this->findPost($id);
         $post->scenario = Post::SCENARIO_UPDATE;
         

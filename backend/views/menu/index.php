@@ -3,6 +3,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
+
+$this->title = Yii::t('app', 'Manage menu');
 ?>
 <?php
 /**

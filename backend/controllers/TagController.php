@@ -21,6 +21,7 @@ class TagController extends Controller
 
     public function actionCreate()
     {
+        $this->_title('Create tag');
         $tag = new Tag(['scenario' => Tag::SCENARIO_CREATE]);
         if($post = $this->post) {
         	if($tag->load($post) && $tag->validate()) {
@@ -33,6 +34,7 @@ class TagController extends Controller
 
     public function actionUpdate($id)
     {
+        $this->_title('Update tag');
         $tag = $this->findTag($id);
         $tag->scenario = Tag::SCENARIO_UPDATE;
 

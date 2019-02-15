@@ -27,6 +27,7 @@ class CustomerController extends Controller
 
     public function actionCreate()
     {
+        $this->_title('Create customer');
         $customer = new Customer([ 
             'scenario' => Customer::SCENARIO_CREATE,
         ]);
@@ -67,6 +68,7 @@ class CustomerController extends Controller
 
     public function actionUpdate($id)
     {
+        $this->_title('Update customer');
         $customer = $this->findCustomer($id);
         $profile = $customer->profile;
         $customer->scenario = Customer::SCENARIO_UPDATE;
@@ -97,7 +99,9 @@ class CustomerController extends Controller
     {
         $customer = $this->findCustomer($id);
         Customer::getDb()->transaction(function() use ($customer) {
-            $customer->profile->delete();
+            if($customer->profile) {
+                $customer->profile->delete();
+            }
             $customer->delete();
         });
         return $this->redirect(['index']);

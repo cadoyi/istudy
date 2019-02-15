@@ -10,26 +10,18 @@ jQuery(function($) {
 	// alert 框 5秒消失.
 	setTimeout(function() {
         $('.alert button.close').alert('close');
-	}, 50000);
-	
-	var scrollHandler = function() {
-    	var top = $(document).scrollTop();
-    	var old = layoutjs.scroll;
-    	layoutjs.scroll = top;
-    	if(old > 40 && top > old) {
-    		return;
-    	} else if(top < old && top > 140) {
-    		return;
-    	}
-        if(top >= 40) {
-            $('#header_menus').addClass('fixed-top');
-            $('body').addClass('pdtop');
-        } else {
-            $('#header_menus').removeClass('fixed-top');
-            $('body').removeClass('pdtop');
-        }
-	}
-	scrollHandler();
-    $(document).scroll(scrollHandler);
+	}, 5000);
+
+
+    $('#footermenus > li').addClass('flex1');
+    
+    var fixFooterPosition = function() {
+        var footer =  $('#footer').outerHeight();
+        var win = $(window).height();
+        $('#page').css({'min-height' : win - footer - 70 + 'px'});
+    }
+    
+    fixFooterPosition();
+    $(window).resize(fixFooterPosition);
 });
 

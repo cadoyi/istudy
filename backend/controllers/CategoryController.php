@@ -32,6 +32,7 @@ class CategoryController extends Controller
      */
 	public function actionCreate()
 	{
+        $this->_title('Manage category');
         $category = new Category(['scenario' => Category::SCENARIO_CREATE]);
         if($post = $this->post) {
             if($category->load($post) && $category->validate()) {
@@ -51,6 +52,7 @@ class CategoryController extends Controller
 
 	public function actionUpdate($id)
 	{
+        $this->_title('Update category');
         $category = $this->findCategory($id);
         $category->scenario = Category::SCENARIO_UPDATE;
 

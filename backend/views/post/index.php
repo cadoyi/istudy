@@ -8,6 +8,7 @@ use common\models\Post;
 use core\helpers\Form;
 
 $categories = Category::hashOptions();
+$this->title = Yii::t('app', 'Manage post');
 ?>
 <?php
 /**

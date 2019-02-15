@@ -1,13 +1,12 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
-    'telephone'  => '152-3210-6789',
     'website' => [
-        'meta_title'       => '网站源标题',
-        'meta_keywords'    => '网站源关键字',
-        'meta_description' => '网站源描述',
+        'meta_title'       => '学吧网',
+        'meta_keywords'    => '学吧网',
+        'meta_description' => '学吧网',
         'icp'              => '京ICP备 17018336-1',
-        'copyright'        => '2018-2013 网站名称',
+        'copyright'        => '2019 学吧网',
     ],
     'friendlinks' => [
         [

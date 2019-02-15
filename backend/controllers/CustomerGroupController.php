@@ -23,6 +23,7 @@ class CustomerGroupController extends Controller
 
     public function actionCreate()
     {
+        $this->_title('Create customer group');
         $group = new CustomerGroup([
             'scenario' => CustomerGroup::SCENARIO_CREATE,
         ]);
@@ -47,6 +48,7 @@ class CustomerGroupController extends Controller
 
     public function actionUpdate($id)
     {
+        $this->_title('Update customer group');
         $group = $this->findGroup($id);
         $group->scenario = CustomerGroup::SCENARIO_UPDATE;
         if($post = $this->post) {

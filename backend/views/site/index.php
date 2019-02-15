@@ -3,7 +3,7 @@
 /* @var $this yii\web\View */
 use yii\helpers\Html;
 use yii\helpers\Url;
-$this->title = Yii::t('admin', Yii::$app->name);
+$this->title = Yii::t('app', 'Dashboard');
 ?>
 <div class="site-index col-xs-12">
 

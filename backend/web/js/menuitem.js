@@ -4,15 +4,15 @@ var buttonHandlers = {
 		var item = $('#menutree a.menu.active');
 		if(!item.length) {
 			// 增加主菜单
-			var ul = document.getElementById('menutree');
+			  var ul = document.getElementById('menutree');
 		} else {
-            var ul = item.next('ul');
-            if(!ul.length) {
-               ul = document.createElement('ul');
-               item.parent().append(ul);
-            } else {
-            	ul = ul.get(0);
-            }
+        var ul = item.next('ul');
+        if(!ul.length) {
+           ul = document.createElement('ul');
+           item.parent().append(ul);
+        } else {
+        	ul = ul.get(0);
+        }
 		}
 		$(ul).append('<li><a class="menu btn" title="#" data-title="新标签" href="#">新标签</a></li>');
 		return false;

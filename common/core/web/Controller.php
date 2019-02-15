@@ -16,19 +16,13 @@ class Controller extends \yii\web\Controller
     protected function _keywords($keywords)
     {
     	$keywords = Yii::t('all', $keywords);
-    	$this->getView()->registerMetaTag([
-           'name' => 'keywords',
-           'content' => $keywords,
-    	], 'keywords');
+        $this->getView()->registerMetaKeywords($keywords);
     }
 
     protected function _description($description)
     {
     	$des = Yii::t('all', $description);
-    	$this->getView()->registerMetaTag([
-            'name' => 'description',
-            'content' => $des,
-    	], 'description');
+        $this->getView()->registerMetaDescription($des);
     }
 
 }

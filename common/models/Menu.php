@@ -68,4 +68,9 @@ class Menu extends ActiveRecord
     {
         return MenuItem::findOrderedItems($this);
     }
+
+    public static function findByTitle($title)
+    {
+        return static::find()->where(['title' => $title])->one();
+    }
 }

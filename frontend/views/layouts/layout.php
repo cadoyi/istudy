@@ -6,14 +6,11 @@ $params = &Yii::$app->params;
 $user = Yii::$app->user;
 ?>
 <?php $this->beginContent('@frontend/views/layouts/base.php') ?>
-    	<div class="page">
+    	<div id="page" class="page">
 	    	<div class="header">
                 <div class="container-fluid page-alert">
                     <?= Alert::widget() ?>
                 </div>
-	    		<div class="container">
-                    <?= $this->render('@frontend/views/layouts/layout/preheader.php') ?>
-	    	    </div>
 	    	    <div class="container-fluid">
                     <?= $this->render('@frontend/views/layouts/layout/menu.php') ?>
 	    	    </div>

@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
 use core\helpers\Form;
-
+$this->title = Yii::t('app', 'Manage customer group');
 ?>
 <?php
 /**

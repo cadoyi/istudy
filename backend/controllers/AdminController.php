@@ -26,6 +26,7 @@ class AdminController extends Controller
 
     public function actionCreate()
     {
+        $this->_title('Create admin user');
         $user = new User(['scenario' => User::SCENARIO_CREATE]);
         $profile = new UserProfile(['scenario' => UserProfile::SCENARIO_CREATE]);
 
@@ -61,6 +62,7 @@ class AdminController extends Controller
 
     public function actionUpdate($id)
     {
+        $this->_title('Update admin user');
         $user = $this->findUser($id);
         $user->scenario =  User::SCENARIO_UPDATE;
         $profile = $user->profile;

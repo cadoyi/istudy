@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
+$this->title = Yii::t('app', 'Manage customer');
 ?>
 <?php $this->beginContent('@backend/views/wraps/grid.php'); ?>
   <?= GridView::widget([

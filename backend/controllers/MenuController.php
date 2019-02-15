@@ -43,6 +43,7 @@ class MenuController extends Controller
 
 	public function actionCreate()
 	{
+        $this->_title('Create menu');
         $menu = new Menu(['scenario' => Menu::SCENARIO_CREATE]);
         if($post = $this->post) {
         	if($menu->load($post) && $menu->validate()) {
@@ -57,6 +58,7 @@ class MenuController extends Controller
 
 	public function actionUpdate($id)
 	{
+        $this->_title('Update menu');
         $menu =$this->findMenu($id);
         $menu->scenario = Menu::SCENARIO_UPDATE;
         if($post = $this->post) {

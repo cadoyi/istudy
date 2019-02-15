@@ -5,36 +5,41 @@
 /* @var $model \common\models\LoginForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
-$this->title = 'Login';
+$this->title = Yii::t('app', 'Student login');
 ?>
-<div class="row">
-    <div class="col-xs-12 site-login">
-        <h1><?= Html::encode($this->title) ?></h1>
+<?php $this->beginContent('@frontend/views/site/_siginup.php'); ?>
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style="max-width:320px;">
+    <div class="site-login">
+
+        <div>
+            <div class="" style="max-width:320px;">
                 <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
                     <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
-
                     <?= $form->field($model, 'password')->passwordInput() ?>
-
                     <?= $form->field($model, 'code')->widget(Captcha::className()) ?>
+                    <div class="form-group clearfix">
+                        <?= $form->field($model, 'remember', [
+                            'options' => [
+                                'class' => ['pull-left','form-group'],
+                            ],
+                        ])->checkbox() ?>
 
-                    <?= $form->field($model, 'remember')->checkbox() ?>
-
-                    <div style="color:#999;margin:1em 0">
-                        If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    </div>
+                        <div class="form-group pull-right">
+                            <?= Html::a(Yii::t('app', 'Forgot password?'), ['site/request-password-reset'],[
+                                    'class' => 'btn btn-sm'
+                                ]) ?>
+                        </div>
+                   </div>
 
                     <div class="form-group">
-                        <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                        <?= Html::submitButton(Yii::t('app', 'Login'), ['class' => 'btn btn-primary']) ?>
                     </div>
 
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
-</div>
+<?php $this->endContent() ?>
