@@ -7,7 +7,6 @@ use Yii;
 class CustomerController extends Controller
 {
 
-
     /**
      * 个人中心
      * 

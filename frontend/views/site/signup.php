@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'password_confirm')->passwordInput() ?>
 
         <?= $form->field($model, 'code')->widget(Captcha::className(), [
-             
+             'captchaAction' => 'site/captcha-register',
         ])?>
 
         <div class="form-group">

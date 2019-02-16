@@ -50,7 +50,7 @@ class ViewBehavior extends Behavior
 
     public function registerMetaKeywords($keywords = null)
     {
-        $keywords = is_null($keywords) ? App::getParam('website.meta_keywords') : $keywords;
+        $keywords = empty($keywords) ? App::getParam('website.meta_keywords') : $keywords;
         if($keywords) {
             $this->owner->registerMetaTag([
                'name' => 'keywords',
@@ -61,7 +61,7 @@ class ViewBehavior extends Behavior
 
     public function registerMetaDescription($description = null)
     {
-        $description = is_null($description) ? App::getParam('website.meta_description') : $description;
+        $description = empty($description) ? App::getParam('website.meta_description') : $description;
         if($description) {
             $this->owner->registerMetaTag([
                'name' => 'description',

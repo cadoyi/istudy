@@ -358,20 +358,19 @@ class Customer extends ActiveRecord implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $token = Yii::$app->security->generateRandomString(32);
-        $this->setPasswordResetToken($token); 
+        return $this->getPasswordResetToken();
     }
 
 
     /**
-     * 验证重置密码的 token是否可用.
+     * 验证重置密码的 token 是否可用.
      * 
      * @param  mixed $token  - 需要验证的 token
      * @return boolean
      */
     public function validatePasswordResetToken($token)
     {
-        return $token && $this->getPasswordResetToken() == $token;
+        return Yii::$app->cache->get([$this->id, 'resetPassword']) === $token;
     }
 
 
@@ -380,24 +379,16 @@ class Customer extends ActiveRecord implements IdentityInterface
      */
     public function getPasswordResetToken()
     {
-        return Yii::$app->cache->get('password_reset_token:'. $this->id);
+        return Yii::$app->cache->getOrSet([$this->id, 'resetPassword'], function($cache){
+            return Yii::$app->security->generateRandomString();
+        }, 3600);
     }
 
-
-    /**
-     * 设置重置密码的 token, 或者如果没有,则删除token
-     * 
-     * @param string $token
-     */
-    public function setPasswordResetToken($token)
+    public function removePasswordResetToken()
     {
-        if($token) {
-            Yii::$app->cache->set('password_reset_token:' . $this->id, $token, 3600);
-        } else {
-            Yii::$app->cache->delete('password_reset_token:' . $this->id);
-        }
-        
+        Yii::$app->cache->delete([$this->id, 'resetPassword']);
     }
+
 
 
 

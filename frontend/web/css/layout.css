@@ -4,21 +4,10 @@ body {
 .page {
 	min-height: 100%;
 }
-.page-alert .alert {
-	position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-}
 .page-alert {
-    padding-left: 0;
-    padding-right: 0;
-    position: fixed;
-    z-index: 200;
-    left: 0;
-    right: 0;
     text-align: center;
 }
+
 .header-menus {
 	position: relative;
 }

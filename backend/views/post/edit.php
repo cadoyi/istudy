@@ -1,16 +1,21 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use backend\widgets\FormContainer;
 use common\models\Category;
 use common\models\Tag;
 use core\helpers\Form;
+
+$selectedTags = $post->postTags;
+
 ?>
 <?php
     $input = Html::getInputId($post, 'content');
     $formid = 'edit_form';
     $this->registerJsVar('tags', Tag::hashOptions());
+    $this->registerJsVar('postTags', ArrayHelper::getColumn($selectedTags, 'tag_id'));
     $this->registerJsVar('contentid', $input);
     $this->registerJsVar('formid', $formid);
 

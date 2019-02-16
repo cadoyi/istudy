@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\SluggableBehavior;
@@ -149,6 +150,37 @@ class Post extends ActiveRecord
         return Yii::createObject(PostQuery::className(), [ get_called_class() ]);
     }
 
+    public function saveTags($newTags)
+    {
+        if(empty($newTags)) {
+            $newTags = [];
+        }
+        $tags = $this->tags;
+        if(empty($tags) && empty($newTags)) {
+            return true;
+        }
+        $newids = ArrayHelper::getColumn($newTags, 'id');
+        $oldids = array_keys($tags);
+
+        $insert = array_diff($newids, $oldids);
+        $delete = array_diff($oldids, $newids);
+
+        foreach($insert as $tag_id) {
+            $postTag = new PostTag([
+                'tag_id' => $tag_id,
+                'post_id' => $this->id,
+            ]);
+            $postTag->save();
+        }
+        $postTags = $this->postTags;
+        foreach($delete as $tag_id) {
+            $postTag = isset($postTags[$tag_id]) ? $postTags[$tag_id] : null;
+            if($postTag) {
+                $postTag->delete();
+            }
+        }
+    }
+
 
     /**
      * 获取当前文章对应的分类实例
@@ -190,12 +222,15 @@ class Post extends ActiveRecord
 
     public function getPostTags()
     {
-        return $this->hasMany(PostTag::className(), ['post_id' => 'id'])->inverseOf('post');
+        return $this->hasMany(PostTag::className(), ['post_id' => 'id'])
+           -> indexBy('tag_id')
+           -> inverseOf('post');
     }
 
     public function getTags()
     {
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
+           -> indexBy('id')
            -> via('postTags');
     }
 

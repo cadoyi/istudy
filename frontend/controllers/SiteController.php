@@ -13,6 +13,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\Customer;
+use core\exception\ConfirmException;
 
 /**
  * Site controller
@@ -64,6 +65,16 @@ class SiteController extends Controller
                 'minLength' => 4,
                 'maxLength' => 4,
             ],
+            'captcha-register' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'minLength' => 4,
+                'maxLength' => 4,
+            ],
+            'captcha-reset-password' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'minLength' => 4,
+                'maxLength' => 4,
+            ],
         ];
     }
 
@@ -89,8 +100,14 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            try {
+                if($model->login()) {
+                    return $this->goBack();
+                }
+            } catch(ConfirmException $e) {
+                return $this->redirect(['verify', 'id' => $model->user->id]);
+            }
         }
         $model->password = '';
 
@@ -155,7 +172,7 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
-                return $this->redirect(['verify', ['email' => $user->email]]);
+                return $this->redirect(['verify', 'id' => $user->id]);
             }
         }
 
@@ -164,17 +181,16 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionVerify($email)
+    public function actionVerify($id)
     {
-        $cache = Yii::$app->cache;
         $customer = Customer::find()
             -> where([
-                'email' => $email, 
+                'id' => $id, 
                 'is_active' => 0
             ])
             -> one();
         if($customer && !$customer->is_active) {
-            return $this->render('verify', ['email' => $customer->email]);
+            return $this->render('verify', ['customer' => $customer]);
         }
         throw new BadRequestHttpException('Bad request');
     }
@@ -195,14 +211,13 @@ class SiteController extends Controller
         throw new BadRequestHttpException('Token expired');
     }
 
-    public function resendRegisterEmail()
+    public function actionConfirmResent($id)
     {
         $request = Yii::$app->request;
         $data['success'] = 0;
         if($request->isPost && $request->isAjax) {
-            $email = $request->post('email');
-            $customer = Customer::find()->where(['email' => $email])->one();
-            if(!$customer->is_active) {
+            $customer = Customer::find()->where(['id' => $id])->one();
+            if($customer && !$customer->is_active) {
                 SignupForm::sendRegisterVerifyEmail($customer);
                 $data['success'] = 1;
             }
@@ -219,18 +234,42 @@ class SiteController extends Controller
     {
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
+            $customer = $model->customer;
+            PasswordResetRequestForm::sendEmail($customer);
+            return $this->redirect(['verify-password', 'id' => $customer->id]);
         }
-
+        
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);
+    }
+
+    public function actionVerifyPassword($id)
+    {
+        $customer = Customer::find()
+            -> where([
+                'id' => $id, 
+                'is_active' => 1
+            ])
+            -> one();
+        if($customer && $customer->is_active) {
+            return $this->render('verify-password', ['customer' => $customer]);
+        }
+        throw new BadRequestHttpException('Bad request');        
+    }
+
+    public function actionConfirmResentPassword($id)
+    {
+        $request = Yii::$app->request;
+        $data['success'] = 0;
+        if($request->isPost && $request->isAjax) {
+            $customer = Customer::find()->where(['id' => $id, 'is_active' => 1])->one();
+            if($customer && Yii::$app->cache->get([$customer->id, 'resetPassword'])) {
+                PasswordResetRequestForm::sendEmail($customer);
+                $data['success'] = 1;
+            }
+        }
+        return $this->asJson($data);
     }
 
     /**
@@ -240,20 +279,18 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token)
+    public function actionResetPassword($token, $id)
     {
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
+        $customer = Customer::findIdentity($id);
+        if(!$customer || !$customer->validatePasswordResetToken($token)) {
+            throw new BadRequestHttpException('Bad request');
         }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->goHome();
+        $model = new ResetPasswordForm();
+        $model->customer = $customer;
+        if($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->session->setFlash('success', 'password reset successfull');
+            return $this->redirect(['login']);
         }
-
         return $this->render('resetPassword', [
             'model' => $model,
         ]);

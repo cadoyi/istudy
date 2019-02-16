@@ -33,10 +33,11 @@
         var pub = {
             init : function(all, selected) {
                 all = all || {};
-                selected = selected || [];
+                selected = selected || {};
                 $.each(selected, function(_,id) {
                     old_value[id] = id;
                 });
+                console.log(old_value);
                 $.each(all, function(id, title) {
                     var ut = s.unselectBtn(id, title);
                     var st = s.selectBtn(id, title);
@@ -105,5 +106,5 @@ jQuery(function($) {
     });
 
     var postTag = $.postTag();
-    postTag.init(tags);
+    postTag.init(tags, postTags);
 });

@@ -67,6 +67,7 @@ return [
                         'js/scripts.js',
                     ],
                     'css' => [
+                        'css/font-awesome.min.css',
                         'css/styles.css',
                     ],
                     'depends' => [

@@ -18,6 +18,14 @@ class SignupForm extends Model
     public $password_confirm;
     public $code;
 
+    public function rules()
+    {
+        return [
+           [['email', 'password', 'password_confirm', 'code'], 'required'],
+           [['code'], 'captcha', 'captchaAction' => 'site/captcha-register'],
+        ];
+    }
+
     public function attributeLabels()
     {
         return [
@@ -53,7 +61,7 @@ class SignupForm extends Model
                 $profile->save();
                 static::sendRegisterVerifyEmail($customer);
             });
-            return $this;
+            return $customer;
             
         }
         $this->addErrors($customer->getErrors());
@@ -62,20 +70,13 @@ class SignupForm extends Model
 
     public static function sendRegisterVerifyEmail($customer)
     {
-        $cache = Yii::$app->cache;
-        $mailer = Yii::$app->mailer;
-
-        $secret = $cache->getOrSet([$customer->email, $customer->id], function($cache) {
-            return md5(time());
-        }, 3600);
-        $mailer->compose([
-            'text' => 'register-text.php',
-            'html' => 'register-html.php',
-        ], [
-            'user' => $customer,
-            'secret' => $secret,
-        ])->setTo($customer->email)
-          ->setSubject(Yii::t('app', 'Confirm email'))
-          ->send();
+        $secret = Yii::$app->cache
+           ->getOrSet([
+                $customer->email, 
+                $customer->id
+            ], function($cache) {
+                return md5(time());
+            }, 3600);
+        Mailer::register($customer, $secret)->send();
     }
 }

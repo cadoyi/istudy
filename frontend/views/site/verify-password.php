@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->registerJsVar('resentUrl', Url::to(['site/confirm-resent', 'id' => $customer->id]));
+$this->registerJsVar('resentUrl', Url::to(['site/confirm-resent-password', 'id' => $customer->id]));
 $this->registerJs('$("#reconfirm").click(function(){
     $.post(resentUrl).done(function(){
         alert("发送成功");
@@ -13,7 +13,7 @@ $this->registerJs('$("#reconfirm").click(function(){
 ?>
 <div class="row" style="font-size:1rem;">
      <div class="col-xs-12">
-        <h1><small style="color:#000;">感谢您注册学吧网!</small></h1>
+        <h1><small style="color:#000;">您正在重置您的密码!</small></h1>
     </div>
     <div class="col-xs-12">
         <p>为了保护您的权益,我们需要对您的真实身份进行确认.</p>

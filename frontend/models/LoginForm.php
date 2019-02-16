@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use core\validators\PasswordValidator;
 use common\models\Customer;
+use core\exception\ConfirmException;
 
 class LoginForm extends Model
 {
@@ -30,7 +31,7 @@ class LoginForm extends Model
            [['password'], PasswordValidator::className(), 
               'message' => $passwordError, 
            ],
-           [['password'], function($attribute, $params, $validator) {
+           [['password'], function($attribute, $params, $validator) use ($passwordError) {
                if($this->user instanceof Customer && $this->user->validatePassword($this->$attribute)) {
                    return;
                }
@@ -54,14 +55,17 @@ class LoginForm extends Model
 	public function getUser()
 	{
 		if($this->_user && !$this->_user instanceof Customer) {
-			$this->_user = Customer::findByEmail($this->email);
+			$this->_user = Customer::find()->where(['email' => $this->email])->one();
 		}
 		return $this->_user;
 	}
 
 	public function login()
 	{
-        if($this->validate()) {
+        if($this->user) {
+            if(!$this->user->is_active) {
+                throw new ConfirmException('Confirm required');
+            }
             return Yii::$app->user->login($this->user, $this->remember);
         }
         return false;

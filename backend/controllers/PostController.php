@@ -5,7 +5,9 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 use common\models\Post;
+use common\models\Tag;
 use backend\form\PostSearch;
 
 class PostController extends Controller
@@ -31,13 +33,27 @@ class PostController extends Controller
         ]);
         if($_post = $this->post) {
             if($post->load($_post) && $post->validate()) {
-                $post->save(false);
+                Post::getDb()->transaction(function() use ($post) {
+                    $post->save(false);
+                    $post->saveTags($this->getPostedTags());
+                });
                 return $this->redirect(['index']);
             }
         }
         return $this->render('edit', [
             'post' => $post,
         ]);
+    }
+
+    public function getPostedTags()
+    {
+        $tags = [];
+        $post = Yii::$app->request->post('tags', '{}');
+        $postTags = Json::decode($post);
+        if(!empty($postTags)) {
+            $tags = Tag::find()->where(['id' => $postTags])->all();
+        }
+        return $tags;
     }
 
     public function actionUpdate($id)
@@ -48,7 +64,10 @@ class PostController extends Controller
         
         if($_post = $this->post) {
             if($post->load($_post) && $post->validate()) {
-                $post->save(false);
+                Post::getDb()->transaction(function() use ($post){
+                    $post->save(false);
+                    $post->saveTags($this->getPostedTags());
+                });
                 return $this->redirect(['index']);
             }
         }

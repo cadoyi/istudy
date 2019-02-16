@@ -67,15 +67,18 @@ $header = Menu::findByTitle('header');
                 'label' => Yii::$app->user->isGuest ? 
                       Yii::t('app', 'Personal') : 
                       Yii::$app->user->identity->nickname,
+
                 'url' => '#',
                 'visible' => !Yii::$app->user->isGuest,
                 'items' => [
                     [
-                        'label' => Yii::t('app', 'Personal'),
+                        'label' => '<i class="fa fa-fw fa-cog"></i>' . Html::encode(Yii::t('app', 'Personal')),
+                        'encode' => false,
                         'url' => Url::to(['customer/index']),
                     ],
                     [
-                        'label' => Yii::t('app', 'Logout'),
+                        'label' => '<i class="fa fa-fw fa-power-off" style="color:red;"></i> ' . Html::encode(Yii::t('app', 'Logout')),
+                        'encode' => false,
                         'url' => Url::to(['site/logout']),
                         'linkOptions' => [
                             'data-method' => 'post',

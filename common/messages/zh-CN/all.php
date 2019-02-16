@@ -133,7 +133,10 @@ return [
     'Post content'     => '文章内容',
     'Post url path'    => '文章URL路径',
     'Process time'     => '处理时间',
+    'Password reset'   => '重置密码',
+    'password reset successfull' => '密码重置成功',
     'Page not found'   => '页面不存在',
+    'Page not found.'  => '页面不存在',
     'Password incorrect' => '密码不正确',
     'Parent category' => '父分类',
     'Parent category no exists' => '父分类不存在',
@@ -146,6 +149,7 @@ return [
     'Register' => '注册',
     'Revisor'  => '更新者',
     'Reset filter' => '重置筛选器',
+    'Reset password' => '重置密码',
     'Require receipt' => '需要回执',
     'Remember me' => '记住我',
 
@@ -157,6 +161,7 @@ return [
     'Subject' => '标题',
     'Sender'  => '发送者',
     'System'  => '系统',
+    'Send'    => '发送',
     'Send time' => '发送时间',
     'Student login' => '学员登录',
     'Student register' => '学员注册',
@@ -191,6 +196,9 @@ return [
 
     /******** V ********/
     'View' => '查看',
+    'Verify your email address' => '验证您的电子邮件地址',
+    'Verify your email address for register' => '验证您注册的电子邮件地址',
+    'Verify your email address for password reset' => '验证重置密码的电子邮件地址',
 
     /******** W ********/
     'Wechat' => '微信',
@@ -204,6 +212,7 @@ return [
     'Yes' => '是',
     'Your name' => '你的名字',
     'You cannot cancel default group' => '不能取消默认组',
+    'Your email unregisted or inactived' => '未注册或者未激活的邮件地址',
 
     /******** Z ********/
 
