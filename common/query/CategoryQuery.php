@@ -71,4 +71,13 @@ class CategoryQuery extends ActiveQuery
     }
 
 
+    public function selectWithoutContent()
+    {
+        $class = $this->modelClass;
+        $model = $class::instance();
+        $attributes = $model->attributes();
+        $fields = array_diff($attributes, ['content']);
+        return $this->select($fields);
+    }
+
 }

@@ -48,3 +48,6 @@ a.initial:focus {
 .site-sign-row ul {
     margin-bottom: 20px;
 }
+.tag {
+    margin: 0 5px;
+}

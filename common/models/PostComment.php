@@ -19,6 +19,9 @@ use yii\behaviors\TimestampBehavior;
 class PostComment extends ActiveRecord
 {
 
+    const STATUS_PENDING  = 1;
+    const STATUS_REVIEWED = 2;
+
     /**
      * {@inheritdoc}
      */

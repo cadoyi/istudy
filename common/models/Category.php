@@ -278,17 +278,6 @@ class Category extends ActiveRecord
         return $this->parent_id !== null;
     }
 
-    public static function menuColumns()
-    {
-        $attributes = static::getTableSchema()->columns;
-        unset( $attributes['content'],
-               $attributes['meta_title'],
-               $attributes['meta_keywords'],
-               $attributes['meta_description']
-        );
-        return array_keys($attributes);
-    }
-
     /**
      * 查询 text 字段会使用磁盘临时文件,无法完全使用内存
      * 因此这里去掉 text 字段
@@ -297,9 +286,8 @@ class Category extends ActiveRecord
      */
     public static function all()
     {
-        $fields = static::menuColumns();
         $all = static::find()
-            -> select($fields)
+            -> selectWithoutContent()
             -> cache(3600, static::cacheTags(static::CACHE_TAG))
             -> all();
         return $all;
@@ -307,9 +295,8 @@ class Category extends ActiveRecord
 
     public static function menus()
     {
-        $fields = static::menuColumns();
         $all = static::find()
-            ->select($fields)
+            ->selectWithoutContent()
             ->where([
                'is_active' => 1,
                'is_menu' => 1,
@@ -373,7 +360,7 @@ class Category extends ActiveRecord
 
     public function getParentMenu()
     {
-        return $this->getParent()->select(static::menuColumns());
+        return $this->getParent()->selectWithoutContent();
     }
 
 

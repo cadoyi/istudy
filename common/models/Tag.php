@@ -117,6 +117,20 @@ class Tag extends ActiveRecord
         ]);
     }
 
+    public function getHtmlClass()
+    {
+        $integer = crc32($this->title) % 5;
+        $classNames = [
+            'label-danger',
+            'label-warning',
+            'label-info',
+            'label-primary',
+            'label-success',
+        ];
+        $class = $classNames[$integer];
+        return 'tag label ' . $class;
+    }
+
 
     /**
      * 获取 post_tag 表的关联

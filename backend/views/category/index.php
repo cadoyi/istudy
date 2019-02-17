@@ -18,6 +18,7 @@ $this->title = Yii::t('app', 'Manage category');
     'dataProvider' => $dataProvider,
     'filterModel'  => $filterModel,
     'columns' => [
+        'id',
         'title',
         'description',
         'url_path',

@@ -234,5 +234,12 @@ class Post extends ActiveRecord
            -> via('postTags');
     }
 
+    public function getComments()
+    {
+        return $this->hasMany(PostComment::className(), ['post_id' => 'id'])
+          ->andWhere(['status' => PostComment::STATUS_REVIEWED])
+        ->inverseOf('post');
+    }
+
 
 }
