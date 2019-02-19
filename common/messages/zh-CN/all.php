@@ -10,6 +10,7 @@ return [
     'Avator' => '头像',
     'Author' => '作者',
     'Audited' => '已审核',
+    'Audit'   => '审核',
     'Administrator' => '管理员',
     'Admin login' => '管理员登录',
     'Are you sure you want delete this item?' => '确定要删除这个项目吗?',
@@ -60,15 +61,20 @@ return [
     'Date of birth' => '出生日期',
     'Default group' => '默认组',
     'Delete image'  => '删除图片',
+    'Do you sure audit it?' => '确定要审核吗?',
+    'Do you sure cancle audit it?' => '确定要取消审核吗?',
 
     /******** E ********/
+    'Enabled' => '已启用', 
+    'Enroll'  => '报名',    
     'Email address' => '邮件地址',
-    'Enabled' => '已启用',
     'Edit post' => '编辑文章',
     'Emergency email address' => '应急电子邮件地址',
     'Enroll now' => '立即报名',
 
+
     /******** F ********/
+    'Female' => '女',
     'Forgot password?' => '忘记密码?',
     /******** G ********/
     'Group' => '组',
@@ -88,6 +94,7 @@ return [
 
     /******** M ********/
     'Menu'  => '菜单',
+    'Male'  => '男',
     'Message' => '消息',
     'May Public'  => '可以公开',
     'Mobile phone number' => '手机号码',
@@ -128,6 +135,9 @@ return [
     'Profile'          => '资料',
     'Position'         => '位置',
     'Personal'         => '个人中心',
+    'Pending'          => '挂起',
+    'Processed'        => '已处理',
+    'Phone number'     => '电话号码',
     'Post title'       => '文章标题',
     'Post description' => '文章描述',
     'Post content'     => '文章内容',
@@ -182,6 +192,7 @@ return [
     'User'     => '用户',
     'Update'   => '更新',
     'Unaudited' => '未审核',
+    'Unaudit' => '取消审核',
     'Updated time' => '更新时间',
     'User home page' => '用户主页',
     'Url path' => 'url 路径',
@@ -218,5 +229,6 @@ return [
 
     /******** { ********/
     "{attribute} must be combination of {mixed} or more uppercase and lowercase and digit and other character" => "{attribute}必须包含大小写字母,数字和特殊字符中的{mixed}种以上",
+    "{attribute} must be a valid phone number" => "{attribute}必须是可用的手机号码",
     
 ];

@@ -2,16 +2,15 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use common\models\PostComment;
+use yii\captcha\Captcha;
 ?>
 <?php 
 /**
  * @var  $this yii\web\View
  * @var  $post common\models\Post
- * 
+ * @var  $comment frontend\models\CommentForm
  */
 
-$comment = new PostComment(['scenario' => PostComment::SCENARIO_CREATE]);
 ?>
 <?php 
 $this->title = $post->title;
@@ -34,7 +33,7 @@ $tags = $post->tags;
             <?= $post->content; ?>
         </div>
     </article>
-    <div class="col-xs-12 comment-form-div">
+    <div class="col-xs-12 comment-form-div" style="margin-bottom: 20px;padding-top: 20px;">
         <?php $form = ActiveForm::begin([
             'id' => 'comment_form',
             'action' => Url::to(['post/add-comment', 
@@ -42,15 +41,25 @@ $tags = $post->tags;
             ]),
             'method' => 'post',
         ]) ?>
-            <?= $form->field($comment, 'comment')->textarea() ?>
+            <?= $form->field($comment, 'content')->textarea() ?>
+            <?= $form->field($comment, 'code')->widget(Captcha::className(), [
+                'captchaAction' => 'post/captcha-comment',
+            ])?>
             <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-primary']) ?>
         <?php ActiveForm::end() ?>
     </div>
-    <div class="col-xs-12 comment-list">
+    <div class="col-xs-12 comment-list" style="margin-bottom: 20px;background-color: #fafafa;padding: 1rem;">
         <?php foreach($dataProvider->getModels() as $comment): ?>
-            <div class="col-xs-12">
-                <div class=""><?= Html::encode($comment->customer->nickname) ?></div>
-                <div class=""><?= $comment->comment ?></div>
+            <div class="panel" style="border-left: 13px solid #f1f1f1;border-top: 1px solid #ddd;">
+                <div class="panel-heading">
+                    <a class="athim" title="@他" href="#"><?= Html::encode($comment->customer->nickname) ?></a>
+                    说:    
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-12">
+                        <?= $comment->comment ?>
+                    </div>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>

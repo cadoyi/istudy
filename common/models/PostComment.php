@@ -22,6 +22,15 @@ class PostComment extends ActiveRecord
     const STATUS_PENDING  = 1;
     const STATUS_REVIEWED = 2;
 
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_PENDING => Yii::t('app', 'Unaudited'),
+            self::STATUS_REVIEWED => Yii::t('app', 'Audited'),
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -98,13 +107,13 @@ class PostComment extends ActiveRecord
     public function attributeLabels()
     {
         return [
-           'id'          => 'ID',
-           'customer_id' => Yii::t('all', 'Customer'),
-           'post_id'     => Yii::t('all', 'Post'),
-           'parent_id'   => Yii::t('all', 'Parent comment'),
-           'comment'     => Yii::t('all', 'Comment'),
-           'status'      => Yii::t('all', 'Status'),
-           'created_at'  => Yii::t('all', 'Created time'),
+           'id'                => 'ID',
+           'customer_id'       => Yii::t('all', 'Customer'),
+           'post_id'           => Yii::t('all', 'Post'),
+           'parent_id'         => Yii::t('all', 'Parent comment'),
+           'comment'           => Yii::t('all', 'Comment'),
+           'status'            => Yii::t('all', 'Status'),
+           'created_at'        => Yii::t('all', 'Created time'),
            'post_title'        => Yii::t('all', 'Post title'),
            'post_url'          => Yii::t('all', 'Post url path'),
            'customer_email'    => Yii::t('all', 'Customer email address'),
@@ -112,6 +121,11 @@ class PostComment extends ActiveRecord
         ];
     }
 
+
+    public function switchStatus()
+    {
+        $this->status = ($this->status === self::STATUS_PENDING) ? self::STATUS_REVIEWED : self::STATUS_PENDING;
+    }
 
 
     /**

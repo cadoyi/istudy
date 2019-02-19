@@ -25,7 +25,7 @@ return [
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            
+            'cache' => YII_DEBUG ? null : 'cache',
         ],
         'i18n' => [
             'translations' => [

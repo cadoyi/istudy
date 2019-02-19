@@ -68,7 +68,12 @@ use yii\helpers\Html;
             'label' => Yii::t('all', 'Comment'),
             'icon'  => 'comment',
             'url'   => ['comment/index'],
-        ]
+        ],
+        [
+            'label' => Yii::t('all', 'Enroll'),
+            'icon' => 'usb',
+            'url'  => ['enroll/index'],
+        ],
     ],
 
 ]) ?>

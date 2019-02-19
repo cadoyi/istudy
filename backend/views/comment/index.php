@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use backend\grid\GridView;
 use backend\grid\ActionColumn;
 use core\helpers\Form;
+use common\models\PostComment;
 $this->title = Yii::t('app', 'Manage comment');
 
 ?>
@@ -39,7 +40,7 @@ $this->title = Yii::t('app', 'Manage comment');
         ],
         'status' => [
             'attribute' => 'status',
-            'filter' => Form::booleanList(['Audited', 'Unaudited']),
+            'filter' => PostComment::statusList(),
             'value' => function($model, $key, $index, $column) {
                  return $column->filter[$model->status];
             }
@@ -48,6 +49,41 @@ $this->title = Yii::t('app', 'Manage comment');
         [
             'class' => ActionColumn::className(),
             'header' => Yii::t('all', 'Action'),
+            'template' => '<ul class="nav">
+               <li class="dropdown">
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                       <span class="glyphicon glyphicon-option-horizontal"></span>
+                   </a>
+                   <ul class="dropdown-menu">
+                       <li class="action-list">{view}</li>
+                       <li class="action-list">{audit}</li>
+                       <li class="action-list">{delete}</li>
+                   </ul>
+               </li>
+            </ul>',
+            'buttons' => [
+                'audit' => function($url, $model, $key) {
+                    if($model->status == PostComment::STATUS_PENDING) {
+                        $title = Yii::t('app','Audit');
+                        $confirm = Yii::t('app', 'Do you sure audit it?');
+                    } else {
+                        $title = Yii::t('app', 'Unaudit');
+                        $confirm = Yii::t('app', 'Do you sure cancle audit it?');
+                    }
+                    
+                    $options = [
+                        'title' => $title,
+                        'aria-label' => $title,
+                        'data-pjax' => '0',
+                        'class' => 'action-audit',
+                        'data-confirm' => $confirm,
+                        'data-method' => 'post',
+                    ];
+                    $icon = '<span class="glyphicon glyphicon-random"></span> ';
+
+                    return Html::a($icon . $title, $url, $options);
+                }
+            ],
         ],
     ],
 ]) ?>

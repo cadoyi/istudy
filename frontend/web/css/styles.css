@@ -51,3 +51,8 @@ a.initial:focus {
 .tag {
     margin: 0 5px;
 }
+
+.form-group.required label.control-label:before {
+    content:"* ";
+    color: #a94442;
+}

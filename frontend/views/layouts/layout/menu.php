@@ -46,7 +46,7 @@ $header = Menu::findByTitle('header');
         'items' => [           
            [
                'label' => Yii::t('app', 'Enroll now'),
-               'url' => Url::to(['site/login']),
+               'url' => Url::to(['enroll/join']),
            ],
 
         ],
