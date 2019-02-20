@@ -40,11 +40,18 @@ phpunit.phar
 
 #runtime path
 /backend/runtime/*
+!/backend/runtime/.gitkeep
 /frontend/runtime/*
+!/frontend/runtime/.gitkeep
 /common/runtime/*
+!/common/runtime/.gitkeep
 /console/runtime/*
+!/console/runtime/.gitkeep
 /backend/web/assets/*
+!/backend/web/assets/.gitkeep
 /frontend/web/assets/*
+!/frontend/web/assets/.gitkeep
 /media/*
+!/media/.gitkeep
 !/media/.gitkeep
 
