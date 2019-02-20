@@ -8,11 +8,19 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\base\Widget;
+use yii\bootstrap\BootstrapPluginAsset;
 
 class Permission extends Widget
 {
 
+    public $options = ['class' => 'permission-tree'];
+
     public $role;
+
+    public $ulOptions = ['class' => 'permission-ul'];
+
+    public $liOptions = ['class' => 'permission-li'];
+
 
     public function init()
     {
@@ -20,19 +28,47 @@ class Permission extends Widget
         if($this->role === null) {
             throw new InvalidConfigException('The {role} must be set.');
         }
+        if(!isset($this->options['id'])) {
+            $this->options['id'] = $this->id;
+        }
     }
+
+
     public function run()
     {
+        $this->registerClientScript();
         $all = $this->prepare();
-        return $this->renderItems($all);
+        $ul = $this->renderItems($all);
+        $options = $this->options;
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        return Html::tag($tag, $ul, $options);
+    }
+
+    public function registerClientScript()
+    {
+        BootstrapPluginAsset::register($this->view);
+        $id = $this->options['id'];
+        $this->view->registerJs("\$('#{$id}').click({
+            selector : 'a',
+            handler : function() {
+               var ul = \$(this).siblings('ul');
+               var checked = ul.find(':checked').length;
+               var all = ul.find('input[type=\"checkbox\"]').length;
+               var value = !(all == checked);
+               ul.find('input[type=\"checkbox\"]').each(function() {
+                   \$(this).prop('checked', value);
+               });
+               return false;
+            }
+        });");
     }
 
     public function renderItems($all, $prefix = '')
     {
-        $html = Html::beginTag('ul');
+        $html = Html::beginTag('ul', $this->ulOptions);
         foreach($all as $name => $item) {
             $key = trim($prefix . '/' . $name, '/');
-            $html .= Html::beginTag('li');
+            $html .= Html::beginTag('li', $this->liOptions);
             if(is_array($item)) {
                 $html .= Html::a($this->getLabel($key), '#');
                 $html .= $this->renderItems($item, $key);

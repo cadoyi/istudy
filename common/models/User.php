@@ -260,4 +260,21 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
 
+    public function hasRole($name)
+    {
+        if($this->id) {
+            return Yii::$app->authManager->getAssignment($name, $this->id);
+        }
+        return false;
+    }
+
+    public function getRoles()
+    {
+        if($this->id) {
+            return Yii::$app->authManager->getAssignments($this->id);
+        }
+        return [];
+    }
+
+
 }
