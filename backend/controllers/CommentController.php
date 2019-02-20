@@ -23,6 +23,31 @@ class CommentController extends Controller
         ]);
     }
 
+    public function rbac()
+    {
+        return [
+           'class' => 'yii\filters\AccessControl',
+           'ruleConfig' => [
+               'class' => 'yii\filters\AccessRule',
+               'allow' => true,
+           ],
+           'rules' => [
+                [
+                   'actions' => ['index', 'view'],
+                   'roles' => ['comment/view'],
+                ],
+                [
+                   'actions' => ['audit'],
+                   'roles' => ['comment/update'],
+                ],
+                [
+                    'actions' => ['delete'],
+                    'roles' => ['comment/delete'],
+                ],
+            ],
+        ];
+    }
+
 
     public function actionIndex()
     {

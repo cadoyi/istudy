@@ -10,6 +10,28 @@ use backend\form\EnrollSearch;
 class EnrollController extends Controller
 {
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+                'actions' => ['index', 'view'],
+                'roles' => ['enroll/view'],
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['enroll/create'],
+            ],
+            [
+                'actions' => ['update'],
+                'roles' => ['enroll/update'],
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['enroll/delete'],
+            ],
+        ]);
+    }
+
     public function actionIndex()
     {
         $filterModel = new EnrollSearch();

@@ -86,6 +86,18 @@ class Controller extends WebController
         return [];
     }
 
+    protected function _rbac($rules = [])
+    {
+        return [
+            'class' => 'yii\filters\AccessControl',
+            'ruleConfig' => [
+                'class' => 'yii\filters\AccessRule',
+                'allow' => true,
+            ],
+            'rules' => $rules, 
+        ];
+    }
+
     
     /**
      * 查找模型
@@ -107,7 +119,7 @@ class Controller extends WebController
             $model = $query->one();
         }
          if(!$model instanceof $modelClass) {
-            throw new NotFoundHttpException(Yii::t('all', 'Page not found'));
+            return $this->notFound();
          }
          return $model;
     }

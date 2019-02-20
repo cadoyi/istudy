@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use common\models\Category;
 use common\models\Post;
@@ -16,11 +17,41 @@ class CategoryController extends Controller
 {
 
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+               'actions' => ['index'],
+               'roles' => ['category/view'],
+            ],
+            [
+                'actions' => ['view'],
+                'roles' => ['category/view'],
+                'roleParams' => $this->roleParams(),
+            ],
+            [
+                'actions' => ['update'],
+                'roles' => ['category/update'],
+                'roleParams' => $this->roleParams(),
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['category/create'],
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['category/delete'],
+                'roleParams' => $this->roleParams(),
+            ],            
+        ]);
+
+    }
+
     /**
      * 分类列表
      */
 	public function actionIndex()
-	{
+	{        
         $filterModel = new CategorySearch();
         $dataProvider = $filterModel->search(Yii::$app->request->get());
         return $this->render('index', compact('filterModel', 'dataProvider'));
@@ -88,7 +119,22 @@ class CategoryController extends Controller
 
     public function findCategory($id)
     {
-        return $this->findModel($id, Category::className());
+        if(!Yii::$app->get('currentCategory', false)) {
+            $category = $this->findModel($id, Category::className());
+            Yii::$app->set('currentCategory', $category);
+        }
+        return Yii::$app->get('currentCategory');
+    }
+
+    protected function roleParams()
+    {
+        return function($rule) {
+            $params = [];
+            if($id = Yii::$app->request->get('id', false)) {
+                $params['model'] = $this->findCategory($id);
+            }
+            return $params;
+        };
     }
 
 

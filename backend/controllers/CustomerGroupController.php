@@ -9,6 +9,28 @@ use backend\form\CustomerGroupSearch;
 class CustomerGroupController extends Controller
 {
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+                'actions' => ['index', 'view'],
+                'roles' => ['customer_group/view'],
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['customer_group/create'],
+            ],
+            [
+                'actions' => ['update'],
+                'roles' => ['customer_group/update'],
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['customer_group/delete'],
+            ],
+        ]);
+    }
+
     public function actionIndex()
     {
     	$filterModel = new CustomerGroupSearch();

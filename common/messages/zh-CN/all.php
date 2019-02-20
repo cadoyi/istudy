@@ -6,6 +6,7 @@
 
 return [
     /******** A ********/
+    'All'    => '全部',
     'Action' => '动作',
     'Avator' => '头像',
     'Author' => '作者',
@@ -123,6 +124,7 @@ return [
     'Note information' => '备注信息',
 
     /******** O ********/
+    'Owner' => '自己的',
     'Only use for category' => '只用于分类',
 
     /******** P ********/
@@ -156,6 +158,8 @@ return [
 
     /******** R ********/
     'Role' => '角色',
+    'Role name' => '角色名称',
+    'Role description' => '角色描述',
     'Register' => '注册',
     'Revisor'  => '更新者',
     'Reset filter' => '重置筛选器',

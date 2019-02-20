@@ -31,6 +31,28 @@ class MenuController extends Controller
         ]);
     }
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+                'actions' => ['index'],
+                'roles' => ['menu/view'],
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['menu/create'],
+            ],
+            [
+                'actions' => ['update', 'save-items'],
+                'roles' => ['menu/update'],
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['menu/delete'],
+            ],
+        ]);
+    }
+
 	public function actionIndex()
 	{
 		$filterModel = new MenuSearch();

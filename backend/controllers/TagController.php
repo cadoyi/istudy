@@ -9,6 +9,28 @@ use backend\form\TagSearch;
 class TagController extends Controller
 {
 
+    public function rbac()
+    {
+        return $this->_rbac([
+           [
+               'actions' => ['index', 'view'],
+               'roles' => ['tag/view'],
+           ],
+           [
+               'actions' => ['create'],
+               'roles' => ['tag/create'],
+           ],
+           [
+               'actions' => ['update'],
+               'roles' => ['tag/update'],
+           ],
+           [
+               'actions' => ['delete'],
+               'roles' => ['tag/delete'],
+           ],
+        ]);
+    }
+
     public function actionIndex()
     {
         $filterModel = new TagSearch();

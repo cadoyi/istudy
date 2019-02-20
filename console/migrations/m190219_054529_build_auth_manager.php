@@ -2,7 +2,8 @@
 
 
 use yii\db\Migration;
-use backend\rules\PostOwnerRule;
+use backend\rules\OwnerRule;
+use core\helpers\Auth;
 
 /**
  * Class m190219_054529_build_auth_manager
@@ -10,125 +11,68 @@ use backend\rules\PostOwnerRule;
 class m190219_054529_build_auth_manager extends Migration
 {
 
-    public function createRole($name, $params = [])
-    {
-        $auth = Yii::$app->authManager;
-        $params = array_merge(['description' => $name], $params);
-        $role = $auth->createRole($name);
-        Yii::configure($role, $params);
-        $auth->add($role);
-        return $role;
-    }
-
-    public function createPermission($name, $params = [])
-    {
-        $auth = Yii::$app->authManager;
-        $params = array_merge(['description' => $name ], $params);
-        $permission = $auth->createPermission($name);
-        Yii::configure($permission, $params);
-        $auth->add($permission);
-        return $permission;
-    }
-
-    public function createPermissions(array $names)
-    {
-        $objects = [];
-        foreach($names as $key => $name) {
-            if(is_int($key)) {
-                $objects[] = $this->createPermission($name);
-            } else {
-                $objects[] = $this->createPermission($key, $name);
-            }
-        }
-        return $objects;
-    }
-
-    public function addChilds($parent, $child)
-    {
-        if(is_array($child)) {
-            foreach($child as $_child) {
-                Yii::$app->authManager->addChild($parent, $_child);
-            }
-            return;
-        }
-
-        $objects = func_get_args();
-        $parent = array_shift($objects);
-        foreach($objects as $object) {
-            Yii::$app->authManager->addChild($parent, $object);
-        }
-    }
-
-
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $auth = Yii::$app->authManager;
+        // 创建管理员权限.
+        $admin = Auth::createRole('admin');
+        $user = 1;
+        Auth::manager()->assign($admin, $user);
 
-        // 创建 admin 角色
-        // 创建 author 角色
-        // 创建 post 角色
-        $admin = $this->createRole('admin');
-        $author = $this->createRole('author');        
-        $post = $this->createRole('post');
+        $permissions = Auth::createPermissions('permission');
+        Auth::addChilds($admin, $permissions);
 
-        // admin <- post <- author 
-        $this->addChilds($admin, $post);
-        $this->addChilds($post, $author);
+        $postPermissions = Auth::createPermissions('post', [
+            'update/owner' => [
+                'ruleName' => OwnerRule::className(),  
+            ],
+            'delete/owner' => [
+                'ruleName' => OwnerRule::className(),
+            ],
+            'view/owner' => [
+                'ruleName' => OwnerRule::className(),
+            ],
+        ]);
+        Auth::addChilds($admin, $postPermissions);
+        Auth::addChilds($postPermissions['post/update/owner'], $postPermissions['post/update']);
+        Auth::addChilds($postPermissions['post/delete/owner'], $postPermissions['post/delete']);
+        Auth::addChilds($postPermissions['post/view/owner'], $postPermissions['post/view']);
 
-        $updatePost = $this->createPermission('post/update');
-        $deletePost = $this->createPermission('post/delete');
-        $createPost = $this->createPermission('post/author/create');
-        $viewPost = $this->createPermission('post/author/view');
-        $updateOwnPost = $this->createPermission('post/author/update', ['ruleName' => PostOwnerRule::className() ]);
-        $deleteOwnPost = $this->createPermission('post/author/delete', ['ruleName' => PostOwnerRule::className() ]);
-        
-        $this->addChilds($post, $updatePost, $deletePost);
-        $this->addChilds($author, $updateOwnPost, $deleteOwnPost, $viewPost, $createPost);
-        
-        $this->addChilds($updateOwnPost, $updatePost);
-        $this->addChilds($deleteOwnPost, $deletePost);
+        $categoryPermissions = Auth::createPermissions('category', [
+            'update/owner' => [
+                'ruleName' => OwnerRule::className(),  
+            ],
+            'delete/owner' => [
+                'ruleName' => OwnerRule::className(),
+            ],
+            'view/owner' => [
+                'ruleName' => OwnerRule::className(),
+            ],
+        ]);
+        Auth::addChilds($admin, $categoryPermissions);
+        Auth::addChilds($categoryPermissions['category/update/owner'], $categoryPermissions['category/update']);
+        Auth::addChilds($categoryPermissions['category/delete/owner'], $categoryPermissions['category/delete']);
+        Auth::addChilds($categoryPermissions['category/view/owner'], $categoryPermissions['category/view']);
 
-        $category = $this->createRole('category');
-        $this->addChilds($category, $this->createPermissions([
-            'category/update',
-            'category/delete',
-            'category/view',
-            'category/create',
-        ]));
+        $customerGroupPermissions = Auth::createPermissions('customer_group');
+        Auth::addChilds($admin, $customerGroupPermissions);
 
-        $this->addChilds($admin, $category);
+        $customerPermissions = Auth::createPermissions('customer');
+        Auth::addChilds($admin, $customerPermissions);
 
+        $menuPermissions = Auth::createPermissions('menu');
+        Auth::addChilds($admin, $menuPermissions);
 
-        $group = $this->createRole('customer_group');
-        $this->addChilds($group, $this->createPermissions([
-             'customer_group/update',
-             'customer_group/delete',
-             'customer_group/view',
-             'customer_group/create',
-        ]));
-        $this->addChilds($admin, $group);
+        $enrollPermissions = Auth::createPermissions('enroll');
+        Auth::addChilds($admin, $enrollPermissions);
 
-        $customer = $this->createRole('customer');
-        $this->addChilds($customer, $this->createPermissions([
-            'customer/update',
-            'customer/delete',
-            'customer/view',
-            'customer/create',
-        ]));
+        $tagPermissions = Auth::createPermissions('tag');
+        Auth::addChilds($admin, $tagPermissions);
 
-        $menu = $this->createRole('menu');
-        $this->addChilds($menu, $this->createPermissions([
-            'menu/update',
-            'menu/create',
-            'menu/delete',
-            'menu/view',
-        ]));
-        $this->addChilds($admin, $menu);
-         
-
+        $commentPermissions = Auth::createPermissions('comment');
+        Auth::addChilds($admin, $commentPermissions);
     }
 
     /**

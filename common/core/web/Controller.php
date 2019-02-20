@@ -3,6 +3,7 @@
 namespace core\web;
 
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class Controller extends \yii\web\Controller
 {
@@ -23,6 +24,12 @@ class Controller extends \yii\web\Controller
     {
     	$des = Yii::t('all', $description);
         $this->getView()->registerMetaDescription($des);
+    }
+
+
+    public function notFound()
+    {
+        throw new NotFoundHttpException(Yii::t('app', 'Page not found'));
     }
 
 }

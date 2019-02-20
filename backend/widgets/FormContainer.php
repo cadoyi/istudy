@@ -39,6 +39,7 @@ class FormContainer extends Widget
     * target       : tab 的锚点,不带 #
     * active       : 是否是 active 的
     * icon         : 内容 icon
+    * visible      : 是否可见
     * 
     * @var array
     */
@@ -60,10 +61,29 @@ class FormContainer extends Widget
         if(!isset($this->options['id'])) {
             $this->options['id'] = $this->id;
         }
+        $this->initTabs();
         $this->initButtons();
 		ob_start();
 		ob_implicit_flush(false);
 	}
+
+    public function initTabs()
+    {
+        $tabs = [];
+        foreach($this->tabs as $index => $tab) {
+            if(isset($tab['visible'])) {
+                $visible = $tab['visible'];
+                if(is_callable($tab['visible'])) {
+                    $visible = call_user_func($tab['visible']);
+                }
+                if(!$visible) {
+                    continue;
+                }
+            }
+            $tabs[$index] = $tab;
+        }
+        $this->tabs = $tabs;
+    }
 
     public function initButtons()
     {

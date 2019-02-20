@@ -13,7 +13,45 @@ use backend\form\PostSearch;
 class PostController extends Controller
 {
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+               'actions' => ['index'],
+               'roles' => ['post/view'],
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['post/create'],
+            ],
+            [
+                'actions' => ['view'],
+                'roles' => ['post/view'],
+                'roleParams' => $this->roleParams(),
+            ],
+            [
+                'actions' => ['update'],
+                'roles' => ['post/update'],
+                'roleParams' => $this->roleParams(),
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['post/delete'],
+                'roleParams' => $this->roleParams(),
+            ],
+        ]);
+    }
 
+    protected function roleParams()
+    {
+        return function($rule) {
+            $params = [];
+            if($id = Yii::$app->request->get('id', false)) {
+                $params['model'] = $this->findPost($id);
+            }
+            return $params;
+        }
+    }
 
     public function actionIndex()
     {
@@ -92,6 +130,10 @@ class PostController extends Controller
 
     public function findPost($id)
     {
-        return $this->findModel($id, Post::className());
+        if(!Yii::$app->get('currentPost', false)) {
+            $post = $this->findModel($id, Post::className());
+            Yii::$app->set('currentPost', $post);
+        }
+        return Yii::$app->get('currentPost');
     }
 }

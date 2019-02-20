@@ -13,6 +13,37 @@ use common\models\CustomerProfile;
 class CustomerController extends Controller
 {
 
+
+    public function rbac()
+    {
+        return [
+           'class' => 'yii\filters\AccessControl',
+           'ruleConfig' => [
+                'class' => 'yii\filters\AccessRule',
+                'allow' => true,
+           ],
+           'rules' => [
+                [
+                   'actions' => ['index', 'view'],
+                   'roles' => ['customer/view'],
+                ],
+                [
+                   'actions' => ['create'],
+                   'roles' => ['customer/create'],
+                ],
+                [
+                   'actions' => ['update'],
+                   'roles' => ['customer/update'],
+                ],
+                [
+                   'actions' => ['delete'],
+                   'roles' => ['customer/delete'],
+                ],
+           ],
+
+        ];
+    }
+
     public function actionIndex()
     {
         $search = new CustomerSearch();

@@ -13,6 +13,28 @@ use backend\form\AdminSearch;
 class AdminController extends Controller
 {
 
+    public function rbac()
+    {
+        return $this->_rbac([
+            [
+                'actions' => ['index', 'view'],
+                'roles' => ['permission/view'],
+            ],
+            [
+                'actions' => ['create'],
+                'roles' => ['permission/create'],
+            ],
+            [
+                'actions' => ['update'],
+                'roles' => ['permission/update'],
+            ],
+            [
+                'actions' => ['delete'],
+                'roles' => ['permission/delete'],
+            ],
+        ]);
+    }
+
     public function actionIndex()
     {
         $search = new AdminSearch();
