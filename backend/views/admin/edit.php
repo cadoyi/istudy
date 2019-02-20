@@ -8,21 +8,35 @@ use yii\bootstrap\ActiveForm;
 ?>
 <?php
 /**
+ * @var  $this yii\web\View
+ * @var  $user common\models\User
+ * @var  $profile common\models\UserProfile
+ * @var  $role yii\base\DynamicModel;
  * 
  */
+if($user->id == 1) {
+    $options = ['disabled' => 'disabled'];
+} else {
+    $options = [];
+}
+
 ?>
 <?php 
     $formid = 'edit_form';
     $container = FormContainer::begin([
        'tabs' => [
            [
-              'title' => '用户信息',
-              'target'   => 'user_base_info',
+               'title'    => '用户信息',
+               'target'   => 'user_base_info',
            ],
            [
-              'title'    => '资料信息',
-              'target'   => 'user_profile_info',
-           ],       
+               'title'    => '资料信息',
+               'target'   => 'user_profile_info',
+           ],
+           [
+               'title'   => '角色信息',
+               'target'  => 'user_role_info',
+           ],    
        ],
        'form' => $formid,
     ]); 
@@ -48,6 +62,18 @@ use yii\bootstrap\ActiveForm;
         'deleteAttribute' => 'avatorDelete',
     ]) ?>
     <?= $form->field($profile, 'note')->textarea() ?>
+</div>
+<div id="user_role_info" class="tab-target">
+  
+    <?php foreach($role as $name => $value): ?>
+         <div class="form-group">
+            <?php if($name == 'admin'): ?>
+               <?= $form->field($role, $name)->checkbox($options) ?>
+            <?php else: ?>
+               <?= $form->field($role, $name)->checkbox() ?>
+            <?php endif; ?>
+         </div>
+    <?php endforeach; ?>
 </div>
 <?php 
     ActiveForm::end();
