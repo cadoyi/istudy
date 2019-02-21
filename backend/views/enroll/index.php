@@ -28,14 +28,14 @@ $this->title = Yii::t('app', 'Manage enroll');
         'dob',
         'sex' => [
            'attribute' => 'sex',
-           'filter' => Form::booleanList(['male', 'female']),
+           'filter' => Enroll::sexHashOptions(),
            'value' => function($model, $key, $index, $column) {
                return $column->filter[$model->sex];
            }
         ],
         'status' => [
            'attribute' => 'status',
-           'filter' => Enroll::statusList(),
+           'filter' => Enroll::statusHashOptions(),
            'value' => function($model, $key, $index, $column) {
                return $column->filter[$model->status];
            }

@@ -53,5 +53,4 @@ phpunit.phar
 !/frontend/web/assets/.gitkeep
 /media/*
 !/media/.gitkeep
-!/media/.gitkeep
-
+!/media/wysiwyg/.gitkeep

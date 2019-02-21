@@ -99,7 +99,9 @@
 })(window.jQuery);
 
 jQuery(function($) {
-    var editor = CKEDITOR.replace(contentid);
+    var editor = CKEDITOR.replace(contentid, {
+          customConfig : "/config/ckeditor.js",
+    });
     $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
         var html = editor.document.getBody().getHtml();
         $("#" + contentid).text(html);

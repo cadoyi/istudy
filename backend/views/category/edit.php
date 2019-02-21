@@ -33,9 +33,7 @@ use core\widgets\ImageInput;
        window.ce = editor;
         $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
             var html = editor.document.getBody().getHtml();
-            console.log(html);
             $("#" + contentid).text(html);
-            console.log(document.getElementById(contentid));
         });
     '); 
 ?>

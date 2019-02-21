@@ -3,6 +3,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use core\helpers\Form;
+use frontend\models\Enroll;
+$this->title = '报名表';
+$this->registerMetaKeywords();
+$this->registerMetaDescription();
 ?>
 <?php
 /**
@@ -25,7 +29,7 @@ use core\helpers\Form;
         <?= $form->field($enroll, 'email') ?>
         <?= $form->field($enroll, 'phone')?>
         <?= $form->field($enroll, 'dob')?>
-        <?= $form->field($enroll, 'sex')->dropDownList(Form::booleanList(['male', 'female']), ['prompt' => '请选择性别'])?>
+        <?= $form->field($enroll, 'sex')->radioList(Enroll::sexHashOptions())?>
         <?= $form->field($enroll, 'note')->textarea()?>
         <?= Html::submitButton(Yii::t('app', 'Enroll'), ['class' => 'btn btn-primary'])?>
        </div>

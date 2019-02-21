@@ -13,6 +13,11 @@ use backend\form\PostSearch;
 class PostController extends Controller
 {
 
+
+    /**
+     * 设置 RBAC 权限.
+     * @return array
+     */
     public function rbac()
     {
         return $this->_rbac([
@@ -50,7 +55,7 @@ class PostController extends Controller
                 $params['model'] = $this->findPost($id);
             }
             return $params;
-        }
+        };
     }
 
     public function actionIndex()

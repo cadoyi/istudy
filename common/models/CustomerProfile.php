@@ -11,6 +11,9 @@ use core\helpers\App;
 
 class CustomerProfile extends ActiveRecord
 {
+
+    const SEX_MALE   = 0;
+    const SEX_FEMALE = 1;
    
    public $avatorFile;
 
@@ -38,6 +41,14 @@ class CustomerProfile extends ActiveRecord
                  'path' => '@media/customer',
              ],
          ]);
+    }
+
+    public static function sexHashOptions()
+    {
+        return [
+           self::SEX_MALE => Yii::t('app', 'Male'),
+           self::SEX_FEMALE => Yii::t('app', 'Female'),
+        ];
     }
 
 
@@ -127,7 +138,7 @@ class CustomerProfile extends ActiveRecord
         if($this->avator) {
             return App::getMediaUrl('customer/'. $this->avator, $absolute);
         }
-        return null;
+        return App::getImageUrl('placeholder.jpg');
     }
 
     public function attributeHints()

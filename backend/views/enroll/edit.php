@@ -32,8 +32,8 @@ $form = ActiveForm::begin([
     <?= $form->field($enroll, 'email') ?>
     <?= $form->field($enroll, 'phone') ?>
     <?= $form->field($enroll, 'dob') ?>
-    <?= $form->field($enroll, 'sex')->dropDownList(Form::booleanList(['male', 'female']), ['prompt' => '']) ?>
-    <?= $form->field($enroll, 'status')->dropDownList(Enroll::statusList(), ['prompt' => ''])?>
+    <?= $form->field($enroll, 'sex')->radioList(Enroll::sexHashOptions()) ?>
+    <?= $form->field($enroll, 'status')->radioList(Enroll::statusHashOptions())?>
     <?= $form->field($enroll, 'note')->textarea() ?>
 </div>
 

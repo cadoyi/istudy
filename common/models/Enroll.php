@@ -28,11 +28,30 @@ class Enroll extends ActiveRecord
     const STATUS_PENDING = 0;
     const STATUS_PROCESSED = 1;
 
+    const SEX_MALE = 0;
+    const SEX_FEMALE = 1;
+
+    /**
+     * @deprecated
+     */
     public static function statusList()
     {
+        return static::statusHashOptions();
+    }
+
+    public static function statusHashOptions()
+    {
         return [
-            self::STATUS_PENDING   => 'Pending',
-            self::STATUS_PROCESSED => 'Processed',
+            self::STATUS_PENDING   => Yii::t('app', 'Pending'),
+            self::STATUS_PROCESSED => Yii::t('app', 'Processed'),
+        ];
+    }
+
+    public static function sexHashOptions()
+    {
+        return [
+            static::SEX_MALE => Yii::t('app', 'Male'),
+            static::SEX_FEMALE => Yii::t('app', 'Female'),
         ];
     }
 

@@ -9,8 +9,14 @@ jQuery(function($){
         var ul = $(this).children('ul');
         if(ul.length) {
             if(this == e.target || this == $(e.target).closest('li').get(0)) {
-                ul.toggleClass('open');
-                $(this).toggleClass('opened');
+                var opened = ul.hasClass('open');
+                $('#menus').find('.open').removeClass('open');
+                $('#menus').find('li.opened').removeClass('opened');
+                if(!opened) {
+                    ul.addClass('open');
+                   $(this).addClass('opened'); 
+                }
+                
                 return false;
             }
         }

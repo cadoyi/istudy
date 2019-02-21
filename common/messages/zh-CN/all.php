@@ -24,7 +24,8 @@ return [
 
     
     /******** C ********/
-    'City' => '城市',
+    'City'     => '城市',
+    'Content'  => '内容',
     'Customer' => '客户',
     'Commit'   => '提交',
     'Comment'  => '评论',
@@ -51,7 +52,9 @@ return [
     'Customer nickname' => '客户昵称',
     'Customer login' => '客户登录',
     'Customer register' => '客户注册',
+    'Customer updated'  => '客户已更新',
     "Current user's password" => '当前用户密码',
+    'Change password' => '修改密码',
     'Can use for login' => '可以用于登录',
 
     /******** D ********/
@@ -122,9 +125,11 @@ return [
     'Nickname' => '昵称',
     'Note'     => '备注',
     'Note information' => '备注信息',
+    'New password' => '新密码',
 
     /******** O ********/
     'Owner' => '自己的',
+    'Origin password' => '原始密码',
     'Only use for category' => '只用于分类',
 
     /******** P ********/
@@ -146,6 +151,7 @@ return [
     'Post url path'    => '文章URL路径',
     'Process time'     => '处理时间',
     'Password reset'   => '重置密码',
+    'Password updated' => '密码已更新',
     'password reset successfull' => '密码重置成功',
     'Page not found'   => '页面不存在',
     'Page not found.'  => '页面不存在',

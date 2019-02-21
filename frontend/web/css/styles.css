@@ -56,3 +56,12 @@ a.initial:focus {
     content:"* ";
     color: #a94442;
 }
+.upload-link {
+    display: block;
+    float: left;
+    margin-right: 15px;
+}
+.upload-link img {
+    width:36px;
+    height:36px;
+}

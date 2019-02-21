@@ -56,32 +56,34 @@ use yii\helpers\Html;
             
         ],
         [
-            'label' => Yii::t('all', 'Category'),
-            'icon' => 'book',
-            'url' => ['category/index'],
-            'visible' => Yii::$app->user->can('category/view'),
+            'label' => Yii::t('app', 'Content'),
+            'icon'  => 'newspaper-o',
+            'items' => [
+                [
+                    'label' => Yii::t('all', 'Category'),
+                    'url' => ['category/index'],
+                    'visible' => Yii::$app->user->can('category/view'),
+                ],
+                [
+                    'label' => Yii::t('all', 'Post'),
+                    'url'  => ['post/index'],
+                    'visible' => Yii::$app->user->can('post/view'),
+                    
+                ],
+                [
+                    'label' => Yii::t('all', 'Tag'),
+                    'url'   => ['tag/index'],
+                    'visible' => Yii::$app->user->can('tag/view'),
+                    
+                ],
+                [
+                    'label' => Yii::t('all', 'Comment'),
+                    'url'   => ['comment/index'],
+                    'visible' => Yii::$app->user->can('comment/view'),
+                ],
+            ],
         ],
-        [
-            'label' => Yii::t('all', 'Post'),
-            'icon' => 'newspaper-o',
-            'url'  => ['post/index'],
-            'visible' => Yii::$app->user->can('post/view'),
-            
-        ],
-        [
-            'label' => Yii::t('all', 'Tag'),
-            'icon'  => 'tag',
-            'url'   => ['tag/index'],
-            'visible' => Yii::$app->user->can('tag/view'),
-            
-        ],
-        [
-            'label' => Yii::t('all', 'Comment'),
-            'icon'  => 'comment',
-            'url'   => ['comment/index'],
-            'visible' => Yii::$app->user->can('comment/view'),
-            
-        ],
+
         [
             'label' => Yii::t('all', 'Enroll'),
             'icon' => 'usb',

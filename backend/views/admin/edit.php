@@ -67,15 +67,11 @@ if($user->id == 1) {
   
     <?php foreach($role as $name => $value): ?>
          <div class="form-group">
-<<<<<<< HEAD
             <?php if($name == 'admin'): ?>
                <?= $form->field($role, $name)->checkbox($options) ?>
             <?php else: ?>
                <?= $form->field($role, $name)->checkbox() ?>
             <?php endif; ?>
-=======
-            <?= $form->field($role, $name)->checkbox() ?>
->>>>>>> 51dac83aba39eb2abad13992051462038133267e
          </div>
     <?php endforeach; ?>
 </div>
