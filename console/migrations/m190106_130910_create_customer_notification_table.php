@@ -21,17 +21,17 @@ class m190106_130910_create_customer_notification_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
-            'customer_id' => $this->integer(11)->unsigned()->notNull(),
+            'id' => $this->id_key(),
+            'customer_id' => $this->foreign_key(),
             'message'    => $this->string(255)->notNull(),
             'level'      => $this->tinyInteger()->notNull()->defaultValue(0),
             'watched'    => $this->boolean()->notNull()->defaultValue(0),
             'rewatch'    => $this->boolean()->notNull()->defaultValue(0),
             'expire_at'  => $this->integer(11)->unsigned()->comment('过期时间'),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
-            'created_by' => $this->integer(11)->unsigned()->notNull(),
-            'updated_by' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
+            'created_by' => $this->foreign_key(),
+            'updated_by' => $this->foreign_key(),
         ], $this->tableOption);
 
         $this->addForeignKey($this->customerFk,

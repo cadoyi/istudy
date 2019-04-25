@@ -23,9 +23,9 @@ class m190202_065333_create_menu_item_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->bigPrimaryKey()->unsigned(),
-            'parent_id' => $this->bigInteger()->unsigned(),
-            'menu_id' => $this->integer(11)->unsigned()->notNull(),
+            'id' => $this->big_id_key(),
+            'parent_id' => $this->big_foreign_key(true),
+            'menu_id' => $this->foreign_key(),
             'title' => $this->string()->notNull(),
             'url'   => $this->string()->notNull()->defaultValue('#'),
             'position' => $this->integer()->unsigned()->notNull(),

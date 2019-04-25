@@ -22,16 +22,16 @@ class m190106_121548_create_customer_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id'            => $this->primaryKey()->unsigned(),
+            'id'            => $this->id_key(),
             'email'         => $this->string()->notNull()->unique(),
             'nickname'      => $this->string(32),
             'phone'         => $this->string(11)->unique(),
             'password_hash' => $this->string(191)->notNull(),
             'auth_key'      => $this->string(32)->notNull(),
-            'is_active'     => $this->boolean()->notNull()->defaultValue(1),
-            'group_id'      => $this->integer(11)->unsigned()->notNull(),
-            'created_at'    => $this->integer(11)->unsigned()->notNull(),
-            'updated_at'    => $this->integer(11)->unsigned()->notNull(),
+            'is_active'     => $this->is_active(1),
+            'group_id'      => $this->foreign_key(),
+            'created_at'    => $this->datetime_at(),
+            'updated_at'    => $this->datetime_at(),
         ], $this->tableOption);
 
         $this->createIndex('IDX_CUSTOMER_IS_ACTIVE', $this->table, 'is_active');

@@ -23,8 +23,8 @@ class m190106_123549_create_customer_profile_table extends Migration
     public function up()
     {
         $this->createTable('{{%customer_profile}}', [
-            'id' => $this->primaryKey()->unsigned(),
-            'customer_id' => $this->integer(11)->unsigned()->notNull(),
+            'id' => $this->id_key(),
+            'customer_id' => $this->foreign_key(),
             'username' => $this->string(32)->comment('用户名'),
             'bio'      => $this->string()->comment('用户简介'),
             'url'      => $this->string()->comment('用户主页'),

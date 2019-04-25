@@ -19,8 +19,8 @@ class m190106_140558_create_post_tag_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'tag_id' => $this->integer(11)->unsigned()->notNull(),
-            'post_id' => $this->integer(11)->unsigned()->notNull(),
+            'tag_id' => $this->foreign_key(),
+            'post_id' => $this->foreign_key(),
         ], $this->tableOption);
 
         $this->addPrimaryKey($this->pkName, $this->table, [

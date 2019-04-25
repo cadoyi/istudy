@@ -18,11 +18,11 @@ class m190106_140540_create_tag_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
+            'id' => $this->id_key(),
             'title' => $this->string()->notNull()->unique(),
             'description' => $this->string(),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
         ], $this->tableOption);
     }
 

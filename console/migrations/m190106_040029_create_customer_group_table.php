@@ -17,12 +17,12 @@ class m190106_040029_create_customer_group_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id'          => $this->primaryKey()->unsigned(),
+            'id'          => $this->id_key(),
             'name'        => $this->string(32)->notNull(),
             'description' => $this->string(),
-            'is_default'  => $this->boolean()->notNull()->defaultValue(0),
-            'created_at'  => $this->integer(11)->unsigned()->notNull(),
-            'updated_at'  => $this->integer(11)->unsigned()->notNull(),
+            'is_default'  => $this->is_default(),
+            'created_at'  => $this->datetime_at(),
+            'updated_at'  => $this->datetime_at(),
         ], $this->tableOption);
 
         $time = time();

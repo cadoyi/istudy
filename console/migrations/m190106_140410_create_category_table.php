@@ -20,24 +20,24 @@ class m190106_140410_create_category_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
-            'parent_id' => $this->integer(11)->unsigned(),
+            'id' => $this->id_key(),
+            'parent_id' => $this->foreign_key(true),
             'level' => $this->tinyInteger()->unsigned()->notNull()->defaultValue(1),
             'path' => $this->string()->notNull()->comment('父子关系路径'),
             'url_path' => $this->string()->notNull()->unique(),
             'title' => $this->string()->notNull()->comment('分类标题'),
             'description' => $this->string()->notNull()->comment('分类描述'),
-            'is_active' => $this->boolean()->notNull()->defaultValue(1),
+            'is_active' => $this->is_active(1),
             'position' => $this->integer()->notNull()->defaultValue(1),
             'image' => $this->string()->comment('category image'),
             'meta_title' => $this->string(),
             'meta_keywords' => $this->string(),
             'meta_description' => $this->string(),
             'content' => $this->mediumText(),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
-            'created_by' => $this->integer(11)->unsigned()->notNull(),
-            'updated_by' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
+            'created_by' => $this->foreign_key(),
+            'updated_by' => $this->foreign_key(),
         ], $this->tableOption);
         
         $this->addForeignKey($this->selfFk,

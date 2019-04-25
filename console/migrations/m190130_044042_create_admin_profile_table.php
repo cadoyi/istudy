@@ -20,8 +20,8 @@ class m190130_044042_create_admin_profile_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey(),
-            'user_id' => $this->integer(11)->unsigned()->notNull(),
+            'id' => $this->id_key(),
+            'user_id' => $this->foreign_key(),
             'phone'   => $this->char(11),
             'email'   => $this->string(),
             'wechat'  => $this->string(),

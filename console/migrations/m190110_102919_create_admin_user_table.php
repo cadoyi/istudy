@@ -17,14 +17,14 @@ class m190110_102919_create_admin_user_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id'       => $this->primaryKey()->unsigned(),
+            'id'       => $this->id_key(),
             'username' => $this->string(32)->notNull()->unique(),
             'nickname' => $this->string(32)->unique(),
             'email'    => $this->string(255)->notNull()->unique(),
             'password_hash' => $this->string(191)->notNull(),
-            'is_active' => $this->boolean()->notNull()->defaultValue(1),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
+            'is_active' => $this->is_active(1),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
         ], $this->tableOption);
         
         $this->insert($this->table, [

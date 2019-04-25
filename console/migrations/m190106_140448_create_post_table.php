@@ -21,20 +21,20 @@ class m190106_140448_create_post_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
+            'id' => $this->id_key(),
             'title' => $this->string()->notNull()->comment('文章标题'),
-            'category_id' => $this->integer(11)->unsigned()->notNull()->comment('分类ID'),
+            'category_id' => $this->foreign_key()->comment('分类ID'),
             'description'  => $this->string(255)->notNull()->comment('短描述'),
-            'is_active'    => $this->boolean()->notNull()->defaultValue(1),
+            'is_active'    => $this->is_active(1),
             'url_path'     => $this->string(255)->notNull()->unique(),
             'meta_title'       =>  $this->string(),
             'meta_keywords'    =>  $this->string(),
             'meta_description' => $this->string(),
             'content'          => $this->longText()->notNull(),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
-            'created_by' => $this->integer(11)->unsigned()->notNull(),
-            'updated_by' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
+            'created_by' => $this->foreign_key(),
+            'updated_by' => $this->foreign_key(),
         ], $this->tableOption);
 
         $this->addForeignKey($this->categoryFk,

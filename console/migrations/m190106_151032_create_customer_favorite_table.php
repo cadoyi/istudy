@@ -26,13 +26,13 @@ class m190106_151032_create_customer_favorite_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->primaryKey()->unsigned(),
-            'customer_id' => $this->integer(11)->unsigned()->notNull(),
-            'post_id' => $this->integer(11)->unsigned()->notNull(),
+            'id' => $this->id_key(),
+            'customer_id' => $this->foreign_key(),
+            'post_id' => $this->foreign_key(),
             'reason'  => $this->string(64)->notNull()->defaultValue('就是这么任性')->comment('收藏原因'),
             'is_user_reason' => $this->boolean()->notNull()->defaultValue(0)->comment('是否是用户自己输入的原因'),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
         ], $this->tableOption);
 
         $this->addForeignKey($this->customerFk,

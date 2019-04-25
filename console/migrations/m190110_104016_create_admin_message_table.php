@@ -22,14 +22,14 @@ class m190110_104016_create_admin_message_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id'         => $this->bigPrimaryKey()->unsigned(),
-            'user_id'    => $this->integer(11)->unsigned()->notNull(),
-            'sender_id'  => $this->integer(11)->unsigned()->notNull(),
+            'id'         => $this->big_id_key(),
+            'user_id'    => $this->foreign_key(),
+            'sender_id'  => $this->foreign_key(),
             'sender_name' => $this->string()->notNull()->comment('发送者名字'),
             'subject'    => $this->string()->notNull()->comment('摘要'),
             'message'    => $this->text()->notNull(),
             'watched'    => $this->boolean()->notNull()->defaultValue(0),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
             'watched_at' => $this->integer(11)->unsigned(),
             'level'      => $this->tinyInteger()->unsigned()->notNull()->comment('消息级别'),
             'require_receipt' => $this->boolean()->notNull()->defaultValue(0)->comment('是否需要回执'),

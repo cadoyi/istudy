@@ -18,7 +18,7 @@ class m190219_012006_create_enroll_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id'      => $this->primaryKey()->unsigned(),
+            'id'      => $this->id_key(),
             'name'    => $this->string(255)->notNull(),
             'phone'   => $this->string(255)->notNull(),
             'email'   => $this->string(255)->notNull(),
@@ -26,8 +26,8 @@ class m190219_012006_create_enroll_table extends Migration
             'sex'     => $this->boolean(),
             'status'  => $this->tinyInteger()->notNull()->defaultValue(0),
             'note'    => $this->string(),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
-            'updated_at' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
+            'updated_at' => $this->datetime_at(),
         ], $this->tableOption);
         
     }

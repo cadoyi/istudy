@@ -27,12 +27,12 @@ class m190106_140631_create_post_comment_table extends Migration
     public function up()
     {
         $this->createTable($this->table, [
-            'id' => $this->BigPrimaryKey()->unsigned(),
-            'post_id' => $this->integer(11)->unsigned()->notNull(),
-            'customer_id' => $this->integer(11)->unsigned()->notNull(),
-            'parent_id' => $this->bigInteger()->unsigned(),
+            'id' => $this->big_id_key(),
+            'post_id' => $this->foreign_key(),
+            'customer_id' => $this->foreign_key(),
+            'parent_id' => $this->big_foreign_key(true),
             'comment' => $this->string(255)->notNull(),
-            'created_at' => $this->integer(11)->unsigned()->notNull(),
+            'created_at' => $this->datetime_at(),
             'status' => $this->tinyInteger()->notNull()->defaultValue(0)->comment('审核状态'),
         ], $this->tableOption);
 
