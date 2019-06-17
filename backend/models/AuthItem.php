@@ -7,7 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\rbac\Item;
 use yii\rbac\Role;
 use yii\rbac\Permission;
-use common\models\ActiveRecord;
+use core\db\ActiveRecord;
 
 class AuthItem extends ActiveRecord
 {

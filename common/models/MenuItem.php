@@ -90,7 +90,7 @@ class MenuItem extends ActiveRecord
         $items = static::find()
            -> where(['menu_id' => $menu->id])
            -> orderBy(['level' => SORT_ASC, 'position' => SORT_ASC])
-           -> tagCache(static::CACHE_TAG_ALL3600)
+           -> tagCache(static::CACHE_TAG_ALL, 3600)
            -> indexBy('id')
            -> all();
 

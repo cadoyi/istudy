@@ -4,26 +4,16 @@ namespace backend\grid;
 
 use Yii;
 use yii\helpers\Html;
-use yii\grid\Column;
 
 class ActionColumn extends \yii\grid\ActionColumn
 {
 
-    public $template = '<ul class="nav">
-               <li class="dropdown">
-                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                       <span class="glyphicon glyphicon-option-horizontal"></span>
-                   </a>
-                   <ul class="dropdown-menu">
-                       <li class="action-list">{view}</li>
-                       <li class="action-list">{update}</li>
-                       <li class="action-list">{delete}</li>
-                   </ul>
-               </li>
-            </ul>';
+    public $template = '{view} {update} {delete}';
+
 
     
     public $header;
+    
 
     /**
      * {@inheritdoc}
@@ -33,7 +23,7 @@ class ActionColumn extends \yii\grid\ActionColumn
     {
         parent::init();
         if(is_null($this->header)) {
-            $this->header = Yii::t('admin', 'Action');
+            $this->header = Yii::t('app', 'Action');
         }
     }
 
@@ -46,18 +36,22 @@ class ActionColumn extends \yii\grid\ActionColumn
             $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
                 switch ($name) {
                     case 'view':
-                        $title = Yii::t('admin', 'View');
+                        $title = Yii::t('app', 'View');
+                        $class = 'btn-default showPageModal';
                         break;
                     case 'update':
-                        $title = Yii::t('admin', 'Update');
+                        $title = Yii::t('app', 'Update');
+                        $class = 'btn-primary';
                         break;
                     case 'delete':
-                        $title = Yii::t('admin', 'Delete');
+                        $title = Yii::t('app', 'Delete');
+                        $class = 'btn-danger';
                         break;
                     default:
                         $title = ucfirst($name);
+                        $class = 'btn-default';
                 }
-                $className = 'action-' . strtolower($name);
+                $className = 'btn btn-sm ' . $class . ' action-' . strtolower($name);
                 $options = array_merge([
                     'title' => $title,
                     'aria-label' => $title,
@@ -66,9 +60,11 @@ class ActionColumn extends \yii\grid\ActionColumn
                 ], $additionalOptions, $this->buttonOptions);
 
                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-$iconName"]);
-                $content = $icon . ' ' . $title;
+                $content = $icon . ' ';
                 return Html::a($content, $url, $options);
             };
         }
     }
+
+
 }
