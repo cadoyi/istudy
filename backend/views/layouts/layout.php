@@ -30,6 +30,7 @@ $nickname = Html::encode(Yii::$app->user->identity->nickname);
                   <?= $this->render('layout/header') ?>
               </div>     
               <div class="container-fluid page-content-container">
+                  <?= $this->getBlock('breadcrumbs') ?>
                   <?= $content; ?>
               </div>
           </div>

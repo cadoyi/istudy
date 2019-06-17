@@ -51,7 +51,7 @@ class FormContainer extends Widget
 
 	public $buttons = [];
 
-    public $buttonTemplate = "{commit} {back}";
+    public $buttonTemplate = "{back} {commit}";
 
     public $form = 'edit_form';
 
@@ -87,12 +87,6 @@ class FormContainer extends Widget
 
     public function initButtons()
     {
-        $this->registerButton('back', [
-            'tag'   => 'a',
-            'href'   => Url::to(['index']),
-            'title' => Yii::t('admin', 'Back'),
-            'class' => 'btn btn-sm btn-primary',
-        ]);
 
         $this->registerButton('commit', [
             'tag'         => 'button',
@@ -103,6 +97,14 @@ class FormContainer extends Widget
             ],
             'class' => 'btn btn-sm btn-primary',
         ]);
+
+        $this->registerButton('back', [
+            'tag'   => 'a',
+            'href'   => Url::to(['index']),
+            'title' => Yii::t('admin', 'Back'),
+            'class' => 'btn btn-sm btn-default',
+        ]);
+
     }
 
     public function registerButton($name, $options = []) 

@@ -22,7 +22,7 @@ AppAsset::register($this);
         <?= $this->head() ?>
     	<title><?= Html::encode($this->title)?></title>
     </head>
-    <body class="<?= $this->bodyClass ?>">
+    <body class="<?= $this->getBlock()->bodyClass ?>">
     	<?php $this->beginBody() ?>
     	<?= $content; ?>
     	<?php $this->endBody() ?>

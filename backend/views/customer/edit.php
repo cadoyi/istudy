@@ -18,6 +18,7 @@ $groups = CustomerGroup::hashOptions();
  * @var array $emails  多个邮件地址 
  * 
  */
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage customer'), ['index']);
 ?>
 <?php
    $formid = 'edit_form';

@@ -14,6 +14,8 @@ use core\widgets\ImageInput;
  * @var $post common\models\Post
  * @var $postContent common\models\PostContent
  */
+$this->title = $category->isNewRecord ? Yii::t('app', 'Create category') : $category->title;
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage category'), ['index']);
 ?>
 <?php
     $input = Html::getInputId($category, 'content');

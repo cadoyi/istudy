@@ -14,6 +14,9 @@ use yii\bootstrap\ActiveForm;
  * @var  $role yii\base\DynamicModel;
  * 
  */
+$this->title = $user->isNewRecord ? Yii::t('app', 'Create admin user') : $user->nickname;
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage admin user'), ['index']);
+
 if($user->id == 1) {
     $options = ['disabled' => 'disabled'];
 } else {

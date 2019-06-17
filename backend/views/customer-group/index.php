@@ -27,8 +27,6 @@ $this->title = Yii::t('app', 'Manage customer group');
             	return $values[$model->is_default];
             }
         ],
-        'created_at:datetime',
-        'updated_at:datetime',
         [
             'class' => ActionColumn::className(),
             'header' => Yii::t('all', 'Action'),

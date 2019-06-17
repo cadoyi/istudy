@@ -12,6 +12,8 @@ use backend\widgets\Permission;
  * @var  $role backend\models\AuthItem;
  * @var  $showPermission  boolean
  */
+$this->title = Yii::t('app', $role->isNewRecord ? 'Create role' : 'Update role');
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage role'), ['index']);
 ?>
 <?php 
    $container = FormContainer::begin([

@@ -11,6 +11,7 @@ use common\models\Enroll;
  * @var  $this yii\web\View
  * @var  $enroll common\models\Enroll
  */
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage enroll'), ['index']);
 ?>
 <?php 
 $formid = 'edit_form';

@@ -33,6 +33,7 @@ $selectedTags = $post->postTags;
  * @var $post common\models\Post
  * @var $post common\models\PostContent
  */
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage post'), ['index']);
 ?>
 <?php $container = FormContainer::begin([
     'tabs' => [

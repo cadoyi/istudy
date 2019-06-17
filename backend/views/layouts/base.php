@@ -16,7 +16,7 @@ $bodyClass = str_replace('/', '-', Yii::$app->controller->route);
        <?= $this->head(); ?>
        <title><?= Html::encode($this->title) ?></title>
    </head>
-   <body class="<?= $bodyClass ?>">
+   <body class="<?= $this->getBlock()->bodyClass ?>">
       <?php $this->beginBody(); ?>
        <?= $content; ?>
       <?php $this->endBody(); ?>

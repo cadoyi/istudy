@@ -77,6 +77,19 @@ return [
                 ],
             ],
         ],
+        'view' => [
+            'as blockBehavior' => [
+                'class' => 'common\blocks\BlockBehavior',
+                'registerBlocks' => [
+                    'main' => [
+                        'class' => 'common\blocks\Layout',
+                    ],
+                    'breadcrumbs' => [
+                        'class' => 'common\blocks\Breadcrumbs',
+                    ],
+                ],
+            ],
+        ],
         
     ],
     'params' => $params,

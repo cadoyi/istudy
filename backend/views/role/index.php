@@ -11,6 +11,7 @@ use backend\grid\ActionColumn;
  * @var  $dataProvider yii\data\ActiveDataProvider
  * 
  */
+$this->title = Yii::t('app', 'Manage role');
 ?>
 <?php $this->beginContent('@backend/views/wraps/grid.php'); ?>
 <?= GridView::widget([

@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
  * @var  $this yii\web\View
  * @var  $tag common\models\Tag
  */
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage tag'), ['index']);
 ?>
 <?php 
    $formid = 'edit_form';

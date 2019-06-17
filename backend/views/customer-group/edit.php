@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
  * @var  $this yii\web\View
  * @var  $group common\models\Group
  */
+$this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage customer group'), ['index']);
 ?>
 <?php
    $formid = 'edit_form';
@@ -28,7 +29,7 @@ use yii\widgets\ActiveForm;
 ?>
 <div id="group_base_info" class="tab-target">
 	<?= $form->field($group, 'name')?>
-	<?= $form->field($group, 'description')?>
+	<?= $form->field($group, 'description')->textarea() ?>
 	<?= $form->field($group, 'is_default')->checkbox() ?>
 </div>
 
