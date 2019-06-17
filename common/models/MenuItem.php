@@ -126,7 +126,7 @@ class MenuItem extends ActiveRecord
 
     public static function flushMenuItemCache()
     {
-        static::invalidate([
+        static::invalidateTag([
             static::CACHE_TAG_ALL,
         ]);
     }

@@ -102,7 +102,7 @@ class CustomerGroup extends ActiveRecord
 
 	public function invalidateCache()
 	{
-		static::invalidate([
+		static::invalidateTag([
 			static::CACHE_TAG_ALL,
 			static::CACHE_TAG_DEFAULT,
 		]);

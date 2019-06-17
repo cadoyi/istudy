@@ -79,7 +79,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * 
      * @param  mixed $tags  缓存标签
      */
-    public function invalidateTag($tags)
+    public static function invalidateTag($tags)
     {
         $db = static::getDb();
         if($db->enableQueryCache) {

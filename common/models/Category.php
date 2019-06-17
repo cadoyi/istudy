@@ -303,8 +303,8 @@ class Category extends ActiveRecord
 
     public function invalidateCache()
     {
-        static::invalidate([
-            static::CACHE_TAG,
+        static::invalidateTag([
+            static::CACHE_TAG_ALL,
         ]);
     }
 

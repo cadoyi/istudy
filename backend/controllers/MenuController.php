@@ -116,10 +116,10 @@ class MenuController extends Controller
             $data['message'] = $e->getMessage();
         } catch(\Exception $e) {
             $data['error'] = 1;
-            $data['message'] = 'Internal Server Error';
+            $data['message'] = $e->getMessage();
         } catch(\Throwable $e) {
             $data['error'] = 1;
-            $data['message'] = 'Internal Server Error';
+            $data['message'] = $e->getMessage();
         }
         return $this->asJson($data);
     }

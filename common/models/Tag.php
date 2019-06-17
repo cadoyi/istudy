@@ -112,7 +112,7 @@ class Tag extends ActiveRecord
 
     public function invalidateCache()
     {
-        static::invalidate([
+        static::invalidateTag([
             static::CACHE_TAG_ALL,
         ]);
     }
