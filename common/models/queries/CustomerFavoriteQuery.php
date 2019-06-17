@@ -1,8 +1,9 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
+use core\db\ActiveQuery;
 
 class CustomerFavoriteQuery extends ActiveQuery
 {
@@ -15,7 +16,7 @@ class CustomerFavoriteQuery extends ActiveQuery
      */
     public function filterUserReason($bool = true)
     {
-        return $this->_filterBoolean('is_user_reason', $bool);
+        return $this->andWhere(['is_user_reason' => $bool ? 1 : 0]);
     }
 
 

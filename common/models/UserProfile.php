@@ -4,23 +4,62 @@ namespace common\models;
 
 use Yii;
 use yii\helpers\Url;
+use common\models\queries\UserProfileQuery;
 use core\validators\PhoneValidator;
 use core\behaviors\UploadedBehavior;
 use core\helpers\App;
+use core\db\ActiveRecord;
 
+/**
+ * This is the model class for table "admin_profile".
+ *
+ * @property int    $id
+ * @property int    $user_id
+ * @property string $phone
+ * @property string $email
+ * @property string $wechat
+ * @property int    $qq
+ * @property string $avator
+ * @property int    $sex
+ * @property string $note
+ *
+ */
 class UserProfile extends ActiveRecord
 {
 
-	  public $avatorFile;
+	public $avatorFile;
 
     public $avatorDelete;
 
 
-	  public static function tableName()
-	  {
-		    return '{{%admin_profile}}';
-	  }
+    /**
+     * @inheritdoc
+     * 
+     * @return string
+     */
+	public static function tableName()
+	{
+		return '{{%admin_profile}}';
+	}
 
+
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(UserProfileQuery::class, [ get_called_class()]);
+    }
+
+
+  
+    /**
+     * @inheritdoc
+     * 
+     * @return array
+     */
     public function behaviors()
     {
     	return array_merge(parent::behaviors(), [
@@ -32,8 +71,15 @@ class UserProfile extends ActiveRecord
     	]);
     }
 
-	  public function rules()
-	  {
+
+
+    /**
+     * @inheritdoc
+     * 
+     * @return array
+     */
+    public function rules()
+    {
         return [
             [['phone'], PhoneValidator::className() ],
             [['email'], 'email'],
@@ -46,18 +92,15 @@ class UserProfile extends ActiveRecord
             [['avatorDelete'], 'boolean'],
             [['phone', 'email', 'wechat', 'qq', 'avator', 'sex', 'note'], 'default', 'value' => null],
         ];
-	  }
-
-    public function scenarios()
-    {
-      	$default = ['phone', 'email', 'wechat', 'qq', 'avator', 'sex', 'note', 'avatorFile', 'avatorDelete'];
-      	return [
-               static::SCENARIO_DEFAULT => $default,
-               static::SCENARIO_CREATE => $default,
-               static::SCENARIO_UPDATE => $default,
-      	];
     }
 
+
+
+    /**
+     * @inheritdoc
+     * 
+     * @return array
+     */
     public function attributeLabels()
     {
           return [
@@ -75,12 +118,25 @@ class UserProfile extends ActiveRecord
           ];
     }
 
+
+    /**
+     * 查询用户
+     * 
+     * @return ActiveQuery
+     */
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id'])->inverseOf('profile');
     }
 
 
+
+    /**
+     * 获取头像的 URL
+     * 
+     * @param  boolean $absolute 
+     * @return string|null
+     */
     public function getAvatorUrl($absolute = true)
     {
         if($this->avator) {
@@ -88,4 +144,6 @@ class UserProfile extends ActiveRecord
         }
         return null;
     }
+
+
 }

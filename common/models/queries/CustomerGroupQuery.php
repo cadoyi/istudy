@@ -1,15 +1,16 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
+use core\db\ActiveQuery;
 
 class CustomerGroupQuery extends ActiveQuery
 {
 
 	public function filterDefault($bool = true)
 	{
-		return $this->_filterBoolean('is_default', $bool);
+        return $this->andWhere(['is_default' => $bool ? 1 : 0]);
 	}
 
 }

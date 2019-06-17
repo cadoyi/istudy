@@ -5,6 +5,8 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use core\validators\PhoneValidator;
+use core\db\ActiveRecord;
+use common\models\queries\ContactQuery;
 
 /**
  * contact 表 / 联系我们的表单内容
@@ -32,6 +34,17 @@ class Contact extends ActiveRecord
     public static function tableName()
     {
         return '{{%contact}}';
+    }
+
+
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(ContactQuery::class, [ get_called_class() ]);
     }
 
 
@@ -73,18 +86,6 @@ class Contact extends ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        $default = [ 'name', 'phone', 'email', 'subject', 'message', 'status'];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE  => $default,
-            static::SCENARIO_UPDATE  => $default,
-        ];
-    }
 
 
     /**

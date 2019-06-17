@@ -1,13 +1,16 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
+
+use Yii;
+use core\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[\common\models\Enroll]].
  *
  * @see \common\models\Enroll
  */
-class EnrollQuery extends \common\query\ActiveQuery
+class EnrollQuery extends ActiveQuery
 {
     /*public function active()
     {

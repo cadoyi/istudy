@@ -7,7 +7,8 @@ use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\SluggableBehavior;
-use common\query\PostQuery;
+use common\models\queries\PostQuery;
+use core\db\ActiveRecord;
 
 /**
  * Post table
@@ -110,15 +111,7 @@ class Post extends ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $default = parent::scenarios()[static::SCENARIO_DEFAULT];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ];
-    }
+
 
     public function attributeLabels()
     {

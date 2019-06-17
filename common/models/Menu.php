@@ -5,7 +5,22 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use common\models\queries\MenuQuery;
+use core\db\ActiveRecord;
 
+
+/**
+ * This is the model class for table "menu".
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $description
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $created_by
+ * @property int $updated_by
+ *
+ */
 class Menu extends ActiveRecord
 {
 
@@ -13,6 +28,12 @@ class Menu extends ActiveRecord
 	{
 		return '{{%menu}}';
 	}
+
+
+    public static function find()
+    {
+        return Yii::createObject(MenuQuery::class, [ get_called_class()]);
+    }
 
     public function behaviors()
     {
@@ -48,15 +69,7 @@ class Menu extends ActiveRecord
         ];
 	}
 
-	public function scenarios()
-	{
-		$default = ['title', 'description'];
-		return [
-			static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-	    ];
-	}
+
 
     public function getItems()
     {

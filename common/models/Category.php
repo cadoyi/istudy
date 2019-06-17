@@ -8,9 +8,10 @@ use yii\helpers\Url;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\BlameableBehavior;
-use common\query\CategoryQuery;
+use common\models\queries\CategoryQuery;
 use core\behaviors\UploadedBehavior;
 use core\helpers\App;
+use core\db\ActiveRecord;
 
 /**
  * Category table
@@ -40,7 +41,7 @@ class Category extends ActiveRecord
 
     const LEVEL_START = 1;
 
-    const CACHE_TAG = 'Categories';
+    const CACHE_TAG_ALL = 'Categories';
 
     public $imageFile;
 
@@ -169,32 +170,6 @@ class Category extends ActiveRecord
     }
 
 
-    public function scenarios()
-    {
-        $default = [
-           'path',
-           'level',
-           'url_path',
-           'parent_id',
-           'title',
-           'description',
-           'is_active',
-           'is_menu',
-           'is_block',
-           'position',
-           'imageFile',
-           'imageDelete',
-           'meta_title',
-           'meta_keywords',
-           'meta_description',
-           'content',
-        ];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ];
-    }
 
 
     /**
@@ -288,7 +263,7 @@ class Category extends ActiveRecord
     {
         $all = static::find()
             -> selectWithoutContent()
-            -> cache(3600, static::cacheTags(static::CACHE_TAG))
+            -> tagCache(static::CACHE_TAG_ALL, 3600)
             -> all();
         return $all;
     }
@@ -301,7 +276,7 @@ class Category extends ActiveRecord
                'is_active' => 1,
                'is_menu' => 1,
             ])
-            ->cache(3600, static::cacheTags(static::CACHE_TAG))
+            ->tagCache(static::CACHE_TAG_ALL, 3600)
             ->orderBy('id')
             ->indexBy('id')
             ->all();

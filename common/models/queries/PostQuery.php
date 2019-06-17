@@ -1,9 +1,10 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
 use yii\base\InvalidParamException;
+use core\db\ActiveQuery;
 use common\models\Category;
 use common\models\Post;
 

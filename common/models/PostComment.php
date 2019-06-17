@@ -4,6 +4,8 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use common\models\queries\PostCommentQuery;
+use core\db\ActiveRecord;
 
 /**
  * post_comment 表
@@ -31,12 +33,25 @@ class PostComment extends ActiveRecord
         ];
     }
 
+
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return '{{%post_comment}}';
+    }
+
+    
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(PostCommentQuery::class, [ get_called_class()]);
     }
 
 
@@ -80,24 +95,7 @@ class PostComment extends ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        $default = [
-            'customer_id',
-            'parent_id',
-            'post_id',
-            'comment',
-            'status',
-        ];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE  => $default,
-            static::SCENARIO_UPDATE  => $default,
-        ];
-    }
+
 
 
     /**

@@ -4,72 +4,87 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use common\models\queries\UserMessageQuery;
+use core\db\ActiveRecord;
 
+/**
+ * This is the model class for table "admin_message".
+ *
+ * @property string   $id
+ * @property int      $user_id
+ * @property int      $sender_id
+ * @property string   $sender_name 发送者名字
+ * @property string   $subject 摘要
+ * @property string   $message
+ * @property int      $watched
+ * @property int      $created_at
+ * @property int      $watched_at
+ * @property int      $level 消息级别
+ * @property int      $require_receipt 是否需要回执
+ *
+ */
 class UserMessage extends ActiveRecord
 {
 
-	const LEVEL_ERROR = 4;
+    const LEVEL_ERROR = 4;
 
-	const LEVEL_WARNING = 2;
-	
-	const LEVEL_INFO = 1;
+    const LEVEL_WARNING = 2;
 
-	public static function tableName()
-	{
-		return '{{%admin_message}}';
-	}
+    const LEVEL_INFO = 1;
 
-	public function behaviors()
-	{
-		return array_merge(parent::behaviors(), [
-            'timestamp' => [
-                'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => false,
-            ],
-		]);
-	}
-
-	public function rules()
-	{
-        return [
-        	[['sender_name'], 'required'],
-            [['sender_name'], 'string', 'length' => [0, 255]],
-            [['message'], 'string'],
-            [['watched'], 'default', 'value' => 0],
-            [['watched'], 'boolean'],
-            [['level'], 'in', 'range' => [
-                static::LEVEL_INFO,
-                static::LEVEL_WARNING,
-                static::LEVEL_ERROR,
-            ]],
-            [['require_receipt'], 'default', 'value' => 0],
-            [['require_receipt'], 'boolean'],
-            [['subject'], 'default', 'value' => function() {
-                if(mb_strlen($this->message) > 29) {
-                    return mb_substr($this->message, 0, 29) . '...';
-                } else {
-                	return $this->message;
-                }
-            }],
-        ];
-	}
+    public static function tableName()
+    {
+    	return '{{%admin_message}}';
+    }
 
 
-	public function scenarios()
-	{
-        $default = [
-           'sender_name',
-           'message',
-           'watched',
-           'level',
-           'require_receipt',
-        ];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ]; 
-	}
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(UserMessageQuery::class, [ get_called_class()]);
+    }
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+              'timestamp' => [
+                  'class' => TimestampBehavior::className(),
+                  'updatedAtAttribute' => false,
+              ],
+    	]);
+    }
+
+    public function rules()
+    {
+          return [
+          	[['sender_name'], 'required'],
+              [['sender_name'], 'string', 'length' => [0, 255]],
+              [['message'], 'string'],
+              [['watched'], 'default', 'value' => 0],
+              [['watched'], 'boolean'],
+              [['level'], 'in', 'range' => [
+                  static::LEVEL_INFO,
+                  static::LEVEL_WARNING,
+                  static::LEVEL_ERROR,
+              ]],
+              [['require_receipt'], 'default', 'value' => 0],
+              [['require_receipt'], 'boolean'],
+              [['subject'], 'default', 'value' => function() {
+                  if(mb_strlen($this->message) > 29) {
+                      return mb_substr($this->message, 0, 29) . '...';
+                  } else {
+                  	return $this->message;
+                  }
+              }],
+          ];
+    }
+
+
+
 
 	public function attributeLabels()
 	{

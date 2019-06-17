@@ -5,13 +5,26 @@ namespace common\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
-use common\query\CustomerGroupQuery;
+use common\models\queries\CustomerGroupQuery;
+use core\db\ActiveRecord;
 
 
+/**
+ * This is the model class for table "customer_group".
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $is_default
+ * @property int $created_at
+ * @property int $updated_at
+ *
+ * @property Customer[] $customers
+ */
 class CustomerGroup extends ActiveRecord
 {
-	const CACHE_TAG_NAME = 'CustomerGroup';
-	const DEFAULT_GROUP_TAG = 'CustomerGroupDefault';
+	const CACHE_TAG_ALL = 'CustomerGroup';
+	const CACHE_TAG_DEFAULT = 'CustomerGroupDefault';
 
 
 	public static function tableName()
@@ -28,7 +41,7 @@ class CustomerGroup extends ActiveRecord
 
 	public static function findDefault()
 	{
-		return static::find()->cache(0, static::cacheTags(static::DEFAULT_GROUP_TAG))
+		return static::find()->tagCache(static::CACHE_TAG_DEFAULT)
 		    ->filterDefault(true)
 		    ->one();
 	}
@@ -37,7 +50,7 @@ class CustomerGroup extends ActiveRecord
 	{
         $groups = static::find()
             -> select(['id', 'name'])
-            -> cache(0, static::cacheTags(static::CACHE_TAG_NAME))
+            -> tagCache(static::CACHE_TAG_ALL)
             -> all();
         return ArrayHelper::map($groups, 'id', 'name');
 	}
@@ -74,15 +87,6 @@ class CustomerGroup extends ActiveRecord
 		];
 	}
 
-	public function scenarios()
-	{
-		$default = ['name', 'description', 'is_default'];
-		return [
-           static::SCENARIO_DEFAULT => $default,
-           static::SCENARIO_CREATE => $default,
-           static::SCENARIO_UPDATE => $default,
-		];
-	}
 
 	public function attributeLabels()
 	{
@@ -99,8 +103,8 @@ class CustomerGroup extends ActiveRecord
 	public function invalidateCache()
 	{
 		static::invalidate([
-			static::CACHE_TAG_NAME,
-			static::DEFAULT_GROUP_TAG,
+			static::CACHE_TAG_ALL,
+			static::CACHE_TAG_DEFAULT,
 		]);
 	}
 

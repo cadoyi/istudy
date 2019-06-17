@@ -1,8 +1,9 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
+use core\db\ActiveQuery;
 use common\models\Category;
 
 class CategoryQuery extends ActiveQuery

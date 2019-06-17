@@ -5,10 +5,30 @@ namespace common\models;
 use Yii;
 use yii\helpers\Url;
 use common\helpers\Form;
+use common\models\queries\CustomerProfileQuery;
 use core\behaviors\UploadedBehavior;
 use core\helpers\App;
+use core\db\ActiveRecord;
 
 
+/**
+ * This is the model class for table "customer_profile".
+ *
+ * @property int $id
+ * @property int $customer_id
+ * @property string $username 用户名
+ * @property string $bio 用户简介
+ * @property string $url 用户主页
+ * @property string $wechat 微信
+ * @property string $qq QQ
+ * @property int $sex 性别
+ * @property string $dob 出生日期
+ * @property string $avator 头像
+ * @property string $city 城市
+ * @property string $note 个性签名
+ *
+ * @property Customer $customer
+ */
 class CustomerProfile extends ActiveRecord
 {
 
@@ -26,6 +46,19 @@ class CustomerProfile extends ActiveRecord
     {
         return '{{%customer_profile}}'; 
     }
+
+
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(CustomerProfileQuery::class, [ get_called_class() ]);
+    }
+
+    
 
     public function formName()
     {
@@ -83,27 +116,7 @@ class CustomerProfile extends ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $default = [
-           'username',
-           'bio',
-           'url',
-           'wechat',
-           'qq',
-           'sex',
-           'dob',
-           'avatorFile',
-           'avatorDelete',
-           'city',
-           'note',
-        ];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ];
-    }
+
 
     public function attributeLabels()
     {

@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use common\models\queries\PostTagQuery;
+use core\db\ActiveRecord;
 
 /**
  * post tag 表, 这个表为复合主键
@@ -22,6 +24,17 @@ class PostTag extends ActiveRecord
         return '{{%post_tag}}';
     }
 
+
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(PostTagQuery::class, [ get_called_class() ]);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,18 +46,6 @@ class PostTag extends ActiveRecord
         ];
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        return [
-           static::SCENARIO_DEFAULT => ['post_id', 'tag_id'],
-           static::SCENARIO_CREATE  => ['post_id', 'tag_id'],
-           static::SCENARIO_UPDATE  => ['post_id', 'tag_id'],
-        ];
-    }
 
 
     /**

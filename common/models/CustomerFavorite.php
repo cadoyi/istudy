@@ -3,8 +3,24 @@
 namespace common\models;
 
 use Yii;
-use common\query\CustomerFavoriteQuery;
+use common\models\queries\CustomerFavoriteQuery;
+use core\db\ActiveRecord;
 
+
+/**
+ * This is the model class for table "customer_favorite".
+ *
+ * @property int $id
+ * @property int $customer_id
+ * @property int $post_id
+ * @property string $reason 收藏原因
+ * @property int $is_user_reason 是否是用户自己输入的原因
+ * @property int $created_at
+ * @property int $updated_at
+ *
+ * @property Customer $customer
+ * @property Post $post
+ */
 class CustomerFavorite extends ActiveRecord
 {
 
@@ -19,7 +35,7 @@ class CustomerFavorite extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return common\query\CustomerFavoriteQuery
+     * @return common\models\queries\CustomerFavoriteQuery
      */
     public static function find()
     {

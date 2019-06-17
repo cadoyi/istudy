@@ -1,8 +1,9 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
+use core\db\ActiveQuery;
 use common\models\CustomerNotification;
 
 class CustomerNotificationQuery extends ActiveQuery
@@ -88,7 +89,7 @@ class CustomerNotificationQuery extends ActiveQuery
      */
     public function filterWatched($bool = true)
     {
-        return $this->_filterBoolean('watched', $bool);
+        return $this->andWhere(['watched' => $bool ? 1 : 0]);
     }
 
 
@@ -100,7 +101,7 @@ class CustomerNotificationQuery extends ActiveQuery
      */
     public function filterRewatch($bool = true)
     {
-        return $this->_filterBoolean('rewatch', $bool);
+        return $this->andWhere(['rewatch' => $bool ? 1 : 0]);
     }
 
 

@@ -4,9 +4,9 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use common\query\EnrollQuery;
+use common\models\queries\EnrollQuery;
 use core\validators\PhoneValidator;
-
+use core\db\ActiveRecord;
 
 /**
  * This is the model class for table "enroll".
@@ -91,15 +91,7 @@ class Enroll extends ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $default = ['name', 'email', 'phone', 'sex', 'dob', 'status', 'note'];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ];
-    }
+
 
     /**
      * @inheritdoc
@@ -122,7 +114,7 @@ class Enroll extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\query\EnrollQuery the active query used by this AR class.
+     * @return \common\models\queries\EnrollQuery the active query used by this AR class.
      */
     public static function find()
     {

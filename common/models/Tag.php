@@ -5,6 +5,8 @@ namespace common\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
+use common\models\queries\TagQuery;
+use core\db\ActiveRecord;
 
 /**
  * tag 表
@@ -19,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
 class Tag extends ActiveRecord
 {
 
-    const CACHE_TAG = 'tags';
+    const CACHE_TAG_ALL = 'tags';
 
     /**
      * {@inheritdoc}
@@ -27,6 +29,17 @@ class Tag extends ActiveRecord
     public static function tableName()
     {
         return '{{%tag}}';
+    }
+
+
+    /**
+     * @inheritdoc
+     * 
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(TagQuery::class, [ get_called_class()]);
     }
 
 
@@ -63,23 +76,10 @@ class Tag extends ActiveRecord
             [['title'], 'unique', 'when' => function($model, $attribute) {
                 return $model->isAttributeChanged($attribute);
             }],
-            [['description'], 'string', 'on' => [
-                static::SCENARIO_DEFAULT,
-                static::SCENARIO_CREATE,
-                static::SCENARIO_UPDATE,
-            ]],
+            [['description'], 'string'],
         ];
     }
 
-    public function scenarios()
-    {
-        $default = ['title', 'description'];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE  => $default,
-            static::SCENARIO_UPDATE  => $default,
-        ];
-    }
 
 
     /**
@@ -100,7 +100,7 @@ class Tag extends ActiveRecord
     public static function all()
     {
         return static::find()
-           -> cache(3600, static::cacheTags(static::CACHE_TAG))
+           -> tagCache(static::CACHE_TAG_ALL)
            -> all();
     }
 
@@ -113,7 +113,7 @@ class Tag extends ActiveRecord
     public function invalidateCache()
     {
         static::invalidate([
-            static::CACHE_TAG,
+            static::CACHE_TAG_ALL,
         ]);
     }
 

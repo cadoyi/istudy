@@ -6,10 +6,11 @@ use Yii;
 use yii\helpers\Html;
 use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
-use common\query\CustomerQuery;
+use common\models\queries\CustomerQuery;
 use core\helpers\Form;
 use core\validators\PhoneValidator;
 use core\validators\PasswordValidator;
+use core\db\ActiveRecord;
 
 /**
  * 客户表
@@ -105,23 +106,6 @@ class Customer extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function scenarios()
-    {
-        $default = [
-           'email', 
-           'nickname',
-           'phone',
-           'password',
-           'password_confirm',
-           'is_active',
-           'group_id',
-        ];
-        return [
-            static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-        ];
-    }
 
     public function formName()
     {

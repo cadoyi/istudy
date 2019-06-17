@@ -3,10 +3,25 @@
 namespace common\models;
 
 use Yii;
+use common\models\queries\MenuItemQuery;
 
+use core\db\ActiveRecord;
+
+/**
+ * This is the model class for table "menu_item".
+ *
+ * @property string $id
+ * @property string $parent_id
+ * @property int $menu_id
+ * @property string $title
+ * @property string $url
+ * @property int $position
+ * @property int $level
+ * 
+ */
 class MenuItem extends ActiveRecord
 {
-    const CACHE_TAG = 'menu_items';
+    const CACHE_TAG_ALL = 'menu_items';
 
     public $parent;
     public $childs = [];
@@ -15,6 +30,12 @@ class MenuItem extends ActiveRecord
 	{
 		return '{{%menu_item}}';
 	}
+
+
+    public static function find()
+    {
+        return Yii::createObject(MenuItemQuery::class, [get_called_class()]);
+    }
 
 
 	public function rules()
@@ -56,15 +77,7 @@ class MenuItem extends ActiveRecord
 		];
 	}
 
-	public function scenarios()
-	{
-        $default = ['title', 'url', 'parent_id', 'menu_id', 'position', 'level'];
-		return [
-			static::SCENARIO_DEFAULT => $default,
-            static::SCENARIO_CREATE => $default,
-            static::SCENARIO_UPDATE => $default,
-	    ];
-	}
+
 
     public function getMenu()
     {
@@ -77,7 +90,7 @@ class MenuItem extends ActiveRecord
         $items = static::find()
            -> where(['menu_id' => $menu->id])
            -> orderBy(['level' => SORT_ASC, 'position' => SORT_ASC])
-           -> cache(3600, static::cacheTags(static::CACHE_TAG))
+           -> tagCache(static::CACHE_TAG_ALL3600)
            -> indexBy('id')
            -> all();
 
@@ -114,7 +127,7 @@ class MenuItem extends ActiveRecord
     public static function flushMenuItemCache()
     {
         static::invalidate([
-            static::CACHE_TAG,
+            static::CACHE_TAG_ALL,
         ]);
     }
     

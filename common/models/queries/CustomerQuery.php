@@ -1,8 +1,9 @@
 <?php
 
-namespace common\query;
+namespace common\models\queries;
 
 use Yii;
+use core\db\ActiveQuery;
 
 /**
  * 自定义的 customer 的 activeQuery
@@ -21,7 +22,7 @@ class CustomerQuery extends ActiveQuery
      */
     public function filterActive($bool = true)
     {
-        return $this->_filterBoolean('is_active', $bool);
+        return $this->andWhere(['is_active' => $bool ? 1 : 0]);
     }
 
 

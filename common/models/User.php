@@ -6,7 +6,8 @@ use Yii;
 use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
 use core\validators\PasswordValidator;
-use common\query\UserQuery;
+use common\models\queries\UserQuery;
+use core\db\ActiveRecord;
 
 /**
  * admin_user 模型
