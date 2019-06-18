@@ -99,14 +99,6 @@
 })(window.jQuery);
 
 jQuery(function($) {
-    var editor = CKEDITOR.replace(contentid, {
-          customConfig : "/config/ckeditor.js",
-    });
-    $("#" + formid).on("beforeValidate", function(event,messages,defereds) {
-        var html = editor.document.getBody().getHtml();
-        $("#" + contentid).text(html);
-    });
-
     var postTag = $.postTag();
     postTag.init(tags, postTags);
 });

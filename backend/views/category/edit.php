@@ -1,11 +1,14 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use backend\widgets\FormContainer;
 use backend\widgets\ImageField;
 use common\models\Category;
 use core\helpers\Form;
 use core\widgets\ImageInput;
+use common\widgets\CKEditorInput;
+
 ?>
 <?php
 /**
@@ -21,13 +24,10 @@ $this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage category'), ['index'])
     $input = Html::getInputId($category, 'content');
     $formid = 'edit_form';
 
-    $this->registerJsFile('@web/ckeditor/ckeditor.js', [
-        'depends' => ['common'],
-    ]);
 
     $this->registerJsVar('contentid', $input);
     $this->registerJsVar('formid', $formid);
-    
+    /*
     $this->registerJs('
        var editor = CKEDITOR.replace(contentid, {
            customConfig : "/config/ckeditor.js",
@@ -38,6 +38,7 @@ $this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage category'), ['index'])
             $("#" + contentid).text(html);
         });
     '); 
+    */
 ?>
 <?php $container = FormContainer::begin([
     'tabs' => [
@@ -78,7 +79,12 @@ $this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage category'), ['index'])
        <?= $form->field($category, 'meta_description')->textarea() ?>
    </div>
   <div id="category_content_info" class="tab-target">
-        <?= $form->field($category, 'content')->textarea() ?>
+        <?= $form->field($category, 'content')->widget(CKEditorInput::class, [
+             'pluginOptions' => [
+                  'filebrowserBrowseUrl' => Url::to(['file/browse']),
+                  'customConfig' =>  Url::to("@web/config/ckeditor.js"),
+             ],
+        ]) ?>
   </div>
 <?php ActiveForm::end() ?>
 <?php FormContainer::end() ?>

@@ -9,11 +9,45 @@ return [
     'language'       => 'zh-CN',
     'sourceLanguage' => 'en-US',
     'timeZone'       => 'Asia/Shanghai',
+    'bootstrap' => ['initable'],
     'components' => [
+        'initable' => [
+            'class' => 'common\components\Initable',
+            'handlers' => [
+                'fs' => function($fs) {
+                    $plugin = $fs->getBehavior('urlPlugin');
+                    if($plugin) {
+                        $plugin->attachPlugin();
+                    }
+                },
+                'wysiwyg' => function($fs) {
+                    $plugin = $fs->getBehavior('urlPlugin');
+                    if($plugin) {
+                        $plugin->attachPlugin();
+                    }
+                }
+            ],
+        ],
         'cache' => [
             'class'           => 'yii\caching\FileCache',
             'cachePath'       => '@common/runtime/cache',
             'defaultDuration' => 300,
+        ],
+        'fs' => [
+            'class' => 'creocoder\flysystem\LocalFilesystem',
+            'path' => '@media',
+            'as urlPlugin' => [
+                'class'   => 'common\behaviors\FlysystemPlugin',
+                'baseUrl' => '@mediaUrl', 
+            ],
+        ],
+        'wysiwyg' => [
+            'class' => 'creocoder\flysystem\LocalFilesystem',
+            'path' => '@media/wysiwyg',
+            'as urlPlugin' => [
+                'class'   => 'common\behaviors\FlysystemPlugin',
+                'baseUrl' => '@mediaUrl/wysiwyg', 
+            ],
         ],
         'formatter' => [
             'timeZone'        => 'Asia/Shanghai',

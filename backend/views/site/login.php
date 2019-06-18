@@ -41,14 +41,16 @@ $this->registerMetaTag([
 
         <?= $form->field($model, 'password')->passwordInput() ?>
 
-        <?= $form->field($model, 'code')->widget(Captcha::className(),[
-            'template' => '<div class="row">
-               <div class="col-xs-12">
-                   <div class="col-xs-6" style="padding:0;">{input}</div> 
-                   <div class="col-xs-6">{image}</div>
-               </div>
-            </div>',
-        ]) ?>
+        <?php if($model->isAttributeActive('code')): ?>
+            <?= $form->field($model, 'code')->widget(Captcha::className(),[
+                'template' => '<div class="row">
+                   <div class="col-xs-12">
+                       <div class="col-xs-6" style="padding:0;">{input}</div> 
+                       <div class="col-xs-6">{image}</div>
+                   </div>
+                </div>',
+            ]) ?>
+        <?php endif; ?>
 
         <div class="form-group submit-form-group">
             <?= Html::submitButton(Yii::t('admin','Login'), [

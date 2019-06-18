@@ -7,6 +7,7 @@ use backend\widgets\FormContainer;
 use common\models\Category;
 use common\models\Tag;
 use core\helpers\Form;
+use common\widgets\CKEditorInput;
 
 $selectedTags = $post->postTags;
 
@@ -19,9 +20,6 @@ $selectedTags = $post->postTags;
     $this->registerJsVar('contentid', $input);
     $this->registerJsVar('formid', $formid);
 
-    $this->registerJsFile('@web/ckeditor/ckeditor.js', [
-        'depends' => ['common'],
-    ]);
     $this->registerJsFile('@web/js/post.js', [
         'depends' => ['common'],
     ]);
@@ -76,7 +74,12 @@ $this->getBlock('breadcrumbs')->add(Yii::t('app', 'Manage post'), ['index']);
 	<?= $form->field($post, 'meta_description')->textarea() ?>
 </div>
 <div id="post_content_info" class="tab-target">
-    <?= $form->field($post, 'content')->textarea() ?>
+    <?= $form->field($post, 'content')->widget(CKEditorInput::class, [
+        'pluginOptions' => [
+            'filebrowserBrowseUrl' => Url::to(['file/browse']),
+            'customConfig' => Url::to('@web/config/ckeditor.js'),
+        ],
+    ]) ?>
 </div>
 <div id="post_category_info" class="tab-target">
 	<?= $form->field($post, 'category_id')

@@ -61,6 +61,7 @@ return [
                     'basePath' => '@webroot',
                     'baseUrl'  => '@web',
                     'js' => [
+                        'js/cado.js',
                         'js/scripts.js',
                         'js/layout.js',
 

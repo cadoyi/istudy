@@ -5,16 +5,40 @@ namespace backend\form;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\components\Attempt;
 
 class LoginForm extends Model
 {
+
+    const SCENARIO_CAPTCHA = 'captcha';
+
+
     public $username;
 
     public $password;
  
     public $code;
 
-    private $_user = false;
+    protected $_user = false;
+
+    protected $_attempt;
+
+
+    public function init()
+    {
+        parent::init();
+
+        $this->_attempt = new Attempt([
+            'key'        => 'login_captcha',
+            'retryCount' => 3,     //3次之后出验证码
+        ]);
+        
+        // 尝试执行回调.
+        $this->_attempt->execute( function($counter) {
+             $this->scenario = static::SCENARIO_CAPTCHA;
+        });
+    }
+
 
 
     /**
@@ -26,9 +50,11 @@ class LoginForm extends Model
         $usernameError = Yii::t('admin', 'This user does not exists');
         $passwordError = Yii::t('admin', 'Password incorrect');
         return [
-           [['username', 'password', 'code'], 'required'],
-           [['username', 'password', 'code'], 'trim'],
-           [['code'], 'captcha'],
+           [['username', 'password'], 'required'],
+           [['username', 'password'], 'trim'],
+           [['code'], 'required', 'on' => [ static::SCENARIO_CAPTCHA ]],
+           [['code'], 'captcha', 'on' => [static::SCENARIO_CAPTCHA ]],
+
            [['username'], 'string', 
                'length' => [ 5, 32 ],
                'tooShort' => $usernameError,
@@ -94,11 +120,18 @@ class LoginForm extends Model
     }
 
 
+    /**
+     * 登录.
+     * 
+     * @return boolean
+     */
     public function login()
     {
         if($this->validate()) {
+            $this->_attempt->reset();
             return Yii::$app->user->login($this->user);
         }
+        $this->_attempt->attempt();
         return false;
     }
 } 

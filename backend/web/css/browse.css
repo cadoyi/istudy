@@ -1,0 +1,159 @@
+/**
+ * media\file\browse
+ */
+html,body {
+    height: 100%;
+}
+
+.folders {
+    width: 230px; 
+    overflow-y: auto;
+    position: fixed;
+    top: 3rem;
+    left: 0;
+    bottom: -1px;
+    z-index: 0;
+    padding-top: 1px;
+    padding-bottom: 5rem;
+    background-color: #f6f6f6;
+    border-right: 1px solid #ddd;
+}
+
+.folders ul {
+    list-style: none;
+    padding-left: 0;
+    background-color: #fff;
+}
+
+.folders li {
+    position: relative;
+}
+.folders .folder-name {
+    display: block;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    border-bottom: 1px solid #d3dbe4;
+    white-space : nowrap;
+}
+.folders li.selected > .folder-name {
+    box-shadow: inset -1px 1px 4px 2px #d7effd;
+}
+.folders .open-subdir {
+    display: block;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    width: 2.5rem;
+    text-align: center;
+}
+.folders .open-subdir .fa-caret-down,
+.folders .open-subdir .fa-caret-left {
+    line-height: 2.5rem;
+}
+.folders .fa-folder,
+.folders .fa-folder-open {
+    font-size: 1.5rem;
+    vertical-align: sub;
+}
+.folders .subdirs {
+    display: none;
+}
+
+
+
+/************  **********/
+
+.folder-actions {
+    background-color: #f6f6f6;
+    height: 3rem;
+    padding: .5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    border-bottom: 1px solid #ddd;
+}
+.folder-actions .btn-default {
+    background-color: #fff;
+}
+
+
+/************** ***************/
+.folder-files {
+    padding-left: 230px;
+    padding-top: 3rem;
+    text-align: center;
+}
+
+.folder-files .image {
+    position: relative;
+    width: 152px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    padding: 1px;
+    color: #555;
+}
+.folder-files .image.active {
+    box-shadow: 1px 1px 5px 0px #235226;
+}
+.folder-files .image:hover,
+.folder-files .image:focus {
+    color: #555;
+}
+.folder-files .image .imgspan {
+     display: block;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+
+.folder-files .image img {
+    display: inline-block;
+    width: 150px;
+    height: auto;
+    margin: auto;
+}
+.folder-files .image span {
+    display: block;
+}
+
+
+.folder-files span.fa-check {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    background: green;
+    border-radius: 0 0 20px 0;
+    box-shadow: 3px 3px 1px 4px green;
+}
+.folder-files .image.active span.fa-check {
+    display: inline-block;
+}
+
+.popup-contextmenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+.popup-contextmenu .dropdown-menu {
+    display: block;
+}
+
+.file-uploader {
+    padding: 1rem;
+    background-color: #f6f6f6;
+    border-bottom: 1px solid #ddd
+}
+.file-uploader .file-input {
+    background-color: #fff;
+}
