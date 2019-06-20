@@ -7,7 +7,7 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-console',
+    'id' => 'edu-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
@@ -17,9 +17,23 @@ return [
     ],
     'controllerMap' => [
         'fixture' => [
-            'class' => 'yii\console\controllers\FixtureController',
+            'class'     => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => [
+                '@console/migrations',
+                '@yii/rbac/migrations',
+            ],
+            'generatorTemplateFiles' => [
+                'create_table'    => '@console/views/createTableMigration.php',
+                'drop_table'      => '@yii/views/dropTableMigration.php',
+                'add_column'      => '@yii/views/addColumnMigration.php',
+                'drop_column'     => '@yii/views/dropColumnMigration.php',
+                'create_junction' => '@yii/views/createTableMigration.php',
+            ],
+        ],
     ],
     'components' => [
         'log' => [

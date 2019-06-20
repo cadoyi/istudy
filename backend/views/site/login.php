@@ -6,30 +6,57 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\captcha\Captcha;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('admin','Admin login');
+
+$this->registerMetaTag([
+   'name' => 'meta_keywords',
+   'content' => 'admin login',
+], 'keywords');
+
+$this->registerMetaTag([
+    'name' => 'meta_description',
+    'content' => 'admin login',
+], 'description');
+
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+<div class="row login-form-wrapper">
+    <?php $form = ActiveForm::begin([
+        'id' => 'loginform',
+        'options' => [
+            'class' => 'form login-form',
+        ],
+    ]) ?>
+        <div class="form-group form-header">
+            <h2><?= Html::encode($this->title); ?></h2>
         </div>
-    </div>
+        <?= $form->field($model, 'username', [
+            'options' => [
+               'class' => 'form-group has-feedback',
+            ],
+        ])->textInput([
+            'autofocus' => true,
+        ]) ?>
+
+        <?= $form->field($model, 'password')->passwordInput() ?>
+
+        <?php if($model->isAttributeActive('code')): ?>
+            <?= $form->field($model, 'code')->widget(Captcha::className(),[
+                'template' => '<div class="row">
+                   <div class="col-xs-12">
+                       <div class="col-xs-6" style="padding:0;">{input}</div> 
+                       <div class="col-xs-6">{image}</div>
+                   </div>
+                </div>',
+            ]) ?>
+        <?php endif; ?>
+
+        <div class="form-group submit-form-group">
+            <?= Html::submitButton(Yii::t('admin','Login'), [
+                'class' => 'btn btn-primary btn-block', 
+            ]) ?>
+        </div>        
+    <?php ActiveForm::end(); ?>
 </div>
+

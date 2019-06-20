@@ -7,23 +7,31 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-backend',
+    'id' => 'edu-backend',
+    'name' => "My sister's website",
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [],
+    'layout'  => 'layout',
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-backend',
+            'csrfParam' => '_csrf',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'enableAutoLogin' => false,
+            'loginUrl' => ['site/login'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name'    => 'backend',
+            'timeout' => 86400,
+            'cookieParams' => [
+                'lifetime' => 86400, 
+                'httpOnly' => true, 
+                'secure' => !YII_DEBUG,
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -37,14 +45,53 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'suffix' => '.html',
             'rules' => [
             ],
         ],
-        */
+        'assetManager' => [
+            'appendTimestamp' => !YII_DEBUG,
+            'bundles' => [
+                'common' => [
+                    'class' => 'yii\web\AssetBundle',
+                    'basePath' => '@webroot',
+                    'baseUrl'  => '@web',
+                    'js' => [
+                        'js/cado.js',
+                        'js/scripts.js',
+                        'js/layout.js',
+
+                    ],
+                    'css' => [
+                        'css/styles.css',
+                        'css/layout.css',
+                        'css/font-awesome.css',
+                    ],
+                    'depends' => [
+                        'yii\bootstrap\BootstrapPluginAsset',
+                        'yii\web\YiiAsset',
+                    ],
+                ],
+            ],
+        ],
+        'view' => [
+            'as blockBehavior' => [
+                'class' => 'common\blocks\BlockBehavior',
+                'registerBlocks' => [
+                    'main' => [
+                        'class' => 'common\blocks\Layout',
+                    ],
+                    'breadcrumbs' => [
+                        'class' => 'common\blocks\Breadcrumbs',
+                    ],
+                ],
+            ],
+        ],
+        
     ],
     'params' => $params,
 ];

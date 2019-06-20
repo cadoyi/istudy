@@ -1,51 +1,54 @@
 <?php
 namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\base\InvalidParamException;
-use common\models\User;
+use common\models\Customer;
+use core\validators\PasswordValidator;
 
 /**
  * Password reset form
  */
 class ResetPasswordForm extends Model
 {
+
     public $password;
+
+    public $password_confirm;
 
     /**
      * @var \common\models\User
      */
-    private $_user;
+    private $_customer;
 
 
-    /**
-     * Creates a form model given a token.
-     *
-     * @param string $token
-     * @param array $config name-value pairs that will be used to initialize the object properties
-     * @throws \yii\base\InvalidParamException if token is empty or not valid
-     */
-    public function __construct($token, $config = [])
-    {
-        if (empty($token) || !is_string($token)) {
-            throw new InvalidParamException('Password reset token cannot be blank.');
-        }
-        $this->_user = User::findByPasswordResetToken($token);
-        if (!$this->_user) {
-            throw new InvalidParamException('Wrong password reset token.');
-        }
-        parent::__construct($config);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+           [['password', 'password_confirm'], 'required'],
+           [['password'], 'string', 'length' => [5,32]],
+           [['password'], PasswordValidator::className()],
+           [['password_confirm'], 'compare', 'compareAttribute' => 'password'],
         ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'password' => Yii::t('app', 'Password'),
+            'password_confirm' => Yii::t('app', 'Confirm password'),
+        ];
+    }
+
+    public function setCustomer($customer)
+    {
+        $this->_customer = $customer;
+    }
+
+    public function getCustomer()
+    {
+        return $this->_customer;
     }
 
     /**
@@ -55,10 +58,9 @@ class ResetPasswordForm extends Model
      */
     public function resetPassword()
     {
-        $user = $this->_user;
-        $user->setPassword($this->password);
-        $user->removePasswordResetToken();
-
-        return $user->save(false);
+        $this->customer->scenario = Customer::SCENARIO_UPDATE;
+        $this->customer->setPassword($this->password);
+        $this->customer->removePasswordResetToken();
+        return $this->customer->save(false);
     }
 }

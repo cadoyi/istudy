@@ -2,44 +2,52 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\captcha\CaptchaAction;
+use backend\form\LoginForm;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+
+    public function login()
+    {
+        $login = parent::login();
+        $login['rules'] = [
+            [
+                'actions' => ['login', 'error', 'captcha'],
+                'allow' => true,
+            ],
+            [
+                'actions' => ['logout', 'index'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],            
+        ];
+        return $login;  
+    }
+
+    
     /**
      * {@inheritdoc}
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
                 ],
-            ],
         ];
+        return $behaviors;
     }
+
+
+
 
     /**
      * {@inheritdoc}
@@ -49,6 +57,12 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+                'layout' => 'error',
+            ],
+            'captcha' => [
+                'class' => CaptchaAction::className(),
+                'minLength' => 4,
+                'maxLength' => 4,
             ],
         ];
     }
@@ -73,17 +87,19 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+        $this->layout = 'login';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                'model' => $model,
-            ]);
         }
+
+        $model->password = '';
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+        
     }
 
     /**

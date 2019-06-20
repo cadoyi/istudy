@@ -5,35 +5,41 @@
 /* @var $model \common\models\LoginForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+use yii\captcha\Captcha;
+$this->title = Yii::t('app', 'Student login');
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<?php $this->beginContent('@frontend/views/site/_siginup.php'); ?>
 
-    <p>Please fill out the following fields to login:</p>
+    <div class="site-login">
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <div>
+            <div class="" style="max-width:320px;">
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+                    <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                    <?= $form->field($model, 'password')->passwordInput() ?>
+                    <?= $form->field($model, 'code')->widget(Captcha::className()) ?>
+                    <div class="form-group clearfix">
+                        <?= $form->field($model, 'remember', [
+                            'options' => [
+                                'class' => ['pull-left','form-group'],
+                            ],
+                        ])->checkbox() ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                        <div class="form-group pull-right">
+                            <?= Html::a(Yii::t('app', 'Forgot password?'), ['site/request-password-reset'],[
+                                    'class' => 'btn btn-sm'
+                                ]) ?>
+                        </div>
+                   </div>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                    <div class="form-group">
+                        <?= Html::submitButton(Yii::t('app', 'Login'), ['class' => 'btn btn-primary']) ?>
+                    </div>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+                <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
-</div>
+<?php $this->endContent() ?>

@@ -6,6 +6,7 @@
 /* @var $exception Exception */
 
 use yii\helpers\Html;
+$return = Yii::$app->user->getReturnUrl(Yii::$app->user->loginUrl);
 
 $this->title = $name;
 ?>
@@ -18,10 +19,13 @@ $this->title = $name;
     </div>
 
     <p>
-        The above error occurred while the Web server was processing your request.
+        出现这个错误是因为您的请求无法被服务器处理.
     </p>
     <p>
-        Please contact us if you think this is a server error. Thank you.
+        如果你认为这是服务器出现的错误,那么你可以联系管理员.
+    </p>
+    <p>
+        <?= Html::a('返回', $return, ['class' => 'btn btn-default']) ?>
     </p>
 
 </div>
