@@ -52,7 +52,6 @@ if($user->id == 1) {
     <?= $form->field($user, 'is_active')->dropDownList(Form::statusList()) ?>
     <?= $form->field($user, 'password')->passwordInput() ?>
     <?= $form->field($user, 'password_confirm')->passwordInput() ?>
-    <?= $form->field($user, 'current_password')->passwordInput() ?>
 </div>
 <div id="user_profile_info" class="tab-target">
     <?= $form->field($profile, 'phone') ?>

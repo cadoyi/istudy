@@ -39,10 +39,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public $password_confirm;
 
-    /**
-     * @var string 当前管理员密码
-     */
-    public $current_password;
 
     /**
      * {@inheritdoc}
@@ -87,12 +83,6 @@ class User extends ActiveRecord implements IdentityInterface
                     return \$('#user-password').val().trim() != '';
                 }",
             ],
-            [['current_password'], function($attribute, $params, $validator) {
-                $identity = Yii::$app->user->identity;
-                if(!$identity->validatePassword($this->current_password)) {
-                    $this->addError($attribute, 'Invalid password');
-                }
-            }],
             [['is_active'], 'default', 'value' => 1],
             [['is_active'], 'boolean'],
             
@@ -110,10 +100,6 @@ class User extends ActiveRecord implements IdentityInterface
                     static::SCENARIO_CREATE,
                 ],
             ],
-            [['current_password'], 'required', 'on' => [
-               static::SCENARIO_CREATE,
-               static::SCENARIO_UPDATE,
-            ]],
             [
                 ['nickname'], 
                 'default', 
@@ -135,7 +121,6 @@ class User extends ActiveRecord implements IdentityInterface
             'username'   => Yii::t('all', 'Username'),
             'password'   => Yii::t('all', 'Password'),
             'password_confirm' => Yii::t('all', 'Confirm password'),
-            'current_password' => Yii::t('all', 'Current user\'s password'),
             'email'      => Yii::t('all', 'Email address'),
             'nickname'   => Yii::t('all', 'Nickname'),
             'is_active'  => Yii::t('all', 'Whether enabled'),
@@ -241,7 +226,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password = null;
         $this->password_confirm = null;
-        $this->current_password = null;
     }
 
     public function getProfile()
