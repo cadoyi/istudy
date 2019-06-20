@@ -10,11 +10,24 @@ use common\models\User;
 use common\models\UserProfile;
 use backend\form\AdminSearch;
 use backend\form\RoleSelector;
+use common\components\ComposeModel;
+use common\models\services\RoleService;
 
-
+/**
+ * 管理员控制器
+ *
+ *
+ * 
+ */
 class AdminController extends Controller
 {
 
+
+    /**
+     * @inheritdoc
+     * 
+     * @return array
+     */
     public function rbac()
     {
         return $this->_rbac([
@@ -37,6 +50,11 @@ class AdminController extends Controller
         ]);
     }
 
+
+    /**
+     * 管理员列表
+     * 
+     */
     public function actionIndex()
     {
         $search = new AdminSearch();
@@ -48,6 +66,11 @@ class AdminController extends Controller
         ]);
     }
 
+
+    /**
+     * 创建用户
+     * 
+     */
     public function actionCreate()
     {
         $this->_title('Create admin user');
@@ -57,33 +80,35 @@ class AdminController extends Controller
 
         $request = Yii::$app->request;
         if($post = $this->post) {
-            $success = $user->load($post) &&
-                $profile->load($post) && 
-                $role -> load($post) &&
-                $user->validate() &&
-                $profile->validate() &&
-                $role -> validate();
-            if($success) {
-                User::getDb()->transaction(function() use ($user, $profile, $role){
+            $validator = new ComposeModel([
+                'models' => [
+                    'user'    => $user,
+                    'profile' => $profile,
+                    'role'    => $role,
+                ],
+            ]);
+            if($validator->loadAndValidate($post)) {
+                $trans = User::getDb()->beginTransaction();
+                try {
                     $user->save(false);
                     $profile->user_id = $user->id;
                     $profile->save(false);
-                    $auth = Yii::$app->authManager;
-                    foreach($role->attributes() as $roleName) {
-                        if($role->$roleName) {
-                            $roleObject = new Role(['name' => $roleName]);
-                            $auth->assign($roleObject, $user->id);
-                        }
-                    }
-                });
-                return $this->redirect(['index']);
+
+                    $auth = RoleService::instance(['user' => $user]);
+                    $auth->filterAssigns($role->attributes);
+                    $trans->commit();
+                    return $this->redirect(['index']);
+                } catch(\Throwable $e) {
+                    $trans->rollBack();
+                    throw $e;
+                }
             }
         }
         $user->cleanPassword();
         return $this->render('edit', [
             'user'    => $user,
             'profile' => $profile,
-            'role' => $role,
+            'role'    => $role,
         ]);
     }
 
@@ -95,36 +120,47 @@ class AdminController extends Controller
         return $this->renderView($model);
     }
 
+
+
+    /**
+     * 更新用户
+     * 
+     * @param  int $id  用户ID
+     */
     public function actionUpdate($id)
     {
         $this->_title('Update admin user');
+
         $user = $this->findUser($id);
         $user->scenario =  User::SCENARIO_UPDATE;
+
         $profile = $user->profile;
         $profile->scenario = UserProfile::SCENARIO_UPDATE;
+
         $role = RoleSelector::getModel($user);
 
+        $validator = ComposeModel::instance([
+            'models' => [
+                'user'    => $user,
+                'profile' => $profile,
+                'role'    => $role,
+            ],
+        ]);
+
         if($post = $this->post) {
-            $success = $user->load($post) &&
-                $profile->load($post) &&
-                $role->load($post) &&
-                $user->validate() &&
-                $profile->validate() &&
-                $role->validate();
-            if($success) {
-                User::getDb()->transaction(function() use ($user, $profile, $role){
+            if($validator->loadAndValidate($post)) {
+                $trans = User::getDb()->beginTransaction();
+                try {
                     $user->save(false);
                     $profile->user_id = $user->id;
                     $profile->save(false);
-                    $auth = Yii::$app->authManager;
-                    $auth->revokeAll($user->id);
-                    foreach($role->attributes() as $roleName) {
-                        if($role->$roleName) {
-                            $roleObject = new Role(['name' => $roleName]);
-                            $auth->assign($roleObject, $user->id);
-                        }
-                    }
-                });
+                    $auth = RoleService::instance(['user' => $user]);
+                    $auth->filterAssigns($role->attributes);
+                    $trans->commit();
+                } catch(\Throwable $e) {
+                    $trans->rollBack();
+                    throw $e;
+                }
                 return $this->redirect(['index']);
             }
         }
@@ -136,18 +172,25 @@ class AdminController extends Controller
         ]);
     }
 
+
+    /**
+     * 删除用户,并回收权限.
+     * 
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function actionDelete($id)
     {
         $user = $this->findUser($id);
+        $service = UserService::instance(['user' => $user]);
         if($user->canDelete()) {
-            User::getDb()->transaction(function() use ($user) {
-                Yii::$app->authManager->revokeAll($user->id);
-                $user->profile->delete();
-                $user->delete();
+            User::getDb()->transaction(function() use ($service) {
+                $service->delete();
             });
         }
         $this->redirect(['index']);
     }
+
 
 
     public function findUser($id)
